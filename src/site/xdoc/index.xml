@@ -1,0 +1,177 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 2011 André Rouél
+  
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+    http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+	<properties>
+		<title>Welcome to Jacclog</title>
+		<author>André Rouél</author>
+	</properties>
+	<body>
+
+		<section name="">
+			<div id="downloadbox">
+				<h5>Search Jacclog Sites</h5>
+				<!-- Google CSE Search Box Begins -->
+				<div id="cse" style="width: 100%;">Loading</div>
+				<script src="http://www.google.com/jsapi" type="text/javascript"></script>
+				<script type="text/javascript">
+					google.load('search', '1', {language : 'de'});
+					google.setOnLoadCallback(function() {
+					var customSearchControl = new google.search.CustomSearchControl('013623341226610167665:2slpg_cqf2q');
+					customSearchControl.setResultSetSize(google.search.Search.FILTERED_CSE_RESULTSET);
+					customSearchControl.draw('cse');
+					}, true);
+				</script>
+				<!-- <link rel="stylesheet" href="http://www.google.com/cse/style/look/default.css" type="text/css" /> -->
+				<!-- Google CSE Search Box Ends -->
+
+				<h5>Get Jacclog ${currentVersion}</h5>
+				<span style="display: block; text-align: right; font-size: smaller">Released: 11 August 2009</span>
+				<p>
+					<a href="download.html">
+						<img src="images/folder-open.gif" border="0" alt="" title="Download Jacclog ${currentVersion}" />
+						Jacclog ${currentVersion}
+					</a>
+					<small>(2.8Mb)</small>
+					<span style="font-size: smaller">
+						<br />
+						<a href="release-notes.html">Release Notes</a>
+						,
+						<a href="download.html#Requirements">System Requirements</a>
+						,
+						<a href="download.html#Installation">Installation Instructions</a>
+					</span>
+				</p>
+			</div>
+		</section>
+
+		<section name="Welcome to Jacclog">
+
+			<!-- TODO: I reckon it's time for a new description -->
+			<p>
+				Jacclog is a software project management and comprehension tool. Based on the concept of a project object model
+				(POM), Jacclog can manage a project's build, reporting and documentation from a central piece of information.
+			</p>
+			<p>
+				If you think that Jacclog could help your project, you can find out more information about in the "About Jacclog"
+				section of the navigation. This includes an in-depth description of
+				<a href="what-is-maven.html">what Jacclog is</a>
+				,
+				a
+				<a href="maven-features.html">list of some of its main features</a>
+				, and a set of
+				<a href="general.html">frequently
+					asked questions about what Jacclog is
+				</a>
+				.
+			</p>
+			<h3>Learning about Jacclog</h3>
+			<p>
+				<!-- TODO: this could be the big button type thing instead of a list of links -->
+				This site is separated into the following sections, depending on how you'd like to use Jacclog:
+			</p>
+			<!-- TODO: use CSS -->
+			<ul>
+				<li>
+					<span style="white-space:nowrap; font-weight: bold; font-size: 1.25em">
+						<a href="run-maven/index.html">Run Jacclog</a>
+					</span>
+					<span style="display: block; margin-bottom: 0.5em">
+						Information for those needing to build a project that uses Jacclog
+					</span>
+				</li>
+				<li>
+					<span style="white-space:nowrap; font-weight: bold; font-size: 1.25em">
+						<a href="users/index.html">Use Jacclog</a>
+					</span>
+					<span style="display: block; margin-bottom: 0.5em">
+						Information for those wanting to use Jacclog to build their project, including a "10 minute test" that gives a
+						practical overview of Jacclog's main features in just 10 minutes
+					</span>
+				</li>
+				<li>
+					<span style="white-space:nowrap; font-weight: bold; font-size: 1.25em">
+						<a href="plugin-developers/index.html">Write Jacclog Plugins</a>
+					</span>
+					<span style="display: block; margin-bottom: 0.5em">
+						Information for those who may or may not be using Jacclog, but want to provide a plugin for shared
+						functionality or to accompany their own product or toolset
+					</span>
+				</li>
+				<li>
+					<span style="white-space:nowrap; font-weight: bold; font-size: 1.25em">
+						<a href="repository/index.html">Improve the Jacclog Repository</a>
+					</span>
+					<span style="display: block; margin-bottom: 0.5em">
+						Information for those who may or may not use, but are interested in getting project metadata into the
+						repository
+					</span>
+				</li>
+				<li>
+					<span style="white-space:nowrap; font-weight: bold; font-size: 1.25em">
+						<a href="developers/index.html">Develop Jacclog</a>
+					</span>
+					<span style="display: block; margin-bottom: 0.5em">
+						Information for those who are currently developers, or who are interested
+						in contributing to the Jacclog project itself
+					</span>
+				</li>
+			</ul>
+			<p>
+				Each guide is divided into a number of trails to get you started on a particular topic, and includes a
+				reference area and a "cookbook" of common examples.
+			</p>
+			<p>
+				You can access the guides at any time from the left navigation.
+			</p>
+			<h3>Documentation Index</h3>
+			<p>
+				If you are looking for a quick reference, you can use the
+				<a href="guides/index.html">documentation index.</a>
+				<!-- TODO If you are looking for a quick reference, you can use the documentation index. It is available in both <a href="todo.html">alphabetical</a> 
+					and <a href="todo.html">categorical</a> listing formats. -->
+			</p>
+			<h3>How to Get Support</h3>
+			<p>
+				Support for Jacclog is available in a variety of different forms.
+			</p>
+			<p>
+				To get started, search the documentation, the
+				<a href="http://docs.codehaus.org/display/MAVENUSER">wiki</a>
+				,
+				<a href="issue-tracking.html">issue tracker</a>
+				, or the
+				<a href="mail-lists.html">mailing list archives</a>
+				to
+				see if the problem has been solved or reported before.
+			</p>
+			<p>
+				If the problem has not been reported before, the recommended way to get help is to
+				subscribe to the
+				<a href="mail-lists.html">Jacclog Users Mailing list</a>
+				. Many other users and Jacclog developers
+				will answer your questions there, and the answer will be archived for others in the future.
+			</p>
+
+			<h3>How can I help?</h3>
+			<p>
+				Jacclog is an open source community and welcomes contributions. If you'd like to get involved, see the
+				<a href="guides/development/guide-helping.html">Guide to helping with Jacclog</a>.
+			</p>
+		</section>
+	</body>
+</document>
