@@ -1,17 +1,26 @@
+/*******************************************************************************
+ * Copyright 2011 Andre Rouel
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
+
 /*
-
- Copyright 2011 by Nathaniel Harward <nharward@gmail.com>
-
- ANTLRv3 grammar for comma-separated values (CSV) files.
-
- * No trimming of spaces (disallowed in RFC4180)
- * No trimming of double-quotes, either to define/end a quoted field or
-   when embedded inside one
- * Handles all/mixed newline formats (MSDOS/Windows; Unix; Mac OS)
-
- If you find any issues please email me so I can correct it.
-
-*/
+ * ANTLRv3 grammar for files with comma-separated values (CSV).
+ *
+ * This version is influenced of the CSV grammar from Nathaniel Harward and can be
+ * downloaded at http://www.harward.us/~nharward/antlr/csv.g.
+ *
+ */
 
 grammar CommaSeparatedValues;
 
@@ -21,19 +30,39 @@ options {
 
 @header {
   package net.sf.jacclog.csv;
-  //import net.sf.jacclog.logformat.LogFormat;
+  import net.sf.jacclog.csv.QuotedTextFilter;
 }
 
 @lexer::header {
   package net.sf.jacclog.csv;
 }
 
-file
-    : record (NEWLINE record)* EOF
+@lexer::members {
+
+    private final List<RecognitionException> exceptions = new ArrayList<RecognitionException>();
+
+    public List<RecognitionException> getExceptions() {
+        return exceptions;
+    }
+
+    @Override
+    public void reportError(RecognitionException e) {
+        super.reportError(e);
+        exceptions.add(e);
+    }
+
+}
+
+line returns [List<String> result]
+scope { List fields; }
+@init { $line::fields = new ArrayList(); }
+    : field ( COMMA field )*
+    { $result = $line::fields; }
     ;
 
-record
-    : (quoted_field | unquoted_field) (COMMA (quoted_field | unquoted_field))*
+field
+    : quoted_field { $line::fields.add( QuotedTextFilter.filter($quoted_field.text) ); }
+    | unquoted_field { $line::fields.add($unquoted_field.text); }
     ;
 
 quoted_field
