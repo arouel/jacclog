@@ -80,10 +80,13 @@
 						<configuration>
 							<descriptors>
 								<descriptor>mvn:org.apache.karaf.assemblies.features/standard/${karaf.version}/xml/features</descriptor>
-								<!--descriptor>mvn:org.apache.karaf.assemblies.features/enterprise/${karaf.version}/xml/features</descriptor -->
+								<descriptor>mvn:org.apache.karaf.assemblies.features/enterprise/${karaf.version}/xml/features</descriptor>
 								<descriptor>file:${basedir}/target/classes/features.xml</descriptor>
 							</descriptors>
 							<features>
+                                <feature>config</feature>
+                                <feature>ssh</feature>
+                                <feature>management</feature>
 								<feature>jacclog</feature>
 								<!--feature>obr</feature> <feature>config</feature> <feature>war</feature -->
 							</features>
