@@ -1,24 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  Copyright 2011 André Rouél
-  
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-  
-    http://www.apache.org/licenses/LICENSE-2.0
-  
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
--->
 <!DOCTYPE uasdata SYSTEM "http://user-agent-string.info/rpc/uasxmldata.dtd">
 <uasdata>
 	<description>
 		<label>Data (format xml) for UASparser - http://user-agent-string.info/download/UASparser</label>
-		<version>20110830-01</version>
+		<version>20110913-01</version>
 		<checksum type="MD5">http://user-agent-string.info/rpc/get_data.php?format=xml&amp;md5=y</checksum>
 		<checksum type="SHA1">http://user-agent-string.info/rpc/get_data.php?format=xml&amp;sha1=y</checksum>
 	</description>
@@ -713,6 +698,16 @@
 				<url_company><![CDATA[http://www.google.com/profiles/mr.rahulgarg]]></url_company>
 				<icon>bot.png</icon>
 				<bot_info_url>/list-of-ua/bot-detail?bot=bitlybot</bot_info_url>
+			</robot>
+			<robot>
+				<id>6514</id>
+				<useragent><![CDATA[Mozilla/5.0 (compatible; socketcrawler; http://nlp.fi.muni.cz/projects/biwec/)]]></useragent>
+				<family>biwec</family>
+				<name>biwec</name>
+				<company><![CDATA[Centre for Natural Language Processing]]></company>
+				<url_company><![CDATA[http://muni.cz/fi/335300?lang=en]]></url_company>
+				<icon>bot.png</icon>
+				<bot_info_url>/list-of-ua/bot-detail?bot=biwec</bot_info_url>
 			</robot>
 			<robot>
 				<id>4733</id>
