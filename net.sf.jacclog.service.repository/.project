@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>net.sf.jacclog.service.repository [0.1.0-SNAPSHOT]</name>
-	<comment>Generated using Pax-Construct</comment>
+	<name>net.sf.jacclog.service.repository</name>
+	<comment></comment>
 	<projects>
 	</projects>
 	<buildSpec>
