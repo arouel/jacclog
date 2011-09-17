@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	default-activation="lazy">
+
+	<bean id="logEntryQueue" class="net.sf.jacclog.service.importer.internal.queue.LogEntryQueue">
+		<argument type="int" value="20000" />
+	</bean>
+
+	<reference id="logEntryRepositoryService" interface="net.sf.jacclog.service.repository.LogEntryRepositoryService" />
+
+	<bean id="logEntryImportService" class="net.sf.jacclog.service.importer.internal.LogEntryImportService">
+		<argument ref="logEntryRepositoryService" />
+		<argument ref="logEntryQueue" type="net.sf.jacclog.service.importer.internal.queue.LogEntryQueue" />
+	</bean>
+
+	<service ref="logEntryImportService" interface="net.sf.jacclog.service.importer.api.service.LogEntryImportService" />
+
+	<bean id="importer" class="net.sf.jacclog.service.importer.internal.LogFileImporter">
+		<argument type="int" value="100" />
+		<argument ref="logEntryImportService" />
+	</bean>
+
+	<service ref="importer" interface="net.sf.jacclog.service.importer.api.LogFileImporter" />
+
+</blueprint>

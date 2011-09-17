@@ -20,15 +20,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import net.sf.jacclog.logformat.LogFormat;
 import net.sf.jacclog.service.importer.api.LogFile;
 import net.sf.jacclog.service.importer.api.service.LogEntryImportService;
 import net.sf.jacclog.service.importer.internal.queue.LogFileQueue;
 import net.sf.jacclog.service.importer.internal.queue.LogFileQueueImporterObserver;
 import net.sf.jacclog.service.repository.LogEntry;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LogFileImporter implements net.sf.jacclog.service.importer.api.LogFileImporter {
 
@@ -108,6 +108,18 @@ public class LogFileImporter implements net.sf.jacclog.service.importer.api.LogF
 
 		files = new LogFileQueue(capacity);
 		files.addObserver(new LogFileQueueImporterObserver(service));
+	}
+
+	/**
+	 * This constructor is not really necessary, but Apache Aries Blueprint has a bug that matches to an interface not
+	 * correct.
+	 * 
+	 * @param capacity
+	 * @param service
+	 */
+	public LogFileImporter(final int capacity,
+			final net.sf.jacclog.service.importer.internal.LogEntryImportService service) {
+		this(capacity, (LogEntryImportService<LogEntry>) service);
 	}
 
 	@Override
