@@ -32,7 +32,6 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.sf.jacclog</groupId>
 	<artifactId>net.sf.jacclog.geoip</artifactId>
-	<version>0.1.0-SNAPSHOT</version>
 
 	<name>Jacclog :: GeoIP</name>
 	<description>Jacclog GeoIP is a library to detect geographical location by using the MaxMind GeoLite City data from http://www.maxmind.com/app/geolitecity.</description>

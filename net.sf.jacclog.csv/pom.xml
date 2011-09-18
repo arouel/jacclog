@@ -32,7 +32,6 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.sf.jacclog</groupId>
 	<artifactId>net.sf.jacclog.csv</artifactId>
-	<version>0.1.0-SNAPSHOT</version>
 
 	<name>Jacclog :: CSV</name>
 	<description>The CSV bundle provides tools to interpret comma-separated values (CSV).</description>

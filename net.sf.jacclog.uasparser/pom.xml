@@ -32,7 +32,6 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.sf.jacclog</groupId>
 	<artifactId>net.sf.jacclog.uasparser</artifactId>
-	<version>0.1.0-SNAPSHOT</version>
 
 	<name>Jacclog :: UASparser</name>
 	<description>Jacclog UASparser is a library to detect User-Agents by using the uas.ini datafile from http://user-agent-string.info.</description>

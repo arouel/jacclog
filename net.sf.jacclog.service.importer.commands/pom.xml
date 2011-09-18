@@ -32,7 +32,6 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.sf.jacclog</groupId>
 	<artifactId>net.sf.jacclog.service.importer.commands</artifactId>
-	<version>0.1.0-SNAPSHOT</version>
 
 	<name>Jacclog :: Service :: Importer :: Commands</name>
 
