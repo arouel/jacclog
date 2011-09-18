@@ -18,54 +18,45 @@
 <features name="jacclog-features">
 	<repository>mvn:org.apache.karaf.assemblies.features/standard/${karaf.version}/xml/features</repository>
 	<repository>mvn:org.apache.karaf.assemblies.features/enterprise/${karaf.version}/xml/features</repository>
-	<feature name="commons-lang" version="${commons-lang.bundle.version}">
-		<bundle>mvn:org.apache.commons/commons-lang3/${commons-lang.bundle.version}</bundle>
+	<feature name="commons-lang3" version="${commons-lang3.bundle.version}">
+		<bundle>mvn:org.apache.commons/commons-lang3/${commons-lang3.bundle.version}</bundle>
+	</feature>
+	<feature name="javax.persistence" version="${javax.persistence.version}">
+		<bundle>mvn:org.eclipse.persistence/javax.persistence/${javax.persistence.version}</bundle>
+	</feature>
+	<feature name="eclipselink" version="${eclipselink.version}">
+		<feature version="${javax.persistence.version}">javax.persistence</feature>
+		<bundle>mvn:org.eclipse.persistence/org.eclipse.persistence.antlr/${eclipselink.version}</bundle>
+		<bundle>mvn:org.eclipse.persistence/org.eclipse.persistence.asm/${eclipselink.version}</bundle>
+		<bundle>mvn:org.eclipse.persistence/org.eclipse.persistence.core/${eclipselink.version}</bundle>
+		<bundle>mvn:org.eclipse.persistence/org.eclipse.persistence.jpa/${eclipselink.version}</bundle>
+		<bundle>mvn:org.eclipse.persistence/org.eclipse.persistence.osgi/${eclipselink.version}</bundle>
 	</feature>
 	<feature name="jsr166y" version="${jsr166y.version}">
 		<bundle>mvn:org.codehaus.jsr166-mirror/jsr166y/${jsr166y.version}</bundle>
 	</feature>
 	<feature name="jacclog" version="${project.version}">
-		<feature version="${commons-lang.bundle.version}">commons-lang</feature>
+		<feature version="${commons-lang3.bundle.version}">commons-lang3</feature>
+		<feature version="${eclipselink.version}">eclipselink</feature>
 		<feature version="${jsr166y.version}">jsr166y</feature>
-		<feature version="${aries.transaction.version}">transaction</feature>
 
 		<bundle>mvn:net.sf.jacclog/net.sf.jacclog.logformat/${project.version}</bundle>
 		<bundle>mvn:net.sf.jacclog/net.sf.jacclog.uasparser/${project.version}</bundle>
 		<bundle>mvn:net.sf.jacclog/net.sf.jacclog.util/${project.version}</bundle>
 
-		<bundle>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.aopalliance/${aopalliance.bundle.version}
-		</bundle>
+		<bundle>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.aopalliance/${aopalliance.bundle.version}</bundle>
 		<bundle>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.aspectj/${aspectj.bundle.version}</bundle>
 		<bundle>mvn:javax.transaction/com.springsource.javax.transaction/${javax.transaction.version}</bundle>
-		<bundle>mvn:org.apache.servicemix.specs/org.apache.servicemix.specs.activation-api-1.1/${javax.activation.version}
-		</bundle>
+		<bundle>mvn:org.apache.servicemix.specs/org.apache.servicemix.specs.activation-api-1.1/${javax.activation.version}</bundle>
 		<bundle>mvn:org.apache.servicemix.specs/org.apache.servicemix.specs.jaxb-api-2.2/${javax.xml.bind.version}</bundle>
-		<bundle>mvn:org.apache.servicemix.specs/org.apache.servicemix.specs.jsr303-api-1.0.0/${javax.validation.version}
-		</bundle>
+		<bundle>mvn:org.apache.servicemix.specs/org.apache.servicemix.specs.jsr303-api-1.0.0/${javax.validation.version}</bundle>
 		<bundle>mvn:org.apache.servicemix.specs/org.apache.servicemix.specs.stax-api-1.0/${javax.xml.stream.version}</bundle>
-		<bundle>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.commons-dbcp/${commons-dbcp.bundle.version}
-		</bundle>
-		<bundle>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.commons-pool/${commons-pool.bundle.version}
-		</bundle>
+		<bundle>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.commons-dbcp/${commons-dbcp.bundle.version}</bundle>
+		<bundle>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.commons-pool/${commons-pool.bundle.version}</bundle>
 
-		<bundle>mvn:org.eclipse.persistence/javax.persistence/${javax.persistence.version}</bundle>
-		<bundle>mvn:org.eclipse.persistence/org.eclipse.persistence.antlr/${eclipselink.version}</bundle>
-		<bundle>mvn:org.eclipse.persistence/org.eclipse.persistence.asm/${eclipselink.version}</bundle>
-		<bundle>mvn:org.eclipse.persistence/org.eclipse.persistence.core/${eclipselink.version}</bundle>
-		<bundle>mvn:org.eclipse.persistence/org.eclipse.persistence.jpa/${eclipselink.version}</bundle>
 		<bundle>mvn:com.h2database/h2/${h2.version}</bundle>
 		<bundle>mvn:org.hibernate/hibernate-validator/${hibernate-validator.version}</bundle>
-		<bundle>mvn:org.springframework/spring-aop/${spring.version}</bundle>
-		<bundle>mvn:org.springframework/spring-aspects/${spring.version}</bundle>
-		<bundle>mvn:org.springframework/spring-asm/${spring.version}</bundle>
-		<bundle>mvn:org.springframework/spring-beans/${spring.version}</bundle>
-		<bundle>mvn:org.springframework/spring-context/${spring.version}</bundle>
-		<bundle>mvn:org.springframework/spring-core/${spring.version}</bundle>
-		<bundle>mvn:org.springframework/spring-expression/${spring.version}</bundle>
-		<bundle>mvn:org.springframework/spring-jdbc/${spring.version}</bundle>
-		<bundle>mvn:org.springframework/spring-orm/${spring.version}</bundle>
-		<bundle>mvn:org.springframework/spring-tx/${spring.version}</bundle>
-		<bundle>mvn:net.sf.jacclog/net.sf.jacclog.repository.jpa/${project.version}</bundle>
+		<bundle>mvn:net.sf.jacclog/net.sf.jacclog.persistence.jpa/${project.version}</bundle>
 
 		<bundle>mvn:net.sf.jacclog/net.sf.jacclog.service.repository/${project.version}</bundle>
 		<bundle>mvn:net.sf.jacclog/net.sf.jacclog.service.repository.commands/${project.version}</bundle>
