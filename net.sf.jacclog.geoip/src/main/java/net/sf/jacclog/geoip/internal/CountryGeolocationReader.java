@@ -25,6 +25,7 @@ import java.util.zip.GZIPInputStream;
 
 import net.sf.jacclog.csv.CommaSeparatedValuesReader;
 import net.sf.jacclog.geoip.domain.Country;
+import net.sf.jacclog.geoip.util.IpNumCalculator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +33,8 @@ import org.slf4j.LoggerFactory;
 public class CountryGeolocationReader {
 
 	public static class Mapper {
+
+		private static final Logger LOG = LoggerFactory.getLogger(Mapper.class);
 
 		public static Country mapFieldsToCountry(final List<String> fields) {
 			if (fields == null) {
@@ -42,8 +45,29 @@ public class CountryGeolocationReader {
 				throw new IllegalArgumentException("There are not enough fields in the given list.");
 			}
 
-			final Country country = new Country(fields.get(4), fields.get(5));
+			validateIpAddressAndIpNumber(fields.get(0), fields.get(2));
+			validateIpAddressAndIpNumber(fields.get(1), fields.get(3));
+
+			final Country country = new Country(fields.get(0), fields.get(1), fields.get(2), fields.get(3),
+					fields.get(4), fields.get(5));
 			return country;
+		}
+
+		private static boolean validateIpAddressAndIpNumber(final String ipAddress, final String ipNumber) {
+			if (ipAddress == null) {
+				throw new IllegalArgumentException("Argument 'ipAddress' can not be null.");
+			}
+
+			if (ipNumber == null) {
+				throw new IllegalArgumentException("Argument 'ipNumber' can not be null.");
+			}
+
+			final long startIpNum = IpNumCalculator.calculate(ipAddress);
+			final boolean equals = Long.parseLong(ipNumber) == startIpNum;
+			if (!equals) {
+				LOG.warn("Calculated IP number '" + startIpNum + "' does not equals with read one '" + ipNumber + "'.");
+			}
+			return equals;
 		}
 
 	}
@@ -65,7 +89,7 @@ public class CountryGeolocationReader {
 
 		final List<List<String>> lines = CommaSeparatedValuesReader.read(reader);
 		for (final List<String> fields : lines) {
-			Country country = Mapper.mapFieldsToCountry(fields);
+			final Country country = Mapper.mapFieldsToCountry(fields);
 			// for (final String field : fields) {
 			//
 			// LOG.info("field: " + field);
