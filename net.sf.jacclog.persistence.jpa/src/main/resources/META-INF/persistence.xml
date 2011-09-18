@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  Copyright 2011 André Rouél
+  
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+    http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<persistence xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	version="2.0" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+	<persistence-unit name="jacclogPU" transaction-type="RESOURCE_LOCAL">
+		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+		<class>net.sf.jacclog.persistence.jpa.LogEntry</class>
+		<exclude-unlisted-classes>true</exclude-unlisted-classes>
+		<properties>
+
+			<!-- Default database login using H2 for EclipseLink's internal connection pool, change this to access your own database. -->
+			<property name="javax.persistence.jdbc.driver" value="org.h2.Driver" />
+			<property name="javax.persistence.jdbc.url" value="jdbc:h2:mem:provider;DB_CLOSE_DELAY=-1" />
+			<property name="javax.persistence.jdbc.password" value="" />
+			<property name="javax.persistence.jdbc.user" value="sa" />
+
+			<!-- value="drop-and-create-tables" to build a new database on each run; value="create-tables" creates new tables if needed; 
+				value="none" makes no changes to the database -->
+			<property name="eclipselink.ddl-generation" value="create-tables" />
+
+			<property name="eclipselink.target-database" value="org.eclipse.persistence.platform.database.H2Platform" />
+			<property name="eclipselink.ddl-generation.output-mode" value="database" />
+			<property name="eclipselink.weaving" value="static" />
+
+			<!-- Configure connection pool. -->
+			<property name="eclipselink.jdbc.connections.initial" value="1" />
+			<property name="eclipselink.jdbc.connections.min" value="64" />
+			<property name="eclipselink.jdbc.connections.max" value="64" />
+
+			<!-- Optimization #9 - statement caching -->
+			<property name="eclipselink.jdbc.cache-statements" value="true" />
+			<!-- Optimization #10 - batch writing -->
+			<property name="eclipselink.jdbc.batch-writing" value="JDBC" />
+			<property name="eclipselink.jdbc.batch-writing.size" value="1000" />
+
+			<!-- Optimization #11 - disable caching for batch insert (caching only improves reads, so only adds overhead for inserts) -->
+			<property name="eclipselink.cache.shared.default" value="false" />
+
+			<!-- Optimization #12 - turn logging off -->
+			<!-- property name="eclipselink.logging.level" value="FINE" / -->
+			<property name="eclipselink.logging.level" value="off" />
+			<property name="eclipselink.logging.thread" value="false" />
+			<property name="eclipselink.logging.session" value="false" />
+			<property name="eclipselink.logging.exceptions" value="false" />
+			<property name="eclipselink.logging.timestamp" value="false" />
+
+			<!-- Optimization #13 - close EntityManager on commit, to avoid cost of resume -->
+			<property name="eclipselink.persistence-context.close-on-commit" value="true" />
+
+			<!-- Optimization #14 - avoid auto flush cost on query execution -->
+			<property name="eclipselink.persistence-context.flush-mode" value="commit" />
+
+			<!-- Optimization #15 - avoid cost of persist on commit -->
+			<property name="eclipselink.persistence-context.persist-on-commit" value="true" />
+
+		</properties>
+	</persistence-unit>
+</persistence>
