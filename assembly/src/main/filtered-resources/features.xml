@@ -53,19 +53,10 @@
 		<bundle>mvn:org.eclipse.persistence/org.eclipse.persistence.asm/${eclipselink.version}</bundle>
 		<bundle>mvn:org.eclipse.persistence/org.eclipse.persistence.core/${eclipselink.version}</bundle>
 		<bundle>mvn:org.eclipse.persistence/org.eclipse.persistence.jpa/${eclipselink.version}</bundle>
+		<bundle>mvn:org.eclipse.persistence/org.eclipse.persistence.osgi/${eclipselink.version}</bundle>
 		<bundle>mvn:com.h2database/h2/${h2.version}</bundle>
 		<bundle>mvn:org.hibernate/hibernate-validator/${hibernate-validator.version}</bundle>
-		<bundle>mvn:org.springframework/spring-aop/${spring.version}</bundle>
-		<bundle>mvn:org.springframework/spring-aspects/${spring.version}</bundle>
-		<bundle>mvn:org.springframework/spring-asm/${spring.version}</bundle>
-		<bundle>mvn:org.springframework/spring-beans/${spring.version}</bundle>
-		<bundle>mvn:org.springframework/spring-context/${spring.version}</bundle>
-		<bundle>mvn:org.springframework/spring-core/${spring.version}</bundle>
-		<bundle>mvn:org.springframework/spring-expression/${spring.version}</bundle>
-		<bundle>mvn:org.springframework/spring-jdbc/${spring.version}</bundle>
-		<bundle>mvn:org.springframework/spring-orm/${spring.version}</bundle>
-		<bundle>mvn:org.springframework/spring-tx/${spring.version}</bundle>
-		<bundle>mvn:net.sf.jacclog/net.sf.jacclog.repository.jpa/${project.version}</bundle>
+		<bundle>mvn:net.sf.jacclog/net.sf.jacclog.persistence.jpa/${project.version}</bundle>
 
 		<bundle>mvn:net.sf.jacclog/net.sf.jacclog.service.repository/${project.version}</bundle>
 		<bundle>mvn:net.sf.jacclog/net.sf.jacclog.service.repository.commands/${project.version}</bundle>

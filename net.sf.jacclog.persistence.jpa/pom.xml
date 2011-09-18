@@ -114,8 +114,8 @@
 						<Private-Package>${bundle.namespace}.*</Private-Package>
 						<Import-Package>
 							javax.persistence;version="[2.0.0,3)",
-							org.eclipse.persistence.jpa;version="[2.3,3)",
-							org.eclipse.persistence.jpa.osgi;version="[2.3,3)",
+							org.eclipse.persistence.jpa;version="[${eclipselink.version},3)",
+							org.eclipse.persistence.jpa.osgi;version="[${eclipselink.version},3)",
 							org.h2;version="[1.3,2)",
 							*
 						</Import-Package>

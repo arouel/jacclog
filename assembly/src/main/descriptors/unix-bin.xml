@@ -145,32 +145,6 @@
 			<outputDirectory>/system</outputDirectory>
 			<unpack>false</unpack>
 			<useProjectArtifact>false</useProjectArtifact>
-			<outputFileNameMapping>org/springframework/${artifact.artifactId}/${artifact.baseVersion}/${artifact.artifactId}-${artifact.baseVersion}${dashClassifier?}.${artifact.extension}
-			</outputFileNameMapping>
-			<includes>
-				<include>org.springframework:spring-aop</include>
-				<include>org.springframework:spring-beans</include>
-				<include>org.springframework:spring-context</include>
-				<include>org.springframework:spring-core</include>
-				<include>org.springframework:spring-tx</include>
-			</includes>
-		</dependencySet>
-		<dependencySet>
-			<outputDirectory>/system</outputDirectory>
-			<unpack>false</unpack>
-			<useProjectArtifact>false</useProjectArtifact>
-			<outputFileNameMapping>org/springframework/osgi/${artifact.artifactId}/${artifact.baseVersion}/${artifact.artifactId}-${artifact.baseVersion}${dashClassifier?}.${artifact.extension}
-			</outputFileNameMapping>
-			<includes>
-				<include>org.springframework.osgi:spring-osgi-core</include>
-				<include>org.springframework.osgi:spring-osgi-extender</include>
-				<include>org.springframework.osgi:spring-osgi-io</include>
-			</includes>
-		</dependencySet>
-		<dependencySet>
-			<outputDirectory>/system</outputDirectory>
-			<unpack>false</unpack>
-			<useProjectArtifact>false</useProjectArtifact>
 			<outputFileNameMapping>org/apache/geronimo/specs/${artifact.artifactId}/${artifact.baseVersion}/${artifact.artifactId}-${artifact.baseVersion}${dashClassifier?}.${artifact.extension}
 			</outputFileNameMapping>
 			<includes>
