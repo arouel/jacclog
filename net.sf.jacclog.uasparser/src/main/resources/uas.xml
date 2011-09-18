@@ -3,7 +3,7 @@
 <uasdata>
 	<description>
 		<label>Data (format xml) for UASparser - http://user-agent-string.info/download/UASparser</label>
-		<version>20110913-01</version>
+		<version>20110918-01</version>
 		<checksum type="MD5">http://user-agent-string.info/rpc/get_data.php?format=xml&amp;md5=y</checksum>
 		<checksum type="SHA1">http://user-agent-string.info/rpc/get_data.php?format=xml&amp;sha1=y</checksum>
 	</description>
@@ -5440,6 +5440,16 @@
 				<bot_info_url>/list-of-ua/bot-detail?bot=SEOENGBot</bot_info_url>
 			</robot>
 			<robot>
+				<id>6506</id>
+				<useragent><![CDATA[SEOENGWorldBot/1.0 (+http://www.seoengine.com/seoengbot.htm)]]></useragent>
+				<family>SEOENGBot</family>
+				<name>SEOENGBot/1.0</name>
+				<company><![CDATA[SEO Engine]]></company>
+				<url_company><![CDATA[http://www.seoengine.com/]]></url_company>
+				<icon>bot_SEOENGBot.png</icon>
+				<bot_info_url>/list-of-ua/bot-detail?bot=SEOENGBot</bot_info_url>
+			</robot>
+			<robot>
 				<id>6229</id>
 				<useragent><![CDATA[Setooz/Nutch-1.0 (http://www.setooz.com)]]></useragent>
 				<family>Setoozbot</family>
@@ -6398,6 +6408,16 @@
 				<url_company><![CDATA[http://www.mobile-more.com/]]></url_company>
 				<icon>bot.png</icon>
 				<bot_info_url>/list-of-ua/bot-detail?bot=thumbshots-de-Bot</bot_info_url>
+			</robot>
+			<robot>
+				<id>6578</id>
+				<useragent><![CDATA[Mozilla/5.0 (compatible; Thumbshots.ru; +http://thumbshots.ru/bot) Firefox/3]]></useragent>
+				<family>Thumbshots.ru</family>
+				<name>Thumbshots.ru</name>
+				<company><![CDATA[Sonorth Technologies]]></company>
+				<url_company><![CDATA[http://www.sonorth.com/tech/]]></url_company>
+				<icon>bot.png</icon>
+				<bot_info_url>/list-of-ua/bot-detail?bot=Thumbshots.ru</bot_info_url>
 			</robot>
 			<robot>
 				<id>2003</id>
