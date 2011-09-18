@@ -21,8 +21,16 @@
 	<feature name="commons-lang" version="${commons-lang.bundle.version}">
 		<bundle>mvn:org.apache.commons/commons-lang3/${commons-lang.bundle.version}</bundle>
 	</feature>
-	<feature name="jsr166y" version="${jsr166y.version}">
-		<bundle>mvn:org.codehaus.jsr166-mirror/jsr166y/${jsr166y.version}</bundle>
+	<feature name="eclipselink" version="${eclipselink.version}">
+		<feature version="${javax.persistence.version}">javax.persistence</feature>
+		<bundle>mvn:org.eclipse.persistence/org.eclipse.persistence.antlr/${eclipselink.version}</bundle>
+		<bundle>mvn:org.eclipse.persistence/org.eclipse.persistence.asm/${eclipselink.version}</bundle>
+		<bundle>mvn:org.eclipse.persistence/org.eclipse.persistence.core/${eclipselink.version}</bundle>
+		<bundle>mvn:org.eclipse.persistence/org.eclipse.persistence.jpa/${eclipselink.version}</bundle>
+		<bundle>mvn:org.eclipse.persistence/org.eclipse.persistence.osgi/${eclipselink.version}</bundle>
+	</feature>
+	<feature name="javax.persistence" version="${javax.persistence.version}">
+		<bundle>mvn:org.eclipse.persistence/javax.persistence/${javax.persistence.version}</bundle>
 	</feature>
 	<feature name="jacclog" version="${project.version}">
 		<feature version="${commons-lang.bundle.version}">commons-lang</feature>
@@ -33,20 +41,15 @@
 		<bundle>mvn:net.sf.jacclog/net.sf.jacclog.uasparser/${project.version}</bundle>
 		<bundle>mvn:net.sf.jacclog/net.sf.jacclog.util/${project.version}</bundle>
 
-		<bundle>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.aopalliance/${aopalliance.bundle.version}
-		</bundle>
+		<bundle>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.aopalliance/${aopalliance.bundle.version}</bundle>
 		<bundle>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.aspectj/${aspectj.bundle.version}</bundle>
 		<bundle>mvn:javax.transaction/com.springsource.javax.transaction/${javax.transaction.version}</bundle>
-		<bundle>mvn:org.apache.servicemix.specs/org.apache.servicemix.specs.activation-api-1.1/${javax.activation.version}
-		</bundle>
+		<bundle>mvn:org.apache.servicemix.specs/org.apache.servicemix.specs.activation-api-1.1/${javax.activation.version}</bundle>
 		<bundle>mvn:org.apache.servicemix.specs/org.apache.servicemix.specs.jaxb-api-2.2/${javax.xml.bind.version}</bundle>
-		<bundle>mvn:org.apache.servicemix.specs/org.apache.servicemix.specs.jsr303-api-1.0.0/${javax.validation.version}
-		</bundle>
+		<bundle>mvn:org.apache.servicemix.specs/org.apache.servicemix.specs.jsr303-api-1.0.0/${javax.validation.version}</bundle>
 		<bundle>mvn:org.apache.servicemix.specs/org.apache.servicemix.specs.stax-api-1.0/${javax.xml.stream.version}</bundle>
-		<bundle>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.commons-dbcp/${commons-dbcp.bundle.version}
-		</bundle>
-		<bundle>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.commons-pool/${commons-pool.bundle.version}
-		</bundle>
+		<bundle>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.commons-dbcp/${commons-dbcp.bundle.version}</bundle>
+		<bundle>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.commons-pool/${commons-pool.bundle.version}</bundle>
 
 		<bundle>mvn:org.eclipse.persistence/javax.persistence/${javax.persistence.version}</bundle>
 		<bundle>mvn:org.eclipse.persistence/org.eclipse.persistence.antlr/${eclipselink.version}</bundle>
@@ -67,5 +70,8 @@
 
 		<bundle>mvn:net.sf.jacclog/net.sf.jacclog.service.analyzer/${project.version}</bundle>
 		<bundle>mvn:net.sf.jacclog/net.sf.jacclog.service.analyzer.commands/${project.version}</bundle>
+	</feature>
+	<feature name="jsr166y" version="${jsr166y.version}">
+		<bundle>mvn:org.codehaus.jsr166-mirror/jsr166y/${jsr166y.version}</bundle>
 	</feature>
 </features>
