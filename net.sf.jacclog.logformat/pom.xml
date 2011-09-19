@@ -30,7 +30,6 @@
 	</properties>
 
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>net.sf.jacclog</groupId>
 	<artifactId>net.sf.jacclog.logformat</artifactId>
 
 	<name>Jacclog :: LogFormat</name>

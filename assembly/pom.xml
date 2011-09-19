@@ -25,7 +25,6 @@
 		<version>0.1.0-SNAPSHOT</version>
 	</parent>
 
-	<groupId>net.sf.jacclog</groupId>
 	<artifactId>jacclog</artifactId>
 	<packaging>pom</packaging>
 	<name>Jacclog :: Assembly</name>
