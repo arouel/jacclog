@@ -166,7 +166,6 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-toolchains-plugin</artifactId>
-						<version>1.0</version>
 						<executions>
 							<execution>
 								<phase>validate</phase>
@@ -187,7 +186,6 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-gpg-plugin</artifactId>
-						<version>1.1</version>
 						<executions>
 							<execution>
 								<id>sign-artifacts</id>
@@ -207,6 +205,16 @@
 
 		<pluginManagement>
 			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-toolchains-plugin</artifactId>
+					<version>1.0</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-gpg-plugin</artifactId>
+					<version>1.4</version>
+				</plugin>
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>build-helper-maven-plugin</artifactId>
