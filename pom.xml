@@ -294,6 +294,11 @@
 					<version>2.5.1</version>
 				</plugin>
 				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-changelog-plugin</artifactId>
+					<version>2.2</version>
+				</plugin>
+				<plugin>
 					<groupId>org.antlr</groupId>
 					<artifactId>antlr3-maven-plugin</artifactId>
 					<version>3.4</version>
@@ -305,6 +310,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-site-plugin</artifactId>
+				<inherited>false</inherited>
 				<configuration>
 					<reportPlugins>
 						<plugin>
@@ -326,6 +332,17 @@
 								<dependencyDetailsEnabled>true</dependencyDetailsEnabled>
 								<dependencyLocationsEnabled>true</dependencyLocationsEnabled>
 							</configuration>
+						</plugin>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-changelog-plugin</artifactId>
+							<configuration>
+								<dateFormat>yyyy-MM-dd hh:mm:ss</dateFormat>
+							</configuration>
+							<reports>
+								<report>changelog</report>
+								<report>file-activity</report>
+							</reports>
 						</plugin>
 					</reportPlugins>
 				</configuration>
