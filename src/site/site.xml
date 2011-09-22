@@ -54,7 +54,7 @@
 			<item name="LogFormat" href="net.sf.jacclog.logformat/index.html" />
 			<item name="UASparser" href="net.sf.jacclog.uasparser/index.html" />
 			<item name="Utilities" href="net.sf.jacclog.util/index.html" />
-			<item name="Repository JPA" href="net.sf.jacclog.repository.jpa/index.html" />
+			<item name="Persistence JPA" href="net.sf.jacclog.persistence.jpa/index.html" />
 			<item name="Service Analyzer" href="net.sf.jacclog.service.analyzer/index.html" />
 			<item name="Service Importer" href="net.sf.jacclog.service.importer/index.html" />
 			<item name="Service Importer Commands" href="net.sf.jacclog.service.importer.commands/index.html" />
