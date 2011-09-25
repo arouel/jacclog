@@ -123,6 +123,8 @@ public class IpAddressTranslator {
 	 * @return Numerical representation of an IP address as <code>long</code>
 	 * @throws IllegalArgumentException
 	 *             If the given argument is <code>null</code>
+	 * @throws IllegalArgumentException
+	 *             If the given argument is not a valid IP address (IPv4)
 	 */
 	public static long toLong(final Inet4Address ipAddress) {
 		if (ipAddress == null) {
@@ -165,7 +167,7 @@ public class IpAddressTranslator {
 	 *            IP address (IPv4) as <code>String</code>
 	 * @return Numerical representation of an IP address as <code>long</code>
 	 * @throws IllegalArgumentException
-	 *             If the given argument is null
+	 *             If the given argument is <code>null</code>
 	 * @throws IllegalArgumentException
 	 *             If the given argument is not a valid IP address (IPv4)
 	 */
