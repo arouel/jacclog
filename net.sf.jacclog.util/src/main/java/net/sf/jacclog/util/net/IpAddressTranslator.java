@@ -40,10 +40,14 @@ public class IpAddressTranslator {
 	 * @param ipAddress
 	 *            Four dimensions byte array representation of an IP address
 	 * @return IP address as <code>Inet4Address</code>
-	 * @throws UnknownHostException
-	 *             Thrown to indicate that the IP address of a host could not be determined.
+	 * @throws IllegalArgumentException
+	 *             If the given argument is <code>null</code>
+	 * @throws IllegalArgumentException
+	 *             If the given byte array does not have four entries
+	 * @throws InvalidIpAddressException
+	 *             If the IP address is not valid.
 	 */
-	public static Inet4Address toInet4Address(final byte[] ipAddress) throws UnknownHostException {
+	public static Inet4Address toInet4Address(final byte[] ipAddress) {
 		if (ipAddress == null) {
 			throw new IllegalArgumentException("Argument 'ipAddress' can not be null.");
 		}
@@ -52,7 +56,11 @@ public class IpAddressTranslator {
 			throw new IllegalArgumentException("An IP address as byte array needs 4 entries.");
 		}
 
-		return (Inet4Address) InetAddress.getByAddress(ipAddress);
+		try {
+			return (Inet4Address) InetAddress.getByAddress(ipAddress);
+		} catch (final UnknownHostException e) {
+			throw new InvalidIpAddressException("The given IP address is not valid: " + e.getLocalizedMessage(), e);
+		}
 	}
 
 	/**
@@ -63,10 +71,12 @@ public class IpAddressTranslator {
 	 * @return IP address as <code>Inet4Address</code>
 	 * @throws IllegalArgumentException
 	 *             If the given argument is smaller than 0
-	 * @throws UnknownHostException
+	 * @throws IllegalArgumentException
+	 *             If the given argument is greater than 4294967295
+	 * @throws InvalidIpAddressException
 	 *             Thrown to indicate that the IP address of a host could not be determined.
 	 */
-	public static Inet4Address toInet4Address(final long ipAddress) throws UnknownHostException {
+	public static Inet4Address toInet4Address(final long ipAddress) {
 		if (ipAddress < 0L) {
 			throw new IllegalArgumentException("Argument 'ipAddress' can not be smaller than 0.");
 		}
@@ -86,6 +96,23 @@ public class IpAddressTranslator {
 		(byte) ((ipAddress & 0x000000FF) >> 0) };
 
 		return toInet4Address(bytes);
+	}
+
+	/**
+	 * Translates an IPv4 address from its textual representation to <code>Inet4Address</code>.
+	 * 
+	 * @param ipAddress
+	 *            IP address (IPv4) as <code>String</code>
+	 * @return IP address as <code>Inet4Address</code>
+	 * @throws IllegalArgumentException
+	 *             If the given argument is <code>null</code>
+	 * @throws IllegalArgumentException
+	 *             If the given argument is not a valid IP address (IPv4)
+	 * @throws InvalidIpAddressException
+	 *             Thrown to indicate that the IP address of a host could not be determined.
+	 */
+	public static Inet4Address toInet4Address(final String ipAddress) {
+		return toInet4Address(toLong(ipAddress));
 	}
 
 	/**

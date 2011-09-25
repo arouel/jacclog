@@ -17,8 +17,8 @@ public class IpAddressTranslatorTest {
 		} catch (final IllegalArgumentException e) {
 			Assert.assertEquals("Argument 'ipAddress' can not be null.", e.getMessage());
 			return;
-		} catch (final UnknownHostException e) {
-			Assert.fail("UnknownHostException should not be thrown.");
+		} catch (final InvalidIpAddressException e) {
+			Assert.fail("InvalidIpAddressException should not be thrown.");
 		}
 		Assert.fail("An IllegalArgumentException was expected but was not thrown.");
 	}
@@ -30,8 +30,8 @@ public class IpAddressTranslatorTest {
 		} catch (final IllegalArgumentException e) {
 			Assert.assertEquals("An IP address as byte array needs 4 entries.", e.getMessage());
 			return;
-		} catch (final UnknownHostException e) {
-			Assert.fail("UnknownHostException should not be thrown.");
+		} catch (final InvalidIpAddressException e) {
+			Assert.fail("InvalidIpAddressException should not be thrown.");
 		}
 		Assert.fail("An IllegalArgumentException was expected but was not thrown.");
 	}
@@ -69,8 +69,8 @@ public class IpAddressTranslatorTest {
 		} catch (final IllegalArgumentException e) {
 			Assert.assertEquals("Argument 'ipAddress' can not be smaller than 0.", e.getMessage());
 			return;
-		} catch (final UnknownHostException e) {
-			Assert.fail("UnknownHostException should not be thrown.");
+		} catch (final InvalidIpAddressException e) {
+			Assert.fail("InvalidIpAddressException should not be thrown.");
 		}
 		Assert.fail("An IllegalArgumentException was expected but was not thrown.");
 	}
@@ -82,14 +82,14 @@ public class IpAddressTranslatorTest {
 		} catch (final IllegalArgumentException e) {
 			Assert.assertEquals("Argument 'ipAddress' can not be greater than 4294967295.", e.getMessage());
 			return;
-		} catch (final UnknownHostException e) {
-			Assert.fail("UnknownHostException should not be thrown.");
+		} catch (final InvalidIpAddressException e) {
+			Assert.fail("InvalidIpAddressException should not be thrown.");
 		}
 		Assert.fail("An IllegalArgumentException was expected but was not thrown.");
 	}
 
 	@Test
-	public void testLongToInetAddress1() throws UnknownHostException {
+	public void testLongToInetAddress1() {
 		final Inet4Address actual = IpAddressTranslator.toInet4Address(new byte[] { (byte) 255, (byte) 255, (byte) 255,
 				(byte) 255 });
 		final String expected = "255.255.255.255";
@@ -97,14 +97,14 @@ public class IpAddressTranslatorTest {
 	}
 
 	@Test
-	public void testLongToInetAddress2() throws UnknownHostException {
+	public void testLongToInetAddress2() {
 		final Inet4Address actual = IpAddressTranslator.toInet4Address(0L);
 		final String expected = "0.0.0.0";
 		Assert.assertEquals(expected, actual.getHostAddress());
 	}
 
 	@Test
-	public void testLongToInetAddress3() throws UnknownHostException {
+	public void testLongToInetAddress3() {
 		final long ipnum = 16777216L * 230 + 65536L * 12 + 256 * 123 + 245;
 		final Inet4Address actual = IpAddressTranslator.toInet4Address(ipnum);
 		final String expected = "230.12.123.245";
@@ -151,6 +151,20 @@ public class IpAddressTranslatorTest {
 			return;
 		}
 		Assert.fail("An IllegalArgumentException was expected but was not thrown.");
+	}
+
+	@Test
+	public void testTextToInet4Address1() {
+		final String ipAddress = "230.12.123.245";
+		final Inet4Address actual = IpAddressTranslator.toInet4Address(ipAddress);
+		Assert.assertEquals(ipAddress, actual.getHostAddress());
+	}
+
+	@Test
+	public void testTextToInet4Address2() {
+		final String ipAddress = "255.255.255.255";
+		final Inet4Address actual = IpAddressTranslator.toInet4Address(ipAddress);
+		Assert.assertEquals(ipAddress, actual.getHostAddress());
 	}
 
 	@Test
