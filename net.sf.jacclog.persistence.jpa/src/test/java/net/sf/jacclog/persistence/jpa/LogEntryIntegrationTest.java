@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import net.sf.jacclog.persistence.jpa.entity.LogEntry;
 import net.sf.jacclog.persistence.jpa.internal.LogEntryRepository;
 
 import org.eclipse.persistence.config.TargetServer;

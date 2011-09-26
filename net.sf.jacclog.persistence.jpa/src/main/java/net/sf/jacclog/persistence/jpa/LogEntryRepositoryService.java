@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.sf.jacclog.persistence.jpa.entity.LogEntry;
 import net.sf.jacclog.persistence.jpa.internal.LogEntryMapper;
 import net.sf.jacclog.persistence.jpa.internal.LogEntryRepository;
 

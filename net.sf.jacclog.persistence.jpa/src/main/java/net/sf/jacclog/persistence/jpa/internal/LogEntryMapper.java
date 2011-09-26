@@ -18,7 +18,7 @@ package net.sf.jacclog.persistence.jpa.internal;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.sf.jacclog.persistence.jpa.LogEntry;
+import net.sf.jacclog.persistence.jpa.entity.LogEntry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

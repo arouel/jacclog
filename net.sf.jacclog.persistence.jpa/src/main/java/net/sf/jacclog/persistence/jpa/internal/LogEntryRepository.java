@@ -25,7 +25,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.TemporalType;
 
-import net.sf.jacclog.persistence.jpa.LogEntry;
+import net.sf.jacclog.persistence.jpa.entity.LogEntry;
 
 import org.joda.time.Interval;
 import org.slf4j.Logger;
