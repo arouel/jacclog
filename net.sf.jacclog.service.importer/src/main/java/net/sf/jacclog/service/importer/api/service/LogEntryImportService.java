@@ -19,7 +19,7 @@ import java.util.Collection;
 
 import net.sf.jacclog.service.importer.api.LogFile;
 import net.sf.jacclog.service.importer.api.queue.LogEntryQueue;
-import net.sf.jacclog.service.repository.LogEntry;
+import net.sf.jacclog.service.repository.domain.LogEntry;
 
 public interface LogEntryImportService<E extends LogEntry> {
 

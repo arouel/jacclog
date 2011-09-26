@@ -25,7 +25,7 @@ import net.sf.jacclog.service.importer.api.LogFile;
 import net.sf.jacclog.service.importer.api.service.LogEntryImportService;
 import net.sf.jacclog.service.importer.internal.queue.LogFileQueue;
 import net.sf.jacclog.service.importer.internal.queue.LogFileQueueImporterObserver;
-import net.sf.jacclog.service.repository.LogEntry;
+import net.sf.jacclog.service.repository.domain.LogEntry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

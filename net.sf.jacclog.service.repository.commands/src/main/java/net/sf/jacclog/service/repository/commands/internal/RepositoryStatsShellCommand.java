@@ -15,8 +15,8 @@
  ******************************************************************************/
 package net.sf.jacclog.service.repository.commands.internal;
 
-import net.sf.jacclog.service.repository.LogEntry;
 import net.sf.jacclog.service.repository.LogEntryRepositoryService;
+import net.sf.jacclog.service.repository.domain.LogEntry;
 
 import org.apache.felix.gogo.commands.Command;
 import org.apache.karaf.shell.console.OsgiCommandSupport;

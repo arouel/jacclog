@@ -28,12 +28,12 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
 
-import net.sf.jacclog.service.repository.HttpRequestMethod;
-import net.sf.jacclog.service.repository.HttpStatus;
-import net.sf.jacclog.service.repository.MimeType;
+import net.sf.jacclog.service.repository.domain.HttpRequestMethod;
+import net.sf.jacclog.service.repository.domain.HttpStatus;
+import net.sf.jacclog.service.repository.domain.MimeType;
 
 @Entity
-public class LogEntry implements net.sf.jacclog.service.repository.LogEntry {
+public class LogEntry implements net.sf.jacclog.service.repository.domain.LogEntry {
 
 	@Enumerated(EnumType.STRING)
 	private MimeType contentType;

@@ -29,9 +29,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.sf.jacclog.logformat.LogFormat;
-import net.sf.jacclog.service.repository.HttpRequestMethod;
-import net.sf.jacclog.service.repository.HttpStatus;
-import net.sf.jacclog.service.repository.LogEntry;
+import net.sf.jacclog.service.repository.domain.HttpRequestMethod;
+import net.sf.jacclog.service.repository.domain.HttpStatus;
+import net.sf.jacclog.service.repository.domain.LogEntry;
 
 /**
  * Test for NCSA Log parser.

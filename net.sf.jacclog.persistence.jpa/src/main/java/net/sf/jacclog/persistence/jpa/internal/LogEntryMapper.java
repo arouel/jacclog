@@ -34,7 +34,7 @@ public class LogEntryMapper {
 	 * @param entry
 	 * @return a log entry
 	 */
-	private static LogEntry mapToLogEntry(final net.sf.jacclog.service.repository.LogEntry entry) {
+	private static LogEntry mapToLogEntry(final net.sf.jacclog.service.repository.domain.LogEntry entry) {
 		LogEntry result;
 		if (entry instanceof LogEntry) {
 			result = (LogEntry) entry;
@@ -66,8 +66,8 @@ public class LogEntryMapper {
 	 * @param list
 	 * @return a list with log entries
 	 */
-	public static List<net.sf.jacclog.service.repository.LogEntry> translateList(final List<LogEntry> list) {
-		final List<net.sf.jacclog.service.repository.LogEntry> entries = new ArrayList<net.sf.jacclog.service.repository.LogEntry>(
+	public static List<net.sf.jacclog.service.repository.domain.LogEntry> translateList(final List<LogEntry> list) {
+		final List<net.sf.jacclog.service.repository.domain.LogEntry> entries = new ArrayList<net.sf.jacclog.service.repository.domain.LogEntry>(
 				list);
 		return entries;
 	}
@@ -79,7 +79,7 @@ public class LogEntryMapper {
 	 * @param entry
 	 * @return
 	 */
-	public static LogEntry translateLogEntry(final net.sf.jacclog.service.repository.LogEntry entry) {
+	public static LogEntry translateLogEntry(final net.sf.jacclog.service.repository.domain.LogEntry entry) {
 		LogEntry logEntry;
 		if (!(entry instanceof LogEntry)) {
 			LOGGER.debug("I've found an alien log entry. Translating...");

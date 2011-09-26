@@ -15,7 +15,7 @@
  ******************************************************************************/
 package net.sf.jacclog.service.importer.api.parser;
 
-import net.sf.jacclog.service.repository.LogEntry;
+import net.sf.jacclog.service.repository.domain.LogEntry;
 
 public interface LogParser<E extends LogEntry> {
 

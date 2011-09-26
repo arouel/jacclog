@@ -22,8 +22,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import net.sf.jacclog.service.analyzer.LogEntryAnalysisResult;
 import net.sf.jacclog.service.analyzer.LogEntryAnalyzer;
-import net.sf.jacclog.service.repository.LogEntry;
 import net.sf.jacclog.service.repository.LogEntryRepositoryService;
+import net.sf.jacclog.service.repository.domain.LogEntry;
 import net.sf.jacclog.uasparser.UserAgentInfo;
 
 import org.apache.felix.gogo.commands.Command;

@@ -26,7 +26,7 @@ import net.sf.jacclog.persistence.jpa.internal.LogEntryRepository;
 import org.joda.time.Interval;
 
 public class LogEntryRepositoryService implements
-		net.sf.jacclog.service.repository.LogEntryRepositoryService<net.sf.jacclog.service.repository.LogEntry> {
+		net.sf.jacclog.service.repository.LogEntryRepositoryService<net.sf.jacclog.service.repository.domain.LogEntry> {
 
 	private final LogEntryRepository repository;
 
@@ -48,21 +48,21 @@ public class LogEntryRepositoryService implements
 	}
 
 	@Override
-	public void create(final Collection<net.sf.jacclog.service.repository.LogEntry> entries) {
+	public void create(final Collection<net.sf.jacclog.service.repository.domain.LogEntry> entries) {
 		final List<LogEntry> list = new LinkedList<LogEntry>();
-		for (final net.sf.jacclog.service.repository.LogEntry entry : entries) {
+		for (final net.sf.jacclog.service.repository.domain.LogEntry entry : entries) {
 			list.add(LogEntryMapper.translateLogEntry(entry));
 		}
 		repository.persist(list);
 	}
 
 	@Override
-	public void create(final net.sf.jacclog.service.repository.LogEntry entry) {
+	public void create(final net.sf.jacclog.service.repository.domain.LogEntry entry) {
 		repository.persist(LogEntryMapper.translateLogEntry(entry));
 	}
 
 	@Override
-	public void delete(final net.sf.jacclog.service.repository.LogEntry entry) {
+	public void delete(final net.sf.jacclog.service.repository.domain.LogEntry entry) {
 		repository.remove(LogEntryMapper.translateLogEntry(entry));
 	}
 
@@ -71,33 +71,33 @@ public class LogEntryRepositoryService implements
 	}
 
 	@Override
-	public List<net.sf.jacclog.service.repository.LogEntry> read(final int startPosition, final int maxResults) {
+	public List<net.sf.jacclog.service.repository.domain.LogEntry> read(final int startPosition, final int maxResults) {
 		return LogEntryMapper.translateList(repository.find(startPosition, maxResults));
 	}
 
 	@Override
-	public List<net.sf.jacclog.service.repository.LogEntry> read(final Interval interval) {
+	public List<net.sf.jacclog.service.repository.domain.LogEntry> read(final Interval interval) {
 		return LogEntryMapper.translateList(repository.find(interval));
 	}
 
 	@Override
-	public List<net.sf.jacclog.service.repository.LogEntry> read(final Interval interval, final int startPosition,
+	public List<net.sf.jacclog.service.repository.domain.LogEntry> read(final Interval interval, final int startPosition,
 			final int maxResults) {
 		return LogEntryMapper.translateList(repository.find(interval, startPosition, maxResults));
 	}
 
 	@Override
-	public net.sf.jacclog.service.repository.LogEntry read(final Long id) {
+	public net.sf.jacclog.service.repository.domain.LogEntry read(final Long id) {
 		return repository.find(id);
 	}
 
 	@Override
-	public List<net.sf.jacclog.service.repository.LogEntry> readAll() {
+	public List<net.sf.jacclog.service.repository.domain.LogEntry> readAll() {
 		return LogEntryMapper.translateList(repository.findAll());
 	}
 
 	@Override
-	public net.sf.jacclog.service.repository.LogEntry update(final net.sf.jacclog.service.repository.LogEntry entry) {
+	public net.sf.jacclog.service.repository.domain.LogEntry update(final net.sf.jacclog.service.repository.domain.LogEntry entry) {
 		return repository.merge(LogEntryMapper.translateLogEntry(entry));
 	}
 

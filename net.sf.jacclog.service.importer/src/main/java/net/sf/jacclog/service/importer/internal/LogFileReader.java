@@ -31,7 +31,7 @@ import net.sf.jacclog.service.importer.api.LogFile;
 import net.sf.jacclog.service.importer.api.parser.LogParser;
 import net.sf.jacclog.service.importer.internal.parser.MappingException;
 import net.sf.jacclog.service.importer.internal.parser.NcsaLogParser;
-import net.sf.jacclog.service.repository.LogEntry;
+import net.sf.jacclog.service.repository.domain.LogEntry;
 
 public class LogFileReader implements net.sf.jacclog.service.importer.api.reader.LogReader<LogEntry> {
 

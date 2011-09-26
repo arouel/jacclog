@@ -25,9 +25,9 @@ import java.util.Random;
 
 import net.sf.jacclog.persistence.jpa.entity.LogEntry;
 import net.sf.jacclog.persistence.jpa.internal.LogEntryRepository;
-import net.sf.jacclog.service.repository.HttpRequestMethod;
-import net.sf.jacclog.service.repository.HttpStatus;
-import net.sf.jacclog.service.repository.MimeType;
+import net.sf.jacclog.service.repository.domain.HttpRequestMethod;
+import net.sf.jacclog.service.repository.domain.HttpStatus;
+import net.sf.jacclog.service.repository.domain.MimeType;
 
 public class LogEntryDataOnDemand {
 

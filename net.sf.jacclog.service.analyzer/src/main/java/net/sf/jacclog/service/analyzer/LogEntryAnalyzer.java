@@ -17,7 +17,7 @@ package net.sf.jacclog.service.analyzer;
 
 import java.util.List;
 
-import net.sf.jacclog.service.repository.LogEntry;
+import net.sf.jacclog.service.repository.domain.LogEntry;
 
 import org.joda.time.Interval;
 

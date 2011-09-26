@@ -21,7 +21,7 @@ import java.util.List;
 import net.sf.jacclog.logformat.LogFormat;
 import net.sf.jacclog.service.importer.api.parser.LogEntryPostProcessor;
 import net.sf.jacclog.service.importer.api.parser.LogParser;
-import net.sf.jacclog.service.repository.LogEntry;
+import net.sf.jacclog.service.repository.domain.LogEntry;
 
 /**
  * This is a NCSA-conform log parser.<br>

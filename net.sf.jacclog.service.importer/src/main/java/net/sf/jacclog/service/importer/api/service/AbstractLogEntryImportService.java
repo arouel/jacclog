@@ -21,8 +21,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import net.sf.jacclog.service.importer.api.LogFile;
 import net.sf.jacclog.service.importer.internal.queue.LogEntryQueue;
-import net.sf.jacclog.service.repository.LogEntry;
 import net.sf.jacclog.service.repository.LogEntryRepositoryService;
+import net.sf.jacclog.service.repository.domain.LogEntry;
 import net.sf.jacclog.util.observer.CurrentElementCounter;
 import net.sf.jacclog.util.observer.TotalElementCounter;
 

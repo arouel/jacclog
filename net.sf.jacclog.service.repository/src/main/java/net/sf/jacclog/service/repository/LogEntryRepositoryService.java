@@ -18,6 +18,8 @@ package net.sf.jacclog.service.repository;
 import java.util.Collection;
 import java.util.List;
 
+import net.sf.jacclog.service.repository.domain.LogEntry;
+
 import org.joda.time.Interval;
 
 public interface LogEntryRepositoryService<E extends LogEntry> {

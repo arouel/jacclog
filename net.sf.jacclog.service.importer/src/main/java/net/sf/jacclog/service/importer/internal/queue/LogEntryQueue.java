@@ -15,7 +15,7 @@
  ******************************************************************************/
 package net.sf.jacclog.service.importer.internal.queue;
 
-import net.sf.jacclog.service.repository.LogEntry;
+import net.sf.jacclog.service.repository.domain.LogEntry;
 import net.sf.jacclog.util.observer.BlockingQueueObserver;
 import net.sf.jacclog.util.observer.CurrentElementCounter;
 import net.sf.jacclog.util.observer.TotalElementCounter;

@@ -22,8 +22,8 @@ import jsr166y.ForkJoinPool;
 import net.sf.jacclog.service.analyzer.LogEntryAnalysisResult;
 import net.sf.jacclog.service.analyzer.internal.task.AnalysisByEntriesTask;
 import net.sf.jacclog.service.analyzer.internal.task.AnalysisByIntervalTask;
-import net.sf.jacclog.service.repository.LogEntry;
 import net.sf.jacclog.service.repository.LogEntryRepositoryService;
+import net.sf.jacclog.service.repository.domain.LogEntry;
 import net.sf.jacclog.uasparser.UserAgentStringParser;
 
 import org.joda.time.Interval;

@@ -19,8 +19,8 @@ import java.util.List;
 
 import jsr166y.RecursiveAction;
 import net.sf.jacclog.service.analyzer.LogEntryAnalysisResult;
-import net.sf.jacclog.service.repository.LogEntry;
 import net.sf.jacclog.service.repository.LogEntryRepositoryService;
+import net.sf.jacclog.service.repository.domain.LogEntry;
 import net.sf.jacclog.uasparser.UserAgentStringParser;
 
 import org.joda.time.Interval;

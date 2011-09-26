@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import net.sf.jacclog.service.importer.api.LogFile;
 import net.sf.jacclog.service.importer.api.service.LogEntryImportService;
-import net.sf.jacclog.service.repository.LogEntry;
+import net.sf.jacclog.service.repository.domain.LogEntry;
 import net.sf.jacclog.util.observer.BlockingQueueObserver;
 
 public class LogFileQueueImporterObserver implements BlockingQueueObserver<LogFile> {

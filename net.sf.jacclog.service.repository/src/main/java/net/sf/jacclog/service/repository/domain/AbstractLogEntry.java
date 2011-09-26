@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package net.sf.jacclog.service.repository;
+package net.sf.jacclog.service.repository.domain;
 
 import java.util.Date;
+
 
 public abstract class AbstractLogEntry implements LogEntry {
 

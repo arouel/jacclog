@@ -39,10 +39,10 @@ import net.sf.jacclog.logformat.field.RequestFirstLineField;
 import net.sf.jacclog.logformat.field.RequestTimeField;
 import net.sf.jacclog.logformat.field.ResponseInBytesClfField;
 import net.sf.jacclog.logformat.field.ResponseInBytesField;
-import net.sf.jacclog.service.repository.HttpRequestMethod;
-import net.sf.jacclog.service.repository.HttpStatus;
-import net.sf.jacclog.service.repository.LogEntry;
-import net.sf.jacclog.service.repository.NonPersistentLogEntry;
+import net.sf.jacclog.service.repository.domain.HttpRequestMethod;
+import net.sf.jacclog.service.repository.domain.HttpStatus;
+import net.sf.jacclog.service.repository.domain.LogEntry;
+import net.sf.jacclog.service.repository.domain.NonPersistentLogEntry;
 
 public final class TokensToLogEntryMapper {
 

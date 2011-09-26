@@ -17,7 +17,7 @@ package net.sf.jacclog.service.importer.api.reader;
 
 import java.util.List;
 
-import net.sf.jacclog.service.repository.LogEntry;
+import net.sf.jacclog.service.repository.domain.LogEntry;
 
 public interface LogReader<E extends LogEntry> {
 

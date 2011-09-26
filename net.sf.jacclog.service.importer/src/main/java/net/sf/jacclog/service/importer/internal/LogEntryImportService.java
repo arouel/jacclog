@@ -24,8 +24,8 @@ import net.sf.jacclog.service.importer.api.service.AbstractLogEntryImportService
 import net.sf.jacclog.service.importer.internal.parser.MappingException;
 import net.sf.jacclog.service.importer.internal.queue.LogEntryQueue;
 import net.sf.jacclog.service.importer.internal.queue.LogEntryQueuePersisterObserver;
-import net.sf.jacclog.service.repository.LogEntry;
 import net.sf.jacclog.service.repository.LogEntryRepositoryService;
+import net.sf.jacclog.service.repository.domain.LogEntry;
 
 public class LogEntryImportService extends AbstractLogEntryImportService {
 
