@@ -19,6 +19,7 @@
 	<persistence-unit name="jacclogPU" transaction-type="RESOURCE_LOCAL">
 		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
 		<class>net.sf.jacclog.persistence.jpa.entity.LogEntry</class>
+		<class>net.sf.jacclog.persistence.jpa.entity.Country</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 		<properties>
 
