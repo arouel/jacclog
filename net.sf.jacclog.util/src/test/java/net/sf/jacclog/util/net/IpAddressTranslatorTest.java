@@ -37,6 +37,18 @@ public class IpAddressTranslatorTest {
 	}
 
 	@Test
+	public void testInetAddressCalculation1() throws UnknownHostException {
+		final long ipnum = IpAddressTranslator.toLong((Inet4Address) InetAddress.getByName("091.213.036.001"));
+		Assert.assertEquals(1540695041, ipnum);
+	}
+
+	@Test
+	public void testInetAddressCalculation2() throws UnknownHostException {
+		final long ipnum = IpAddressTranslator.toLong((Inet4Address) InetAddress.getByName("091.213.036.254"));
+		Assert.assertEquals(1540695294, ipnum);
+	}
+
+	@Test
 	public void testInetAddressToLong1() throws UnknownHostException {
 		final long actual = IpAddressTranslator.toLong((Inet4Address) InetAddress.getByAddress(new byte[] { (byte) 255,
 				(byte) 255, (byte) 255, (byte) 255 }));
@@ -60,6 +72,71 @@ public class IpAddressTranslatorTest {
 			return;
 		}
 		Assert.fail("An IllegalArgumentException was expected but was not thrown.");
+	}
+
+	@Test
+	public void testIntCalculation1() {
+		Assert.assertEquals(1540695040, IpAddressTranslator.toLong(91, 213, 36, 0));
+		Assert.assertEquals(1540695041, IpAddressTranslator.toLong(91, 213, 36, 1));
+		Assert.assertEquals(1540695042, IpAddressTranslator.toLong(91, 213, 36, 2));
+	}
+
+	@Test
+	public void testIntCalculation2() {
+		Assert.assertEquals(1540695293, IpAddressTranslator.toLong(91, 213, 36, 253));
+		Assert.assertEquals(1540695294, IpAddressTranslator.toLong(91, 213, 36, 254));
+		Assert.assertEquals(1540695295, IpAddressTranslator.toLong(91, 213, 36, 255));
+	}
+
+	@Test
+	public void testInvalidIpAddress1() {
+		try {
+			IpAddressTranslator.toLong("0.0.0");
+		} catch (final IllegalArgumentException e) {
+			Assert.assertTrue(true);
+			return;
+		}
+		Assert.fail("An IllegalArgumentException was expected but was not thrown.");
+	}
+
+	@Test
+	public void testInvalidIpAddress2() {
+		try {
+			IpAddressTranslator.toLong("0.0.0.");
+		} catch (final IllegalArgumentException e) {
+			Assert.assertTrue(true);
+			return;
+		}
+		Assert.fail("An IllegalArgumentException was expected but was not thrown.");
+	}
+
+	@Test
+	public void testInvalidIpAddress3() {
+		try {
+			IpAddressTranslator.toLong("127");
+		} catch (final IllegalArgumentException e) {
+			Assert.assertTrue(true);
+			return;
+		}
+		Assert.fail("An IllegalArgumentException was expected but was not thrown.");
+	}
+
+	@Test
+	public void testIpAddressCalculation1() {
+		final long ipnum = IpAddressTranslator.toLong("91.213.36.254");
+		Assert.assertTrue(1540695040 < ipnum && ipnum < 1540695295);
+	}
+
+	@Test
+	public void testIpAddressCalculation2() {
+		final long ipnum = IpAddressTranslator.toLong("91.213.36.1");
+		Assert.assertTrue(1540695040 < ipnum && ipnum < 1540695295);
+	}
+
+	@Test
+	public void testIpAddressCalculation3() {
+		final long ipnum = IpAddressTranslator.toLong("091.213.036.001");
+		Assert.assertTrue(1540695040 < ipnum && ipnum < 1540695295);
 	}
 
 	@Test
@@ -112,6 +189,18 @@ public class IpAddressTranslatorTest {
 	}
 
 	@Test
+	public void testNumberPrecision1() {
+		final long ipnum = IpAddressTranslator.toLong("128.0.0.0");
+		Assert.assertEquals(2147483648L, ipnum);
+	}
+
+	@Test
+	public void testNumberPrecision2() {
+		final long ipnum = IpAddressTranslator.toLong("255.255.255.255");
+		Assert.assertEquals(4294967295L, ipnum);
+	}
+
+	@Test
 	public void testPartsToLong1() {
 		final long actual = IpAddressTranslator.toLong(230, 12, 123, 245);
 		final long expected = 16777216L * 230 + 65536L * 12 + 256 * 123 + 245;
@@ -151,6 +240,18 @@ public class IpAddressTranslatorTest {
 			return;
 		}
 		Assert.fail("An IllegalArgumentException was expected but was not thrown.");
+	}
+
+	@Test
+	public void testRangeEnd() {
+		final long ipnum = IpAddressTranslator.toLong("91.213.36.255");
+		Assert.assertEquals(1540695295, ipnum);
+	}
+
+	@Test
+	public void testRangeStart() {
+		final long ipnum = IpAddressTranslator.toLong("91.213.36.0");
+		Assert.assertEquals(1540695040, ipnum);
 	}
 
 	@Test
@@ -229,6 +330,17 @@ public class IpAddressTranslatorTest {
 			return;
 		}
 		Assert.fail("An IllegalArgumentException was expected but was not thrown.");
+	}
+
+	@Test
+	public void testTextToLongFails5() {
+		try {
+			IpAddressTranslator.toLong("256.0.0.0");
+		} catch (final IllegalArgumentException e) {
+			Assert.assertEquals("Argument 'ipAddress' is not a valid IP address.", e.getLocalizedMessage());
+			return;
+		}
+		Assert.assertTrue(false);
 	}
 
 }
