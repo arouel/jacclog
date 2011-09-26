@@ -91,6 +91,7 @@ public class LogEntryMapper {
 	}
 
 	private LogEntryMapper() {
+		// stateless classes must not be instantiated
 	}
 
 }
