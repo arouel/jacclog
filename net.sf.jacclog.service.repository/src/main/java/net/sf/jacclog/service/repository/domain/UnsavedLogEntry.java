@@ -15,7 +15,11 @@
  ******************************************************************************/
 package net.sf.jacclog.service.repository.domain;
 
-
+/**
+ * This interface indicates that instances are not saveable or has been saved in a repository. If one of those objects
+ * should be stored, its content must be copied into a storable object.
+ * 
+ * @author André Rouél
+ */
 public interface UnsavedLogEntry extends LogEntry {
-
 }
