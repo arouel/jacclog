@@ -25,7 +25,7 @@ import java.util.zip.GZIPInputStream;
 
 import net.sf.jacclog.csv.CommaSeparatedValuesReader;
 import net.sf.jacclog.geoip.domain.Country;
-import net.sf.jacclog.geoip.util.IpNumCalculator;
+import net.sf.jacclog.util.net.IpAddressTranslator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,7 +62,7 @@ public class CountryGeolocationReader {
 				throw new IllegalArgumentException("Argument 'ipNumber' can not be null.");
 			}
 
-			final long startIpNum = IpNumCalculator.calculate(ipAddress);
+			final long startIpNum = IpAddressTranslator.toLong(ipAddress);
 			final boolean equals = Long.parseLong(ipNumber) == startIpNum;
 			if (!equals) {
 				LOG.warn("Calculated IP number '" + startIpNum + "' does not equals with read one '" + ipNumber + "'.");
