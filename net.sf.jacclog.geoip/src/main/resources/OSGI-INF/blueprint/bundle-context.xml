@@ -16,8 +16,12 @@
 -->
 <blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0">
 
-	<bean id="userAgentStringParser" class="net.sf.jacclog.uasparser.internal.UserAgentStringParser" />
+	<reference id="countryRepositoryService" interface="net.sf.jacclog.service.repository.CountryRepositoryService" />
 
-	<service ref="userAgentStringParser" interface="net.sf.jacclog.uasparser.UserAgentStringParser" />
+	<bean id="geolocationService" class="net.sf.jacclog.geoip.internal.GeolocationService">
+		<argument ref="countryRepositoryService" />
+	</bean>
+
+	<service ref="geolocationService" interface="net.sf.jacclog.geoip.GeolocationService" />
 
 </blueprint>
