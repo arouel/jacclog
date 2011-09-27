@@ -33,10 +33,19 @@ import org.joda.time.Interval;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The country repository gives you all CRUD operations for country entities and isolates the service layer from data
+ * access specifics.
+ * 
+ * @author André Rouél
+ */
 public class CountryRepository {
 
 	private static final Logger LOG = LoggerFactory.getLogger(CountryRepository.class);
 
+	/**
+	 * The name of the persistence unit as defined in the persistence.xml file.
+	 */
 	private static final String PERSISTENCE_UNIT_NAME = "jacclogPU";
 
 	private final EntityManagerFactory entityManagerFactory;
@@ -46,8 +55,9 @@ public class CountryRepository {
 	}
 
 	public CountryRepository(final Map<String, String> properties) {
-		if (properties == null)
+		if (properties == null) {
 			throw new IllegalArgumentException("Argument 'properties' can not be null.");
+		}
 
 		entityManagerFactory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME, properties);
 	}
@@ -59,11 +69,13 @@ public class CountryRepository {
 	 * @return
 	 */
 	public long count(final Date start, final Date end) {
-		if (start == null)
+		if (start == null) {
 			throw new IllegalArgumentException("Argument 'start' can not be null.");
+		}
 
-		if (end == null)
+		if (end == null) {
 			throw new IllegalArgumentException("Argument 'end' can not be null.");
+		}
 
 		final EntityManager entityManager = entityManagerFactory.createEntityManager();
 		final Long count = entityManager
@@ -75,49 +87,29 @@ public class CountryRepository {
 	}
 
 	/**
-	 * Count all countries within an interval
+	 * Counts all countries within an interval.
 	 * 
 	 * @param interval
-	 * @return
+	 *            A time interval
+	 * @return The number of countries between the interval
 	 */
 	public long count(final Interval interval) {
-		if (interval == null)
+		if (interval == null) {
 			throw new IllegalArgumentException("Argument 'interval' can not be null.");
+		}
 		return count(interval.getStart().toDate(), interval.getEnd().toDate());
 	}
 
+	/**
+	 * Counts all countries in the repository.
+	 * 
+	 * @return The total number of countries in the repository
+	 */
 	public long countAll() {
 		final EntityManager entityManager = entityManagerFactory.createEntityManager();
 		final Long count = entityManager.createQuery("SELECT count(o) FROM Country o", Long.class).getSingleResult();
 		entityManager.close();
 		return count;
-	}
-
-	/**
-	 * Finds all countries in the specific range by specifying a starting position and a maximum number of results.
-	 * 
-	 * @param startPosition
-	 *            Position of the first result, numbered from 0
-	 * @param maxResults
-	 *            Maximum number of results to retrieve
-	 * @return A list of countries
-	 */
-	public List<Country> find(final int startPosition, final int maxResults) {
-		final EntityManager entityManager = entityManagerFactory.createEntityManager();
-		final List<Country> entries = entityManager.createQuery("SELECT o FROM Country o", Country.class)
-				.setFirstResult(startPosition).setMaxResults(maxResults).getResultList();
-		entityManager.close();
-		return entries;
-	}
-
-	public Country find(final Long id) {
-		if (id == null)
-			throw new IllegalArgumentException("Argument 'id' can not be null.");
-
-		final EntityManager entityManager = entityManagerFactory.createEntityManager();
-		final Country entry = entityManager.find(Country.class, id);
-		entityManager.close();
-		return entry;
 	}
 
 	/**
@@ -145,32 +137,81 @@ public class CountryRepository {
 		return country;
 	}
 
-	public List<Country> findAll() {
+	/**
+	 * Finds all countries in a specific range by specifying a starting position and a maximum number of results.
+	 * 
+	 * @param startPosition
+	 *            Position of the first result, numbered from 0
+	 * @param maxResults
+	 *            Maximum number of results to retrieve
+	 * @return A list of countries
+	 */
+	public List<Country> find(final int startPosition, final int maxResults) {
 		final EntityManager entityManager = entityManagerFactory.createEntityManager();
-		final List<Country> entries = entityManager.createQuery("SELECT o FROM Country o", Country.class)
-				.getResultList();
+		final List<Country> countries = entityManager.createQuery("SELECT o FROM Country o", Country.class)
+				.setFirstResult(startPosition).setMaxResults(maxResults).getResultList();
 		entityManager.close();
-		return entries;
+		return countries;
 	}
 
-	public Country merge(final Country entry) {
-		if (entry == null)
-			throw new IllegalArgumentException("Argument 'entry' must be set.");
+	/**
+	 * Finds a country by ID.
+	 * 
+	 * @param id
+	 *            ID of a country
+	 * @return A country
+	 */
+	public Country find(final Long id) {
+		if (id == null) {
+			throw new IllegalArgumentException("Argument 'id' can not be null.");
+		}
+
+		final EntityManager entityManager = entityManagerFactory.createEntityManager();
+		final Country country = entityManager.find(Country.class, id);
+		entityManager.close();
+		return country;
+	}
+
+	/**
+	 * Finds all countries in the repository.
+	 * 
+	 * @return A list of all countries in the repository
+	 */
+	public List<Country> findAll() {
+		final EntityManager entityManager = entityManagerFactory.createEntityManager();
+		final List<Country> countries = entityManager.createQuery("SELECT o FROM Country o", Country.class)
+				.getResultList();
+		entityManager.close();
+		return countries;
+	}
+
+	/**
+	 * Updates (or synchronize) a country with the stored content in the repository.
+	 * 
+	 * @param country
+	 *            An already persisted country
+	 * @return An updated country entity
+	 */
+	public Country merge(final Country country) {
+		if (country == null) {
+			throw new IllegalArgumentException("Argument 'country' must be set.");
+		}
 
 		Country merged = null;
 		final EntityManager entityManager = entityManagerFactory.createEntityManager();
 		entityManager.getTransaction().begin();
 		try {
-			merged = entityManager.merge(entry);
+			merged = entityManager.merge(country);
 			entityManager.getTransaction().commit();
 		} catch (final RuntimeException e1) {
-			if (entityManager.getTransaction().isActive())
+			if (entityManager.getTransaction().isActive()) {
 				try {
 					entityManager.getTransaction().rollback();
 				} catch (final RuntimeException e2) {
 					// Log rollback failure or something
 					throw e2;
 				}
+			}
 			throw e1;
 		} finally {
 			if (entityManager != null) {
@@ -182,24 +223,31 @@ public class CountryRepository {
 		return merged;
 	}
 
-	public void persist(final List<Country> entries) {
-		if (entries == null)
-			throw new IllegalArgumentException("Argument 'entries' can not be null.");
+	/**
+	 * Stores a country in the repository.
+	 * 
+	 * @param country
+	 *            An unsaved country
+	 */
+	public void persist(final Country country) {
+		if (country == null) {
+			throw new IllegalArgumentException("Argument 'country' must be set.");
+		}
 
 		final EntityManager entityManager = entityManagerFactory.createEntityManager();
 		entityManager.getTransaction().begin();
 		try {
-			for (final Country entry : entries)
-				entityManager.persist(entry);
+			entityManager.persist(country);
 			entityManager.getTransaction().commit();
 		} catch (final RuntimeException e1) {
-			if (entityManager.getTransaction().isActive())
+			if (entityManager.getTransaction().isActive()) {
 				try {
 					entityManager.getTransaction().rollback();
 				} catch (final RuntimeException e2) {
 					// Log rollback failure or something
 					throw e2;
 				}
+			}
 			throw e1;
 		} finally {
 			if (entityManager != null) {
@@ -209,23 +257,33 @@ public class CountryRepository {
 		}
 	}
 
-	public void persist(final Country entry) {
-		if (entry == null)
-			throw new IllegalArgumentException("Argument 'entry' must be set.");
+	/**
+	 * Stores a list of unsaved countries in the repository.
+	 * 
+	 * @param country
+	 *            An unsaved country
+	 */
+	public void persist(final List<Country> countries) {
+		if (countries == null) {
+			throw new IllegalArgumentException("Argument 'countries' can not be null.");
+		}
 
 		final EntityManager entityManager = entityManagerFactory.createEntityManager();
 		entityManager.getTransaction().begin();
 		try {
-			entityManager.persist(entry);
+			for (final Country country : countries) {
+				entityManager.persist(country);
+			}
 			entityManager.getTransaction().commit();
 		} catch (final RuntimeException e1) {
-			if (entityManager.getTransaction().isActive())
+			if (entityManager.getTransaction().isActive()) {
 				try {
 					entityManager.getTransaction().rollback();
 				} catch (final RuntimeException e2) {
 					// Log rollback failure or something
 					throw e2;
 				}
+			}
 			throw e1;
 		} finally {
 			if (entityManager != null) {
@@ -235,57 +293,76 @@ public class CountryRepository {
 		}
 	}
 
-	public void remove(final List<Country> entries) {
-		if (entries == null || entries.isEmpty())
-			throw new IllegalArgumentException("Argument 'entries' can not be null or empty.");
-
-		final EntityManager entityManager = entityManagerFactory.createEntityManager();
-		final List<Country> attached = new ArrayList<Country>(entries.size());
-		for (final Country entry : entries)
-			attached.add(entityManager.find(Country.class, entry.getId()));
-		entityManager.getTransaction().begin();
-		try {
-			for (final Country entry : attached)
-				entityManager.remove(entry);
-			entityManager.getTransaction().commit();
-		} catch (final RuntimeException e1) {
-			if (entityManager.getTransaction().isActive())
-				try {
-					entityManager.getTransaction().rollback();
-				} catch (final RuntimeException e2) {
-					// Log rollback failure or something
-					throw e2;
-				}
-			throw e1;
-		} finally {
-			if (entityManager != null) {
-				entityManager.clear();
-				entityManager.close();
-			}
+	/**
+	 * Removes an already stored country in the repository.
+	 * 
+	 * @param country
+	 *            An already stored country
+	 */
+	public void remove(final Country country) {
+		if (country == null) {
+			throw new IllegalArgumentException("Argument 'country' can not be null.");
 		}
-	}
 
-	public void remove(final Country entry) {
-		if (entry == null)
-			throw new IllegalArgumentException("Argument 'entry' can not be null.");
-
-		if (entry.getId() == null)
-			throw new IllegalArgumentException("The ID for an log entry can not be null.");
+		if (country.getId() == null) {
+			throw new IllegalArgumentException("The ID for an log country can not be null.");
+		}
 
 		final EntityManager entityManager = entityManagerFactory.createEntityManager();
-		final Country attached = entityManager.find(Country.class, entry.getId());
+		final Country attached = entityManager.find(Country.class, country.getId());
 		entityManager.getTransaction().begin();
 		try {
 			entityManager.remove(attached);
 			entityManager.getTransaction().commit();
 		} catch (final RuntimeException e1) {
-			if (entityManager.getTransaction().isActive())
+			if (entityManager.getTransaction().isActive()) {
 				try {
 					entityManager.getTransaction().rollback();
 				} catch (final RuntimeException e2) {
 					// Log rollback failure or something
 					throw e2;
 				}
+			}
+			throw e1;
+		} finally {
+			if (entityManager != null) {
+				entityManager.clear();
+				entityManager.close();
+			}
+		}
+	}
+
+	/**
+	 * Removes a list of already stored countries in the repository.
+	 * 
+	 * @param country
+	 *            An already stored country
+	 */
+	public void remove(final List<Country> countries) {
+		if (countries == null || countries.isEmpty()) {
+			throw new IllegalArgumentException("Argument 'countries' can not be null or empty.");
+		}
+
+		final EntityManager entityManager = entityManagerFactory.createEntityManager();
+		final List<Country> attached = new ArrayList<Country>(countries.size());
+		for (final Country country : countries) {
+			attached.add(entityManager.find(Country.class, country.getId()));
+		}
+		entityManager.getTransaction().begin();
+		try {
+			for (final Country country : attached) {
+				entityManager.remove(country);
+			}
+			entityManager.getTransaction().commit();
+		} catch (final RuntimeException e1) {
+			if (entityManager.getTransaction().isActive()) {
+				try {
+					entityManager.getTransaction().rollback();
+				} catch (final RuntimeException e2) {
+					// Log rollback failure or something
+					throw e2;
+				}
+			}
 			throw e1;
 		} finally {
 			if (entityManager != null) {
@@ -302,8 +379,9 @@ public class CountryRepository {
 	public void stop() {
 		LOG.debug("Stopping country repository...");
 
-		if (entityManagerFactory != null)
+		if (entityManagerFactory != null) {
 			entityManagerFactory.close();
+		}
 	}
 
 }
