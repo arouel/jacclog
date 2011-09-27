@@ -130,10 +130,10 @@
 		<joda-time.version>2.0</joda-time.version>
 		<jsr166y.version>1.7.0</jsr166y.version>
 		<junit.version>4.8.2</junit.version>
-		<karaf.version>2.2.2</karaf.version>
+		<karaf.version>2.2.3</karaf.version>
 		<mina.version>2.0.1</mina.version>
 		<pax.logging.version>1.6.3</pax.logging.version>
-		<pax.url.version>1.2.7</pax.url.version>
+		<pax.url.version>1.2.8</pax.url.version>
 		<powermock.version>1.4.10</powermock.version>
 		<servicemix.nmr.version>1.5.0-SNAPSHOT</servicemix.nmr.version>
 		<servicemix.version>4.3.0</servicemix.version>
