@@ -26,4 +26,13 @@
 
 	<service ref="logEntryRepositoryService" interface="net.sf.jacclog.service.repository.LogEntryRepositoryService" />
 
+	<bean id="countryRepository" class="net.sf.jacclog.persistence.jpa.internal.CountryRepository" init-method="start"
+		destroy-method="stop" />
+
+	<bean id="countryRepositoryService" class="net.sf.jacclog.persistence.jpa.CountryRepositoryService">
+		<argument ref="countryRepository" />
+	</bean>
+
+	<service ref="countryRepositoryService" interface="net.sf.jacclog.service.repository.CountryRepositoryService" />
+
 </blueprint>

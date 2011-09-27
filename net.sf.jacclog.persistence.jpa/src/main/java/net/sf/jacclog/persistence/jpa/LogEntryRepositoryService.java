@@ -81,8 +81,8 @@ public class LogEntryRepositoryService implements
 	}
 
 	@Override
-	public List<net.sf.jacclog.service.repository.domain.LogEntry> read(final Interval interval, final int startPosition,
-			final int maxResults) {
+	public List<net.sf.jacclog.service.repository.domain.LogEntry> read(final Interval interval,
+			final int startPosition, final int maxResults) {
 		return LogEntryMapper.translateList(repository.find(interval, startPosition, maxResults));
 	}
 
@@ -97,7 +97,8 @@ public class LogEntryRepositoryService implements
 	}
 
 	@Override
-	public net.sf.jacclog.service.repository.domain.LogEntry update(final net.sf.jacclog.service.repository.domain.LogEntry entry) {
+	public net.sf.jacclog.service.repository.domain.LogEntry update(
+			final net.sf.jacclog.service.repository.domain.LogEntry entry) {
 		return repository.merge(LogEntryMapper.translateLogEntry(entry));
 	}
 
