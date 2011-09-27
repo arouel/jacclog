@@ -55,6 +55,13 @@ public interface Country {
 	Long getEndIpAddressAsNumber();
 
 	/**
+	 * Gets the ID of the country.
+	 * 
+	 * @return ID of the country
+	 */
+	Long getId();
+
+	/**
 	 * Gets the name of the country.
 	 * 
 	 * @return Name of the country
