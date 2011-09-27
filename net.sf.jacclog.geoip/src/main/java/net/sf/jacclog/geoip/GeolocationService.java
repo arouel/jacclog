@@ -15,7 +15,7 @@
  ******************************************************************************/
 package net.sf.jacclog.geoip;
 
-import java.net.InetAddress;
+import java.net.Inet4Address;
 
 import net.sf.jacclog.geoip.domain.Country;
 import net.sf.jacclog.geoip.domain.Location;
@@ -23,16 +23,16 @@ import net.sf.jacclog.geoip.domain.Region;
 
 public interface GeolocationService {
 
-	Country seekCountry(final InetAddress ipAddress);
+	Country findCountry(final Inet4Address ipAddress);
 
-	Country seekCountry(final String ipAddress);
+	Country findCountry(final String ipAddress);
 
-	Location seekLocation(final InetAddress ipAddress);
+	Location findLocation(final Inet4Address ipAddress);
 
-	Location seekLocation(final String ipAddress);
+	Location findLocation(final String ipAddress);
 
-	Region seekRegion(final InetAddress ipAddress);
+	Region findRegion(final Inet4Address ipAddress);
 
-	Region seekRegion(final String ipAddress);
+	Region findRegion(final String ipAddress);
 
 }

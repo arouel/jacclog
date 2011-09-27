@@ -15,64 +15,63 @@
  ******************************************************************************/
 package net.sf.jacclog.geoip.internal;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.net.Inet4Address;
 
 import net.sf.jacclog.geoip.domain.Country;
 import net.sf.jacclog.geoip.domain.Location;
 import net.sf.jacclog.geoip.domain.Region;
+import net.sf.jacclog.service.repository.CountryRepositoryService;
+import net.sf.jacclog.util.net.IpAddressTranslator;
 
 public class GeolocationService implements net.sf.jacclog.geoip.GeolocationService {
 
+	private final CountryRepositoryService<net.sf.jacclog.service.repository.domain.Country> countryRepository;
+
+	public GeolocationService(
+			final CountryRepositoryService<net.sf.jacclog.service.repository.domain.Country> countryRepositoryService) {
+		if (countryRepositoryService == null) {
+			throw new IllegalArgumentException("Argument 'countryRepositoryService' can not be null.");
+		}
+
+		this.countryRepository = countryRepositoryService;
+	}
+
 	@Override
-	public Country seekCountry(final InetAddress ipAddress) {
+	public Country findCountry(final Inet4Address ipAddress) {
+		// TODO here should be an mapper
+		net.sf.jacclog.service.repository.domain.Country entity = countryRepository.find(ipAddress);
+		return new Country(entity.getBeginIpAddress(), entity.getEndIpAddress(), entity.getBeginIpAddressAsNumber(),
+				entity.getEndIpAddressAsNumber(), entity.getCode(), entity.getName());
+	}
+
+	@Override
+	public Country findCountry(final String ipAddress) {
+		Inet4Address address = IpAddressTranslator.toInet4Address(ipAddress);
+		return address != null ? findCountry(address) : Country.UNKNOWN;
+	}
+
+	@Override
+	public Location findLocation(final Inet4Address ipAddress) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Country seekCountry(final String ipAddress) {
-		InetAddress address = null;
-		try {
-			address = InetAddress.getByName(ipAddress);
-		} catch (final UnknownHostException e) {
-			// no problem, we return an unknown country object
-		}
-		return address != null ? seekCountry(address) : Country.UNKNOWN;
+	public Location findLocation(final String ipAddress) {
+		Inet4Address address = IpAddressTranslator.toInet4Address(ipAddress);
+		return address != null ? findLocation(address) : Location.UNKNOWN;
 	}
 
 	@Override
-	public Location seekLocation(final InetAddress ipAddress) {
+	public Region findRegion(final Inet4Address ipAddress) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Location seekLocation(final String ipAddress) {
-		InetAddress address = null;
-		try {
-			address = InetAddress.getByName(ipAddress);
-		} catch (final UnknownHostException e) {
-			// no problem, we return an unknown country object
-		}
-		return address != null ? seekLocation(address) : Location.UNKNOWN;
-	}
-
-	@Override
-	public Region seekRegion(final InetAddress ipAddress) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Region seekRegion(final String ipAddress) {
-		InetAddress address = null;
-		try {
-			address = InetAddress.getByName(ipAddress);
-		} catch (final UnknownHostException e) {
-			// no problem, we return an unknown country object
-		}
-		return address != null ? seekRegion(address) : Region.UNKNOWN;
+	public Region findRegion(final String ipAddress) {
+		Inet4Address address = IpAddressTranslator.toInet4Address(ipAddress);
+		return address != null ? findRegion(address) : Region.UNKNOWN;
 	}
 
 }
