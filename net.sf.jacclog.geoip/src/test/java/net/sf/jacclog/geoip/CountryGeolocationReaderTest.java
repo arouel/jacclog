@@ -16,8 +16,14 @@
 package net.sf.jacclog.geoip;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.Inet4Address;
+import java.util.List;
+import java.util.zip.GZIPInputStream;
 
 import net.sf.jacclog.geoip.internal.CountryGeolocationReader;
+import net.sf.jacclog.service.repository.CountryRepositoryService;
+import net.sf.jacclog.service.repository.domain.Country;
 
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -30,8 +36,51 @@ public class CountryGeolocationReaderTest {
 	@Test
 	public void testReader() {
 		try {
-			final CountryGeolocationReader reader = new CountryGeolocationReader(this.getClass().getClassLoader()
-					.getResourceAsStream("GeoIPCountry.csv.gz"));
+			final InputStream stream = this.getClass().getClassLoader().getResourceAsStream("GeoIPCountry.csv.gz");
+			new CountryGeolocationReader(new GZIPInputStream(stream), new CountryRepositoryService<Country>() {
+
+				@Override
+				public long countAll() {
+					return 0;
+				}
+
+				@Override
+				public void create(List<Country> countries) {
+				}
+
+				@Override
+				public void create(Country country) {
+				}
+
+				@Override
+				public void delete(Country country) {
+				}
+
+				@Override
+				public Country find(Inet4Address ipAddress) {
+					return null;
+				}
+
+				@Override
+				public List<Country> find(int startPosition, int maxResults) {
+					return null;
+				}
+
+				@Override
+				public Country read(Long id) {
+					return null;
+				}
+
+				@Override
+				public List<Country> readAll() {
+					return null;
+				}
+
+				@Override
+				public Country update(Country country) {
+					return null;
+				}
+			});
 		} catch (final IOException e) {
 			LOG.warn(e.getLocalizedMessage());
 		}
