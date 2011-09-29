@@ -16,7 +16,12 @@
 package net.sf.jacclog.logformat.field;
 
 /**
- * First line of request<br>
+ * This class represents the first line of a HTTP request.<br>
+ * <br>
+ * For example:<br>
+ * <code>POST /some/path.html HTTP/1.1</code><br>
+ * <code>GET http://foo.bar/a.html HTTP/1.0</code><br>
+ * <code>HEAD /xyz?a=b HTTP/1.1</code><br>
  * <br>
  * <strong>Field:</strong> %r
  */
@@ -27,8 +32,7 @@ public final class RequestFirstLineField extends AbstractLogFormatField {
 	 * <code>FieldHolder.INSTANCE</code>, not before.
 	 */
 	private static class FieldHolder {
-		public static final RequestFirstLineField INSTANCE = new RequestFirstLineField(
-				FieldType.REQUEST_FIRST_LINE);
+		public static final RequestFirstLineField INSTANCE = new RequestFirstLineField(FieldType.REQUEST_FIRST_LINE);
 	}
 
 	public static RequestFirstLineField getInstance() {
