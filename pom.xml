@@ -38,7 +38,7 @@
 
 	<scm>
 		<connection>scm:git://git.code.sf.net/p/jacclog/code</connection>
-		<developerConnection>scm:ssh://belor@git.code.sf.net/p/jacclog/code</developerConnection>
+		<developerConnection>scm:git:ssh://belor@git.code.sf.net/p/jacclog/code</developerConnection>
 		<url>https://sourceforge.net/p/jacclog/code/commit_browser</url>
 	</scm>
 
