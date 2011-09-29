@@ -44,7 +44,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.sf.jacclog</groupId>
 	<artifactId>net.sf.jacclog</artifactId>
-	<version>0.1.0</version>
+	<version>0.1.1-SNAPSHOT</version>
 
 	<name>Jacclog (OSGi project)</name>
 	<description>Jacclog is an open source access log analysis application and written in Java. The modular architecture is based on Apache Karaf.</description>

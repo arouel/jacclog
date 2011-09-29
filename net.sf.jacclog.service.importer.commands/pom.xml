@@ -20,7 +20,7 @@
 		<relativePath>../</relativePath>
 		<groupId>net.sf.jacclog</groupId>
 		<artifactId>net.sf.jacclog</artifactId>
-		<version>0.1.0</version>
+		<version>0.1.1-SNAPSHOT</version>
 	</parent>
 
 	<properties>
@@ -41,7 +41,7 @@
 		<dependency>
 			<groupId>net.sf.jacclog</groupId>
 			<artifactId>net.sf.jacclog.service.importer</artifactId>
-			<version>0.1.0</version>
+			<version>0.1.1-SNAPSHOT</version>
 		</dependency>
 
 		<!-- Karaf -->
