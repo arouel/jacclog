@@ -37,9 +37,9 @@
 	</licenses>
 
 	<scm>
-		<connection>scm:git://jacclog.git.sourceforge.net/gitroot/jacclog/jacclog</connection>
-		<developerConnection>scm:git://jacclog.git.sourceforge.net/gitroot/jacclog/jacclog</developerConnection>
-		<url>http://jacclog.git.sourceforge.net/git/gitweb-index.cgi</url>
+		<connection>scm:git://git.code.sf.net/p/jacclog/code</connection>
+		<developerConnection>scm:ssh://belor@git.code.sf.net/p/jacclog/code</developerConnection>
+		<url>https://sourceforge.net/p/jacclog/code/commit_browser</url>
 	</scm>
 
 	<modelVersion>4.0.0</modelVersion>
