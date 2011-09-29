@@ -279,15 +279,18 @@ public enum HttpRequestHeader implements Parameter<HttpRequestHeader> {
 	WARNING("Warning");
 
 	/**
-	 * Evaluates the field name against all available Enumeration-Constants and return the appropriate field.
+	 * Evaluates the field name against all available Enumeration-Constants and return the appropriate field.<br>
+	 * <br>
+	 * This function checks the equality by ignoring the case of the field.
 	 * 
 	 * @param field
+	 *            A header field name
 	 * @return <code>HttpRequestHeader</code> if valid, otherwise <code>null</code>
 	 */
 	public static HttpRequestHeader evaluate(final String field) {
 		HttpRequestHeader result = null;
 		for (final HttpRequestHeader name : values()) {
-			if (name.value().equals(field)) {
+			if (name.value().equalsIgnoreCase(field)) {
 				result = name;
 				break;
 			}
