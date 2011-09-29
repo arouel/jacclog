@@ -64,9 +64,9 @@ public enum HttpRequestHeader implements Parameter<HttpRequestHeader> {
 	AUTHORIZATION("Authorization"),
 
 	/**
-	 * The Cache-Control general-header field is specifies directives that MUST be obeyed by all caching mechanisms
-	 * along the request/response chain. The directives specify behavior intended to prevent caches from adversely
-	 * interfering with the request or response.<br>
+	 * The Cache-Control general-header field specifies directives that MUST be obeyed by all caching mechanisms along
+	 * the request/response chain. The directives specify behavior intended to prevent caches from adversely interfering
+	 * with the request or response.<br>
 	 * <br>
 	 * <strong>Example:</strong><br>
 	 * <code>Cache-Control: no-cache</code>
