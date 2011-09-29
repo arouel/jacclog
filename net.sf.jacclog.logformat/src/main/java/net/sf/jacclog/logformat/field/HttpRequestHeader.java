@@ -58,40 +58,50 @@ public enum HttpRequestHeader implements Parameter<HttpRequestHeader> {
 	/**
 	 * Authorization<br>
 	 * <br>
+	 * Authentication credentials for HTTP authentication<br>
+	 * <br>
 	 * <strong>Example:</strong><br>
-	 * <code>Authentication credentials for HTTP authentication<br><br><code>Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==</code>
+	 * <code>Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==</code>
 	 */
 	AUTHORIZATION("Authorization"),
 
 	/**
 	 * Cache-Control<br>
 	 * <br>
+	 * Used to specify directives that MUST be obeyed by all caching mechanisms along the request/response chain<br>
+	 * <br>
 	 * <strong>Example:</strong><br>
-	 * <code>Used to specify directives that MUST be obeyed by all caching mechanisms along the request/response chain<br><br><code>Cache-Control: no-cache</code>
+	 * <code>Cache-Control: no-cache</code>
 	 */
 	CACHE_CONTROL("Cache-Control"),
 
 	/**
 	 * Connection<br>
 	 * <br>
+	 * What type of connection the user-agent would prefer<br>
+	 * <br>
 	 * <strong>Example:</strong><br>
-	 * <code>What type of connection the user-agent would prefer<br><br><code>Connection: close</code>
+	 * <code>Connection: close</code>
 	 */
 	CONNECTION("Connection"),
 
 	/**
 	 * Cookie<br>
 	 * <br>
+	 * An HTTP cookie previously sent by the server with Set-Cookie.<br>
+	 * <br>
 	 * <strong>Example:</strong><br>
-	 * <code>an HTTP cookie previously sent by the server with Set-Cookie (below)<br><br><code>Cookie: $Version=1; Skin=new;</code>
+	 * <code>Cookie: $Version=1; Skin=new;</code>
 	 */
 	COOKIE("Cookie"),
 
 	/**
 	 * Content-Length<br>
 	 * <br>
+	 * The length of the request body in octets (8-bit bytes)<br>
+	 * <br>
 	 * <strong>Example:</strong><br>
-	 * <code>The length of the request body in octets (8-bit bytes)<br><br><code>Content-Length: 348</code>
+	 * <code>Content-Length: 348</code>
 	 */
 	CONTENT_LENGTH("Content-Length"),
 
@@ -187,8 +197,10 @@ public enum HttpRequestHeader implements Parameter<HttpRequestHeader> {
 	/**
 	 * Max-Forwards<br>
 	 * <br>
+	 * Limit the number of times the message can be forwarded through proxies or gateways.<br>
+	 * <br>
 	 * <strong>Example:</strong><br>
-	 * <code>Limit the number of times the message can be forwarded through proxies or gateways.<br><br><code>Max-Forwards: 10</code>
+	 * <code>Max-Forwards: 10</code>
 	 */
 	MAX_FORWARDS("Max-Forwards"),
 
@@ -209,7 +221,7 @@ public enum HttpRequestHeader implements Parameter<HttpRequestHeader> {
 	PROXY_AUTHORIZATION("Proxy-Authorization"),
 
 	/**
-	 * Request only part of an entity. Bytes are numbered from 0.<br>
+	 * Request only part of an entity. Bytes are numbered from <code>0</code>.<br>
 	 * <br>
 	 * <strong>Example:</strong><br>
 	 * <code>Range: bytes=500-999</code>
