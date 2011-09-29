@@ -24,7 +24,7 @@ package net.sf.jacclog.logformat.field;
 public enum HttpRequestHeader implements Parameter<HttpRequestHeader> {
 
 	/**
-	 * Content-Types that are acceptable<br>
+	 * Content-Types that are acceptable by the client<br>
 	 * <br>
 	 * <strong>Example:</strong><br>
 	 * <code>Accept: text/plain</code>
@@ -32,7 +32,7 @@ public enum HttpRequestHeader implements Parameter<HttpRequestHeader> {
 	ACCEPT("Accept"),
 
 	/**
-	 * Character sets that are acceptable<br>
+	 * Character sets that are acceptable by the client<br>
 	 * <br>
 	 * <strong>Example:</strong><br>
 	 * <code>Accept-Charset: utf-8</code>
@@ -40,7 +40,7 @@ public enum HttpRequestHeader implements Parameter<HttpRequestHeader> {
 	ACCEPT_CHARSET("Accept-Charset"),
 
 	/**
-	 * Acceptable encodings<br>
+	 * Acceptable encodings by the client<br>
 	 * <br>
 	 * <strong>Example:</strong><br>
 	 * <code>Accept-Encoding: <compress | gzip | deflate | sdch | identity></code>
@@ -48,7 +48,7 @@ public enum HttpRequestHeader implements Parameter<HttpRequestHeader> {
 	ACCEPT_ENCODING("Accept-Encoding"),
 
 	/**
-	 * Acceptable languages for response<br>
+	 * Acceptable languages for response by the client<br>
 	 * <br>
 	 * <strong>Example:</strong><br>
 	 * <code>Accept-Language: en-US</code>
@@ -56,8 +56,6 @@ public enum HttpRequestHeader implements Parameter<HttpRequestHeader> {
 	ACCEPT_LANGUAGE("Accept-Language"),
 
 	/**
-	 * Authorization<br>
-	 * <br>
 	 * Authentication credentials for HTTP authentication<br>
 	 * <br>
 	 * <strong>Example:</strong><br>
@@ -66,9 +64,9 @@ public enum HttpRequestHeader implements Parameter<HttpRequestHeader> {
 	AUTHORIZATION("Authorization"),
 
 	/**
-	 * Cache-Control<br>
-	 * <br>
-	 * Used to specify directives that MUST be obeyed by all caching mechanisms along the request/response chain<br>
+	 * The Cache-Control general-header field is specifies directives that MUST be obeyed by all caching mechanisms
+	 * along the request/response chain. The directives specify behavior intended to prevent caches from adversely
+	 * interfering with the request or response.<br>
 	 * <br>
 	 * <strong>Example:</strong><br>
 	 * <code>Cache-Control: no-cache</code>
@@ -76,9 +74,10 @@ public enum HttpRequestHeader implements Parameter<HttpRequestHeader> {
 	CACHE_CONTROL("Cache-Control"),
 
 	/**
-	 * Connection<br>
+	 * The Connection general-header field allows the sender to specify options that are desired for that particular
+	 * connection and MUST NOT be communicated by proxies over further connections.<br>
 	 * <br>
-	 * What type of connection the user-agent would prefer<br>
+	 * In other words, it specifies the type of connection the user-agent would prefer.<br>
 	 * <br>
 	 * <strong>Example:</strong><br>
 	 * <code>Connection: close</code>
