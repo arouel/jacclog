@@ -14,14 +14,13 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<parent>
 		<relativePath>../</relativePath>
 		<groupId>net.sf.jacclog</groupId>
 		<artifactId>net.sf.jacclog</artifactId>
-		<version>0.1.0-SNAPSHOT</version>
+		<version>0.1.1-SNAPSHOT</version>
 	</parent>
 
 	<properties>
@@ -33,7 +32,7 @@
 	<artifactId>net.sf.jacclog.logformat</artifactId>
 
 	<name>Jacclog :: LogFormat</name>
-	<description>The LogFormat bundle provides tools to interpret user-defined formats of access logs. ANTLR will be used to parse a format like "%h %l %u %t %r %>s %b %{Referer}i %{User-agent}i %0 %0 %0".</description>
+	<description>The LogFormat bundle provides tools to interpret user-defined formats of access logs. ANTLR will be used to parse a format like "%h %l %u %t %r %&gt;s %b %{Referer}i %{User-agent}i %0 %0 %0".</description>
 
 	<packaging>bundle</packaging>
 
