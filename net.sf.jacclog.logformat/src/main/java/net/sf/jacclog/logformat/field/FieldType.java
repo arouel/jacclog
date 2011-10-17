@@ -170,9 +170,7 @@ public enum FieldType {
 	/**
 	 * Status for the last request<br>
 	 * <br>
-	 * Will be interpreted as field <code>STATUS_CODE</code>.<br>
-	 * <br>
-	 * Placeholder: <code>%s</code>
+	 * Placeholder: <code>%>s</code>
 	 */
 	LAST_STATUS_CODE(">s", false),
 
