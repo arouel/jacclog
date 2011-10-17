@@ -37,6 +37,7 @@
 	<packaging>bundle</packaging>
 
 	<dependencies>
+
 		<!-- internal -->
 		<dependency>
 			<groupId>net.sf.jacclog</groupId>

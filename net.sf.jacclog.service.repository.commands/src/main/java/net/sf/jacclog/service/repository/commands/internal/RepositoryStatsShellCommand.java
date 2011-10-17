@@ -15,8 +15,10 @@
  ******************************************************************************/
 package net.sf.jacclog.service.repository.commands.internal;
 
-import net.sf.jacclog.service.repository.LogEntryRepositoryService;
-import net.sf.jacclog.service.repository.domain.LogEntry;
+import net.sf.jacclog.api.LogEntryService;
+import net.sf.jacclog.api.domain.ReadableLogEntry;
+import net.sf.jacclog.api.domain.http.ReadableHttpRequestHeaderField;
+import net.sf.jacclog.api.domain.http.ReadableHttpResponseHeaderField;
 
 import org.apache.felix.gogo.commands.Command;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
@@ -30,7 +32,7 @@ import org.apache.karaf.shell.console.OsgiCommandSupport;
 @SuppressWarnings("PMD.SystemPrintln")
 public class RepositoryStatsShellCommand extends OsgiCommandSupport {
 
-	private LogEntryRepositoryService<LogEntry> service;
+	private LogEntryService<ReadableLogEntry<ReadableHttpRequestHeaderField, ReadableHttpResponseHeaderField>> service;
 
 	@Override
 	protected Object doExecute() throws Exception {
@@ -43,7 +45,7 @@ public class RepositoryStatsShellCommand extends OsgiCommandSupport {
 		return null;
 	}
 
-	public LogEntryRepositoryService<LogEntry> getService() {
+	public LogEntryService<ReadableLogEntry<ReadableHttpRequestHeaderField, ReadableHttpResponseHeaderField>> getService() {
 		return service;
 	}
 
@@ -53,7 +55,8 @@ public class RepositoryStatsShellCommand extends OsgiCommandSupport {
 		}
 	}
 
-	public void setService(final LogEntryRepositoryService<LogEntry> service) {
+	public void setService(
+			final LogEntryService<ReadableLogEntry<ReadableHttpRequestHeaderField, ReadableHttpResponseHeaderField>> service) {
 		this.service = service;
 	}
 
