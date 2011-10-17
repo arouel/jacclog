@@ -21,6 +21,7 @@ import static org.eclipse.persistence.config.PersistenceUnitProperties.JDBC_URL;
 import static org.eclipse.persistence.config.PersistenceUnitProperties.JDBC_USER;
 import static org.eclipse.persistence.config.PersistenceUnitProperties.LOGGING_LEVEL;
 import static org.eclipse.persistence.config.PersistenceUnitProperties.TARGET_SERVER;
+import static org.eclipse.persistence.config.PersistenceUnitProperties.WEAVING;
 
 import java.net.Inet4Address;
 import java.security.SecureRandom;
@@ -82,6 +83,9 @@ public class CountryIntegrationTest {
 
 		// Ensure that no server-platform is configured
 		properties.put(TARGET_SERVER, TargetServer.None);
+
+		// weaving should be not performed in unit tests
+		properties.put(WEAVING, "static");
 
 		repository = new CountryRepository(properties);
 		dod = new CountryDataOnDemand(repository);

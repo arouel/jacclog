@@ -22,6 +22,7 @@ import static org.eclipse.persistence.config.PersistenceUnitProperties.JDBC_URL;
 import static org.eclipse.persistence.config.PersistenceUnitProperties.JDBC_USER;
 import static org.eclipse.persistence.config.PersistenceUnitProperties.LOGGING_LEVEL;
 import static org.eclipse.persistence.config.PersistenceUnitProperties.TARGET_SERVER;
+import static org.eclipse.persistence.config.PersistenceUnitProperties.WEAVING;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -85,6 +86,9 @@ public class LogEntryIntegrationTest {
 
 		// Ensure that no server-platform is configured
 		properties.put(TARGET_SERVER, TargetServer.None);
+
+		// weaving should be not performed in unit tests
+		properties.put(WEAVING, "static");
 
 		repository = new LogEntryRepository(properties);
 		dod = new LogEntryDataOnDemand(repository);
