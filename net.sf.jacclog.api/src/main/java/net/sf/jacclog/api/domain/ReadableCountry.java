@@ -13,13 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package net.sf.jacclog.service.repository.domain;
+package net.sf.jacclog.api.domain;
 
 /**
- * This interface indicates that instances are not saveable or has been saved in a repository. If one of those objects
- * should be stored, its content must be copied into a storable object.
+ * Defines the root interface of a country.<br>
+ * <br>
+ * The implementation of this interface may be mutable or immutable. This interface only gives access to retrieve data,
+ * never to change it.
  * 
  * @author André Rouél
  */
-public interface UnsavedLogEntry extends LogEntry {
+public interface ReadableCountry {
+
+	/**
+	 * Gets the ISO 3166 Country Code.<br>
+	 * <br>
+	 * {@link http://en.wikipedia.org/wiki/ISO_3166}
+	 * 
+	 * @return Country Code
+	 */
+	String getCode();
+
+	/**
+	 * Gets the name of the country.
+	 * 
+	 * @return Name of the country
+	 */
+	String getName();
+
 }
