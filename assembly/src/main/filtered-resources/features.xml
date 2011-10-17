@@ -37,6 +37,7 @@
 		<feature version="${jsr166y.version}">jsr166y</feature>
 		<feature version="${aries.transaction.version}">transaction</feature>
 
+		<bundle>mvn:net.sf.jacclog/net.sf.jacclog.api/${project.version}</bundle>
 		<bundle>mvn:net.sf.jacclog/net.sf.jacclog.logformat/${project.version}</bundle>
 		<bundle>mvn:net.sf.jacclog/net.sf.jacclog.uasparser/${project.version}</bundle>
 		<bundle>mvn:net.sf.jacclog/net.sf.jacclog.util/${project.version}</bundle>
