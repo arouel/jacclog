@@ -18,7 +18,7 @@ package net.sf.jacclog.service.repository.domain;
 /**
  * All status codes defined in RFC1945 (HTTP/1.0), RFC2616 (HTTP/1.1), and RFC2518 (WebDAV) are listed.
  */
-public enum HttpStatus {
+ enum HttpStatus {
 
 	/** <tt>100 Continue</tt> (HTTP/1.1 - RFC 2616) */
 	CONTINUE(100),

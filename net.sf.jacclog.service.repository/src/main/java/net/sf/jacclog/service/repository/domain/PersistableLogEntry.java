@@ -15,71 +15,21 @@
  ******************************************************************************/
 package net.sf.jacclog.service.repository.domain;
 
-import java.util.Date;
+import net.sf.jacclog.api.domain.ReadWritableLogEntry;
 
+/**
+ * Specifies a mutable and persistable log entry with an ID and version field.
+ * 
+ * @author André Rouél
+ */
+public interface PersistableLogEntry extends ReadWritableLogEntry<PersistableHttpRequestHeaderField, PersistableHttpResponseHeaderField>,
+		Persistable {
 
-public interface LogEntry {
-
-	MimeType getContentType();
-
-	Date getFinishedRequestAt();
-
-	HttpStatus getHttpStatus();
-
+	/**
+	 * Gets the primary key of the entity.
+	 * 
+	 * @return the ID
+	 */
 	Long getId();
-
-	String getLocalHost();
-
-	String getLocalIpAddress();
-
-	String getReferer();
-
-	String getRemoteHost();
-
-	String getRemoteIpAddress();
-
-	HttpRequestMethod getRequestMethod();
-
-	String getRequestParameter();
-
-	String getRequestUrlPath();
-
-	Long getResponseDataSize();
-
-	String getSessionId();
-
-	String getUserAgent();
-
-	String getUserId();
-
-	void setContentType(final MimeType contentType);
-
-	void setFinishedRequestAt(final Date finishedRequestAt);
-
-	void setHttpStatus(final HttpStatus httpStatus);
-
-	void setLocalHost(final String localHost);
-
-	void setLocalIpAddress(final String localIpAddress);
-
-	void setReferer(final String referer);
-
-	void setRemoteHost(final String remoteHost);
-
-	void setRemoteIpAddress(final String remoteIpAddress);
-
-	void setRequestMethod(final HttpRequestMethod requestMethod);
-
-	void setRequestParameter(final String requestParameter);
-
-	void setRequestUrlPath(final String requestUrlPath);
-
-	void setResponseDataSize(final Long responseDataSize);
-
-	void setSessionId(final String sessionId);
-
-	void setUserAgent(final String userAgent);
-
-	void setUserId(final String userId);
 
 }

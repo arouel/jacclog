@@ -15,7 +15,7 @@
  ******************************************************************************/
 package net.sf.jacclog.service.repository.domain;
 
-public enum HttpRequestMethod {
+ enum HttpRequestMethod {
 
 	GET("GET"), POST("POST"), HEAD("HEAD"), PUT("PUT"), DELETE("DELETE"), TRACE("TRACE"), OPTIONS("OPTIONS"), CONNECT(
 			"CONNECT");

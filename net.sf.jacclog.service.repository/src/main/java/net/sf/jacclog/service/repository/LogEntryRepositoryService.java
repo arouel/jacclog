@@ -18,25 +18,11 @@ package net.sf.jacclog.service.repository;
 import java.util.Collection;
 import java.util.List;
 
-import net.sf.jacclog.service.repository.domain.LogEntry;
+import net.sf.jacclog.api.LogEntryService;
+import net.sf.jacclog.api.domain.ReadonlyLogEntry;
+import net.sf.jacclog.service.repository.domain.PersistableLogEntry;
 
-import org.joda.time.Interval;
-
-public interface LogEntryRepositoryService<E extends LogEntry> {
-
-	/**
-	 * Counts all elements within an interval.
-	 * 
-	 * @return Count of log entries
-	 */
-	long count(final Interval interval);
-
-	/**
-	 * Counts all log entries.
-	 * 
-	 * @return Count of all log entries
-	 */
-	long countAll();
+public interface LogEntryRepositoryService<E extends PersistableLogEntry> extends LogEntryService<E> {
 
 	/**
 	 * Stores all log entries.
@@ -46,6 +32,14 @@ public interface LogEntryRepositoryService<E extends LogEntry> {
 	void create(Collection<E> entries);
 
 	/**
+	 * Stores an array of immutable log entries in the repository.
+	 * 
+	 * @param entries
+	 *            the array of immutable log entries
+	 */
+	void create(final ReadonlyLogEntry[] entries);
+
+	/**
 	 * Stores a log entry.
 	 * 
 	 * @param entry
@@ -53,52 +47,18 @@ public interface LogEntryRepositoryService<E extends LogEntry> {
 	void create(E entry);
 
 	/**
+	 * Stores an immutable log entry in the repository.
+	 * 
+	 * @param entry
+	 */
+	void create(final ReadonlyLogEntry entry);
+
+	/**
 	 * Deletes a log entry.
 	 * 
 	 * @param entry
 	 */
 	void delete(E entry);
-
-	/**
-	 * Reads log entries in the specific range by specifying a starting position and a maximum number of results.
-	 * 
-	 * @param startPosition
-	 *            Position of the first result, numbered from 0
-	 * @param maxResults
-	 *            Maximum number of results to retrieve
-	 * @return A list of log entries
-	 */
-	List<E> read(final int startPosition, final int maxResults);
-
-	/**
-	 * Reads all elements within an interval.
-	 * 
-	 * @return A list of log entries
-	 */
-	List<E> read(final Interval interval);
-
-	/**
-	 * Finds all log entries between an interval and ordered by ID. In addition by specifying a starting position and a
-	 * maximum number of results it restricts the size of the result set.
-	 * 
-	 * @param interval
-	 *            A period of time between two dates.
-	 * @param startPosition
-	 *            Position of the first result, numbered from 0
-	 * @param maxResults
-	 *            Maximum number of results to retrieve
-	 * @return A list of log entries
-	 */
-	List<E> read(final Interval interval, final int startPosition, final int maxResults);
-
-	/**
-	 * Read a log entry.
-	 * 
-	 * @param id
-	 *            ID of an entry
-	 * @return A list of log entries
-	 */
-	E read(final Long id);
 
 	/**
 	 * Reads all log entries.
