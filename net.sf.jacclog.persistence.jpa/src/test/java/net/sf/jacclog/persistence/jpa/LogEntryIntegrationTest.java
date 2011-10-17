@@ -15,7 +15,6 @@
  ******************************************************************************/
 package net.sf.jacclog.persistence.jpa;
 
-import static org.eclipse.persistence.config.PersistenceUnitProperties.BATCH_WRITING;
 import static org.eclipse.persistence.config.PersistenceUnitProperties.JDBC_DRIVER;
 import static org.eclipse.persistence.config.PersistenceUnitProperties.JDBC_PASSWORD;
 import static org.eclipse.persistence.config.PersistenceUnitProperties.JDBC_URL;
