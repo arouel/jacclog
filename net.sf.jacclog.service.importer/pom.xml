@@ -61,6 +61,12 @@
 			<artifactId>commons-lang3</artifactId>
 		</dependency>
 
+		<!-- Fork/Join -->
+		<dependency>
+			<groupId>org.codehaus.jsr166-mirror</groupId>
+			<artifactId>jsr166y</artifactId>
+		</dependency>
+
 		<!-- Time convertion -->
 		<dependency>
 			<groupId>joda-time</groupId>

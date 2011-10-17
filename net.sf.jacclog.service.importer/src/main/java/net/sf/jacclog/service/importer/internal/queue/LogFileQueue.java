@@ -47,8 +47,7 @@ public class LogFileQueue extends ObservableLinkedBlockingQueue<LogFile> {
 	 * @return list of files
 	 */
 	public List<File> copyAsList() {
-		final File[] files = (File[]) this.toArray();
-		return Arrays.asList(files);
+		return Arrays.asList(this.toArray(new File[0]));
 	}
 
 }

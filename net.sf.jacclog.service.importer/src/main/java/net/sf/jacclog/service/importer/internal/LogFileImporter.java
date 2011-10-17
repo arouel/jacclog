@@ -20,12 +20,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.sf.jacclog.api.domain.ReadonlyLogEntry;
 import net.sf.jacclog.logformat.LogFormat;
 import net.sf.jacclog.service.importer.api.LogFile;
 import net.sf.jacclog.service.importer.api.service.LogEntryImportService;
 import net.sf.jacclog.service.importer.internal.queue.LogFileQueue;
 import net.sf.jacclog.service.importer.internal.queue.LogFileQueueImporterObserver;
-import net.sf.jacclog.service.repository.domain.LogEntry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -101,7 +101,7 @@ public class LogFileImporter implements net.sf.jacclog.service.importer.api.LogF
 	 */
 	private final LogFileQueue files;
 
-	public LogFileImporter(final int capacity, final LogEntryImportService<LogEntry> service) {
+	public LogFileImporter(final int capacity, final LogEntryImportService<ReadonlyLogEntry> service) {
 		if (service == null) {
 			throw new IllegalArgumentException("Argument 'service' can not be null.");
 		}
@@ -119,7 +119,7 @@ public class LogFileImporter implements net.sf.jacclog.service.importer.api.LogF
 	 */
 	public LogFileImporter(final int capacity,
 			final net.sf.jacclog.service.importer.internal.LogEntryImportService service) {
-		this(capacity, (LogEntryImportService<LogEntry>) service);
+		this(capacity, (LogEntryImportService<ReadonlyLogEntry>) service);
 	}
 
 	@Override

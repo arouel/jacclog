@@ -15,9 +15,9 @@
  ******************************************************************************/
 package net.sf.jacclog.service.importer.api.parser;
 
-import net.sf.jacclog.service.repository.domain.LogEntry;
+import net.sf.jacclog.api.domain.ReadonlyLogEntry;
 
-public interface LogParser<E extends LogEntry> {
+public interface LogParser<E extends ReadonlyLogEntry> {
 
 	/**
 	 * Parse a log line.
@@ -33,6 +33,6 @@ public interface LogParser<E extends LogEntry> {
 	 * 
 	 * @param filter
 	 */
-	void setPostProcessor(final LogEntryPostProcessor<E> filter);
+	void setPostProcessor(final LogEntryPostProcessor filter);
 
 }

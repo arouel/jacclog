@@ -19,36 +19,38 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import net.sf.jacclog.api.domain.ReadonlyLogEntry;
 import net.sf.jacclog.service.importer.api.LogFile;
 import net.sf.jacclog.service.importer.internal.queue.LogEntryQueue;
 import net.sf.jacclog.service.repository.LogEntryRepositoryService;
-import net.sf.jacclog.service.repository.domain.LogEntry;
+import net.sf.jacclog.service.repository.domain.PersistableLogEntry;
 import net.sf.jacclog.util.observer.CurrentElementCounter;
 import net.sf.jacclog.util.observer.TotalElementCounter;
 
 public abstract class AbstractLogEntryImportService implements
-		net.sf.jacclog.service.importer.api.service.LogEntryImportService<LogEntry> {
+		net.sf.jacclog.service.importer.api.service.LogEntryImportService<ReadonlyLogEntry> {
 
 	/**
 	 * Repository services for log entries
 	 */
-	private final List<LogEntryRepositoryService<LogEntry>> services = new CopyOnWriteArrayList<LogEntryRepositoryService<LogEntry>>();
+	private final List<LogEntryRepositoryService<PersistableLogEntry>> services = new CopyOnWriteArrayList<LogEntryRepositoryService<PersistableLogEntry>>();
 
 	/**
 	 * Queue of entries to persist within the repository services
 	 */
-	private final net.sf.jacclog.service.importer.api.queue.LogEntryQueue<LogEntry> queue;
+	private final net.sf.jacclog.service.importer.api.queue.LogEntryQueue<ReadonlyLogEntry> queue;
 
 	/**
 	 * Default queue capacity
 	 */
 	private static final int DEFAULT_CAPACITY = 10000;
 
-	public AbstractLogEntryImportService(final LogEntryRepositoryService<LogEntry> service) {
+	public AbstractLogEntryImportService(final LogEntryRepositoryService<PersistableLogEntry> service) {
 		this(service, new LogEntryQueue(DEFAULT_CAPACITY));
 	}
 
-	public AbstractLogEntryImportService(final LogEntryRepositoryService<LogEntry> service, final LogEntryQueue queue) {
+	public AbstractLogEntryImportService(final LogEntryRepositoryService<PersistableLogEntry> service,
+			final LogEntryQueue queue) {
 		if (service == null) {
 			throw new IllegalArgumentException("Argument 'service' can not be null.");
 		}
@@ -64,29 +66,29 @@ public abstract class AbstractLogEntryImportService implements
 	}
 
 	@Override
-	public void create(final Collection<LogEntry> entries) {
+	public void create(final Collection<ReadonlyLogEntry> entries) {
 		if (entries == null) {
 			throw new IllegalArgumentException("Argument 'entries' can not be null.");
 		}
 
-		for (final LogEntryRepositoryService<LogEntry> service : services) {
-			service.create(entries);
+		for (final LogEntryRepositoryService<PersistableLogEntry> service : services) {
+			service.create(entries.toArray(new ReadonlyLogEntry[0]));
 		}
 	}
 
 	@Override
-	public void create(final LogEntry entry) {
+	public void create(final ReadonlyLogEntry entry) {
 		if (entry == null) {
 			throw new IllegalArgumentException("Argument 'entry' must be not null.");
 		}
 
-		for (final LogEntryRepositoryService<LogEntry> service : services) {
+		for (final LogEntryRepositoryService<PersistableLogEntry> service : services) {
 			service.create(entry);
 		}
 	}
 
 	@Override
-	public net.sf.jacclog.service.importer.api.queue.LogEntryQueue<LogEntry> getQueue() {
+	public net.sf.jacclog.service.importer.api.queue.LogEntryQueue<ReadonlyLogEntry> getQueue() {
 		return queue;
 	}
 
@@ -103,8 +105,8 @@ public abstract class AbstractLogEntryImportService implements
 	 * </ul>
 	 */
 	private void registerDefaultObserver() {
-		final CurrentElementCounter<LogEntry> currentCounter = new CurrentElementCounter<LogEntry>();
-		final TotalElementCounter<LogEntry> totalCounter = new TotalElementCounter<LogEntry>();
+		final CurrentElementCounter<ReadonlyLogEntry> currentCounter = new CurrentElementCounter<ReadonlyLogEntry>();
+		final TotalElementCounter<ReadonlyLogEntry> totalCounter = new TotalElementCounter<ReadonlyLogEntry>();
 		queue.addObserver(currentCounter);
 		queue.addObserver(totalCounter);
 	}

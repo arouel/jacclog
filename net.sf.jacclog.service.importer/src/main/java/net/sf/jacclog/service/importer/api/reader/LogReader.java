@@ -17,9 +17,9 @@ package net.sf.jacclog.service.importer.api.reader;
 
 import java.util.List;
 
-import net.sf.jacclog.service.repository.domain.LogEntry;
+import net.sf.jacclog.api.domain.ReadonlyLogEntry;
 
-public interface LogReader<E extends LogEntry> {
+public interface LogReader<E extends ReadonlyLogEntry> {
 
 	/**
 	 * Reads a number of lines within a <code>BufferedReader</code> and converts it to a log entries.

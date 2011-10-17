@@ -23,15 +23,17 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import net.sf.jacclog.api.domain.ReadonlyLogEntry;
+import net.sf.jacclog.api.domain.http.HttpRequestHeader;
+import net.sf.jacclog.api.domain.http.HttpRequestHeaderField;
+import net.sf.jacclog.api.domain.http.HttpRequestMethod;
+import net.sf.jacclog.api.domain.http.HttpStatus;
+import net.sf.jacclog.logformat.LogFormat;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import net.sf.jacclog.logformat.LogFormat;
-import net.sf.jacclog.service.repository.domain.HttpRequestMethod;
-import net.sf.jacclog.service.repository.domain.HttpStatus;
-import net.sf.jacclog.service.repository.domain.LogEntry;
 
 /**
  * Test for NCSA Log parser.
@@ -60,22 +62,30 @@ public class NcsaLogParserTest {
 		final List<String> tokens = NcsaLogParser.parse(line);
 		printResult(line, tokens);
 
-		final LogEntry entry = new NcsaLogParser(LogFormat.Defaults.COMBINED.getFormat()).parseLine(line);
+		final ReadonlyLogEntry entry = new NcsaLogParser(LogFormat.Defaults.COMBINED.getFormat()).parseLine(line);
 		// TODO %l is not tested yet
 		Assert.assertEquals("192.168.123.12", entry.getRemoteHost());
-		Assert.assertEquals("-", entry.getUserId());
+		Assert.assertEquals("-", entry.getRemoteUser());
 		Assert.assertSame(HttpRequestMethod.GET, entry.getRequestMethod());
 		final long epoch = new SimpleDateFormat("dd/MMM/yyyy:HH:mm:ss Z", Locale.ENGLISH).parse(
 				"19/Oct/2008:19:45:38 -0700").getTime();
-		Assert.assertEquals(new Date(epoch), entry.getFinishedRequestAt());
-		Assert.assertEquals("/search", entry.getRequestUrlPath());
-		Assert.assertEquals("q1=foo&st=bar", entry.getRequestParameter());
-		Assert.assertSame(HttpStatus.OK, entry.getHttpStatus());
-		Assert.assertEquals(Long.valueOf(323), entry.getResponseDataSize());
-		Assert.assertEquals("-", entry.getReferer());
-		Assert.assertEquals(
-				"Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.8.1.14) Gecko/20080416 Fedora/2.0.0.14-1.fc7 Firefox/2.0.0.14",
-				entry.getUserAgent());
+		Assert.assertEquals(new Date(epoch), entry.getRequestTime());
+		Assert.assertEquals("/search", entry.getUrlPath());
+		Assert.assertEquals("q1=foo&st=bar", entry.getQueryString());
+		Assert.assertSame(HttpStatus.OK, entry.getLastStatusCode());
+		Assert.assertEquals(Long.valueOf(323), entry.getResponseInBytes());
+
+		// check size
+		Assert.assertEquals(2, entry.getRequestHeaders().size());
+
+		// check referer
+		HttpRequestHeaderField referer = new HttpRequestHeaderField(HttpRequestHeader.REFERER, "-");
+		Assert.assertTrue(entry.getRequestHeaders().contains(referer));
+
+		// check user agent
+		HttpRequestHeaderField userAgent = new HttpRequestHeaderField(HttpRequestHeader.USER_AGENT,
+				"Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.8.1.14) Gecko/20080416 Fedora/2.0.0.14-1.fc7 Firefox/2.0.0.14");
+		Assert.assertTrue(entry.getRequestHeaders().contains(userAgent));
 
 		LOG.info(entry.toString());
 	}
@@ -98,18 +108,18 @@ public class NcsaLogParserTest {
 		final List<String> tokens = NcsaLogParser.parse(line);
 		printResult(line, tokens);
 
-		final LogEntry entry = new NcsaLogParser(LogFormat.Defaults.COMMON.getFormat()).parseLine(line);
+		final ReadonlyLogEntry entry = new NcsaLogParser(LogFormat.Defaults.COMMON.getFormat()).parseLine(line);
 		// TODO %l is not tested yet
 		Assert.assertEquals("192.168.123.12", entry.getRemoteHost());
-		Assert.assertEquals("-", entry.getUserId());
+		Assert.assertEquals("-", entry.getRemoteUser());
 		Assert.assertSame(HttpRequestMethod.GET, entry.getRequestMethod());
 		final long epoch = new SimpleDateFormat("dd/MMM/yyyy:HH:mm:ss Z", Locale.ENGLISH).parse(
 				"19/Oct/2008:19:45:38 -0700").getTime();
-		Assert.assertEquals(new Date(epoch), entry.getFinishedRequestAt());
-		Assert.assertEquals("/search", entry.getRequestUrlPath());
-		Assert.assertEquals("q1=foo&st=bar", entry.getRequestParameter());
-		Assert.assertSame(HttpStatus.OK, entry.getHttpStatus());
-		Assert.assertEquals(Long.valueOf(323), entry.getResponseDataSize());
+		Assert.assertEquals(new Date(epoch), entry.getRequestTime());
+		Assert.assertEquals("/search", entry.getUrlPath());
+		Assert.assertEquals("q1=foo&st=bar", entry.getQueryString());
+		Assert.assertSame(HttpStatus.OK, entry.getLastStatusCode());
+		Assert.assertEquals(Long.valueOf(323), entry.getResponseInBytes());
 
 		LOG.info(entry.toString());
 	}
@@ -124,24 +134,32 @@ public class NcsaLogParserTest {
 		final List<String> tokens = NcsaLogParser.parse(line);
 		printResult(line, tokens);
 
-		final LogEntry entry = new NcsaLogParser(
+		final ReadonlyLogEntry entry = new NcsaLogParser(
 				LogFormat.parse("%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" %D \"%{User-agent}i\"")).parseLine(line);
 		// TODO %l is not tested yet
 		// TODO %D is not tested yet
 		Assert.assertEquals("192.168.123.12", entry.getRemoteHost());
-		Assert.assertEquals("-", entry.getUserId());
+		Assert.assertEquals("-", entry.getRemoteUser());
 		Assert.assertSame(HttpRequestMethod.GET, entry.getRequestMethod());
 		final long epoch = new SimpleDateFormat("dd/MMM/yyyy:HH:mm:ss Z", Locale.ENGLISH).parse(
 				"19/Oct/2008:19:45:38 -0700").getTime();
-		Assert.assertEquals(new Date(epoch), entry.getFinishedRequestAt());
-		Assert.assertEquals("/search", entry.getRequestUrlPath());
-		Assert.assertEquals("q1=foo&st=bar", entry.getRequestParameter());
-		Assert.assertSame(HttpStatus.OK, entry.getHttpStatus());
-		Assert.assertEquals(Long.valueOf(323), entry.getResponseDataSize());
-		Assert.assertEquals("-", entry.getReferer());
-		Assert.assertEquals(
-				"Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.8.1.14) Gecko/20080416 Fedora/2.0.0.14-1.fc7 Firefox/2.0.0.14",
-				entry.getUserAgent());
+		Assert.assertEquals(new Date(epoch), entry.getRequestTime());
+		Assert.assertEquals("/search", entry.getUrlPath());
+		Assert.assertEquals("q1=foo&st=bar", entry.getQueryString());
+		Assert.assertSame(HttpStatus.OK, entry.getLastStatusCode());
+		Assert.assertEquals(Long.valueOf(323), entry.getResponseInBytes());
+
+		// check size
+		Assert.assertEquals(2, entry.getRequestHeaders().size());
+
+		// check referer
+		HttpRequestHeaderField referer = new HttpRequestHeaderField(HttpRequestHeader.REFERER, "-");
+		Assert.assertTrue(entry.getRequestHeaders().contains(referer));
+
+		// check user agent
+		HttpRequestHeaderField userAgent = new HttpRequestHeaderField(HttpRequestHeader.USER_AGENT,
+				"Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.8.1.14) Gecko/20080416 Fedora/2.0.0.14-1.fc7 Firefox/2.0.0.14");
+		Assert.assertTrue(entry.getRequestHeaders().contains(userAgent));
 
 		LOG.info(entry.toString());
 	}

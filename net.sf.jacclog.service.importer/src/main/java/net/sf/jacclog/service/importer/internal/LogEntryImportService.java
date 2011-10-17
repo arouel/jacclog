@@ -15,30 +15,43 @@
  ******************************************************************************/
 package net.sf.jacclog.service.importer.internal;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
+import net.sf.jacclog.api.domain.ReadonlyLogEntry;
 import net.sf.jacclog.service.importer.api.LogFile;
 import net.sf.jacclog.service.importer.api.LogFileImporterStatistic.Entry;
 import net.sf.jacclog.service.importer.api.service.AbstractLogEntryImportService;
 import net.sf.jacclog.service.importer.internal.parser.MappingException;
 import net.sf.jacclog.service.importer.internal.queue.LogEntryQueue;
-import net.sf.jacclog.service.importer.internal.queue.LogEntryQueuePersisterObserver;
+import net.sf.jacclog.service.importer.internal.task.LogEntryPersisterTask;
+import net.sf.jacclog.service.importer.internal.task.LogEntryPersisterTask.UncaughtExceptionHandler;
 import net.sf.jacclog.service.repository.LogEntryRepositoryService;
-import net.sf.jacclog.service.repository.domain.LogEntry;
+import net.sf.jacclog.service.repository.domain.PersistableLogEntry;
+
+import org.apache.commons.lang3.concurrent.BasicThreadFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LogEntryImportService extends AbstractLogEntryImportService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(LogEntryImportService.class);
 
-	public LogEntryImportService(final LogEntryRepositoryService<LogEntry> service) {
-		super(service);
-		registerPersisterTask();
-	}
+	protected static final int THREADS = Runtime.getRuntime().availableProcessors();
 
-	public LogEntryImportService(final LogEntryRepositoryService<LogEntry> service, final LogEntryQueue queue) {
+	private final LogEntryRepositoryService<PersistableLogEntry> service;
+
+	private final ExecutorService executor;
+
+	public LogEntryImportService(final LogEntryRepositoryService<PersistableLogEntry> service, final LogEntryQueue queue) {
 		super(service, queue);
-		registerPersisterTask();
+		this.service = service;
+
+		final BasicThreadFactory factory = new BasicThreadFactory.Builder()
+				// attributes
+				.namingPattern("persister-%d").daemon(true).priority(Thread.NORM_PRIORITY)
+				.uncaughtExceptionHandler(new UncaughtExceptionHandler()).build();
+		executor = Executors.newFixedThreadPool(THREADS, factory);
 	}
 
 	@Override
@@ -51,34 +64,23 @@ public class LogEntryImportService extends AbstractLogEntryImportService {
 
 		int count = 0;
 		final LogFileReader reader = new LogFileReader(file);
-		while (true) {
-			LogEntry entry = null;
+		ReadonlyLogEntry entry = null;
+		do {
 			try {
 				entry = reader.readEntry();
+				if (entry != null) {
+					executor.execute(new LogEntryPersisterTask(service, entry));
+					count++;
+				}
 			} catch (final MappingException e) {
 				final String prefix = (file != null) ? file.getFile().getPath() + " " : "";
 				LOG.warn(prefix + e.getLocalizedMessage());
 			}
-
-			if (entry == null) {
-				break;
-			} else {
-				try {
-					count++;
-					getQueue().put(entry);
-				} catch (final InterruptedException e) {
-					LOG.warn(e.getLocalizedMessage());
-				}
-			}
-		}
+		} while (entry != null);
 
 		final long elapsedTime = System.currentTimeMillis() - startTime;
-		final Entry entry = new Entry(file, count, elapsedTime);
-		LogFileImporterStatistic.getInstance().addEntry(entry);
-	}
-
-	private void registerPersisterTask() {
-		getQueue().addObserver(new LogEntryQueuePersisterObserver(this));
+		final Entry statEntry = new Entry(file, count, elapsedTime);
+		LogFileImporterStatistic.getInstance().addEntry(statEntry);
 	}
 
 }

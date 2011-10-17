@@ -24,16 +24,16 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import net.sf.jacclog.api.domain.ReadonlyLogEntry;
 import net.sf.jacclog.service.importer.api.LogFile;
 import net.sf.jacclog.service.importer.api.parser.LogParser;
 import net.sf.jacclog.service.importer.internal.parser.MappingException;
 import net.sf.jacclog.service.importer.internal.parser.NcsaLogParser;
-import net.sf.jacclog.service.repository.domain.LogEntry;
 
-public class LogFileReader implements net.sf.jacclog.service.importer.api.reader.LogReader<LogEntry> {
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class LogFileReader implements net.sf.jacclog.service.importer.api.reader.LogReader<ReadonlyLogEntry> {
 
 	/**
 	 * The logger
@@ -86,7 +86,7 @@ public class LogFileReader implements net.sf.jacclog.service.importer.api.reader
 	/**
 	 * A log entry parser
 	 */
-	private final LogParser<LogEntry> parser;
+	private final LogParser<ReadonlyLogEntry> parser;
 
 	/**
 	 * A line number reader
@@ -101,7 +101,7 @@ public class LogFileReader implements net.sf.jacclog.service.importer.api.reader
 	 * @param parser
 	 *            A parser for the log entry lines
 	 */
-	public LogFileReader(final File file, final LogParser<LogEntry> parser) {
+	public LogFileReader(final File file, final LogParser<ReadonlyLogEntry> parser) {
 		this(createLineNumberReader(file), parser);
 	}
 
@@ -122,7 +122,7 @@ public class LogFileReader implements net.sf.jacclog.service.importer.api.reader
 	 * @param parser
 	 *            A parser for the log entry lines
 	 */
-	public LogFileReader(final Reader reader, final LogParser<LogEntry> parser) {
+	public LogFileReader(final Reader reader, final LogParser<ReadonlyLogEntry> parser) {
 		if (reader == null) {
 			throw new IllegalArgumentException("Argument 'reader' can not be null.");
 		}
@@ -140,7 +140,7 @@ public class LogFileReader implements net.sf.jacclog.service.importer.api.reader
 	 * 
 	 * @return log parser
 	 */
-	public LogParser<LogEntry> getParser() {
+	public LogParser<ReadonlyLogEntry> getParser() {
 		return parser;
 	}
 
@@ -154,10 +154,10 @@ public class LogFileReader implements net.sf.jacclog.service.importer.api.reader
 	}
 
 	@Override
-	public List<LogEntry> read(final int count) {
-		final List<LogEntry> entries = new ArrayList<LogEntry>();
+	public List<ReadonlyLogEntry> read(final int count) {
+		final List<ReadonlyLogEntry> entries = new ArrayList<ReadonlyLogEntry>();
 		int counter = 0;
-		LogEntry entry;
+		ReadonlyLogEntry entry;
 
 		do {
 			entry = readEntry();
@@ -178,8 +178,8 @@ public class LogFileReader implements net.sf.jacclog.service.importer.api.reader
 	 * </p>
 	 */
 	@Override
-	public LogEntry readEntry() {
-		LogEntry entry = null;
+	public ReadonlyLogEntry readEntry() {
+		ReadonlyLogEntry entry = null;
 		if (reader != null) {
 			try {
 				final String line = reader.readLine();

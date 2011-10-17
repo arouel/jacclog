@@ -15,8 +15,10 @@
  ******************************************************************************/
 package net.sf.jacclog.service.importer.api.parser;
 
-import net.sf.jacclog.service.repository.domain.LogEntry;
+import net.sf.jacclog.api.domain.LogEntryBuilder;
 
-public interface LogEntryPostProcessor<E extends LogEntry> {
-	void process(E entry);
+public interface LogEntryPostProcessor {
+
+	void process(LogEntryBuilder entry);
+
 }

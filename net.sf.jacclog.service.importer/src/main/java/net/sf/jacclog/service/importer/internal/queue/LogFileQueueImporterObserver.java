@@ -19,14 +19,14 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import net.sf.jacclog.api.domain.ReadonlyLogEntry;
+import net.sf.jacclog.service.importer.api.LogFile;
+import net.sf.jacclog.service.importer.api.service.LogEntryImportService;
+import net.sf.jacclog.util.observer.BlockingQueueObserver;
+
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import net.sf.jacclog.service.importer.api.LogFile;
-import net.sf.jacclog.service.importer.api.service.LogEntryImportService;
-import net.sf.jacclog.service.repository.domain.LogEntry;
-import net.sf.jacclog.util.observer.BlockingQueueObserver;
 
 public class LogFileQueueImporterObserver implements BlockingQueueObserver<LogFile> {
 
@@ -48,9 +48,9 @@ public class LogFileQueueImporterObserver implements BlockingQueueObserver<LogFi
 	/**
 	 * Import service for log entries
 	 */
-	private final LogEntryImportService<LogEntry> service;
+	private final LogEntryImportService<ReadonlyLogEntry> service;
 
-	public LogFileQueueImporterObserver(final LogEntryImportService<LogEntry> service) {
+	public LogFileQueueImporterObserver(final LogEntryImportService<ReadonlyLogEntry> service) {
 		if (service == null) {
 			throw new IllegalArgumentException("Argument 'service' must be not null.");
 		}

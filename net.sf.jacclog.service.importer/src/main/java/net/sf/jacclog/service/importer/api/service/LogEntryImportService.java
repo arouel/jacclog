@@ -17,11 +17,11 @@ package net.sf.jacclog.service.importer.api.service;
 
 import java.util.Collection;
 
+import net.sf.jacclog.api.domain.ReadonlyLogEntry;
 import net.sf.jacclog.service.importer.api.LogFile;
 import net.sf.jacclog.service.importer.api.queue.LogEntryQueue;
-import net.sf.jacclog.service.repository.domain.LogEntry;
 
-public interface LogEntryImportService<E extends LogEntry> {
+public interface LogEntryImportService<E extends ReadonlyLogEntry> {
 
 	/**
 	 * Creates all log entry over the repository service.

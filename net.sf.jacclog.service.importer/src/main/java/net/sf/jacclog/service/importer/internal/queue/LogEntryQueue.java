@@ -15,18 +15,18 @@
  ******************************************************************************/
 package net.sf.jacclog.service.importer.internal.queue;
 
-import net.sf.jacclog.service.repository.domain.LogEntry;
+import net.sf.jacclog.api.domain.ReadonlyLogEntry;
 import net.sf.jacclog.util.observer.BlockingQueueObserver;
 import net.sf.jacclog.util.observer.CurrentElementCounter;
 import net.sf.jacclog.util.observer.TotalElementCounter;
 import net.sf.jacclog.util.queue.ObservableLinkedBlockingQueue;
 
-public class LogEntryQueue extends ObservableLinkedBlockingQueue<LogEntry> implements
-		net.sf.jacclog.service.importer.api.queue.LogEntryQueue<LogEntry> {
+public class LogEntryQueue extends ObservableLinkedBlockingQueue<ReadonlyLogEntry> implements
+		net.sf.jacclog.service.importer.api.queue.LogEntryQueue<ReadonlyLogEntry> {
 
-	private transient CurrentElementCounter<LogEntry> currentElementCounter;
+	private transient CurrentElementCounter<ReadonlyLogEntry> currentElementCounter;
 
-	private transient TotalElementCounter<LogEntry> totalElementCounter;
+	private transient TotalElementCounter<ReadonlyLogEntry> totalElementCounter;
 
 	/**
 	 * Creates a <code>LogEntryQueue</code> with the given (fixed) capacity.
@@ -39,7 +39,7 @@ public class LogEntryQueue extends ObservableLinkedBlockingQueue<LogEntry> imple
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public void addObserver(final BlockingQueueObserver<LogEntry> observer) {
+	public void addObserver(final BlockingQueueObserver<ReadonlyLogEntry> observer) {
 		if (observer instanceof CurrentElementCounter) {
 			currentElementCounter = (CurrentElementCounter) observer;
 		}
@@ -50,12 +50,12 @@ public class LogEntryQueue extends ObservableLinkedBlockingQueue<LogEntry> imple
 	}
 
 	@Override
-	public CurrentElementCounter<LogEntry> getCurrentElementCounter() {
+	public CurrentElementCounter<ReadonlyLogEntry> getCurrentElementCounter() {
 		return currentElementCounter;
 	}
 
 	@Override
-	public TotalElementCounter<LogEntry> getTotalElementCountCounter() {
+	public TotalElementCounter<ReadonlyLogEntry> getTotalElementCountCounter() {
 		return totalElementCounter;
 	}
 

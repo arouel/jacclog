@@ -15,7 +15,7 @@
  ******************************************************************************/
 package net.sf.jacclog.service.importer.api.queue;
 
-import net.sf.jacclog.service.repository.domain.LogEntry;
+import net.sf.jacclog.api.domain.ReadonlyLogEntry;
 import net.sf.jacclog.util.observer.CurrentElementCounter;
 import net.sf.jacclog.util.observer.TotalElementCounter;
 import net.sf.jacclog.util.queue.ObservableBlockingQueue;
@@ -25,7 +25,8 @@ import net.sf.jacclog.util.queue.ObservableBlockingQueue;
  * 
  * @author André Rouél
  */
-public interface LogEntryQueue<E extends LogEntry> extends ObservableBlockingQueue<E> {
+public interface LogEntryQueue<E extends ReadonlyLogEntry> extends
+		ObservableBlockingQueue<E> {
 
 	/**
 	 * Gets the <code>CurrentElementCounter</code> if exists.

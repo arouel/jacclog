@@ -18,10 +18,11 @@ package net.sf.jacclog.service.importer.internal.parser;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.sf.jacclog.api.domain.LogEntryBuilder;
+import net.sf.jacclog.api.domain.ReadonlyLogEntry;
 import net.sf.jacclog.logformat.LogFormat;
 import net.sf.jacclog.service.importer.api.parser.LogEntryPostProcessor;
 import net.sf.jacclog.service.importer.api.parser.LogParser;
-import net.sf.jacclog.service.repository.domain.LogEntry;
 
 /**
  * This is a NCSA-conform log parser.<br>
@@ -34,7 +35,7 @@ import net.sf.jacclog.service.repository.domain.LogEntry;
  * 
  * @author André Rouél
  */
-public class NcsaLogParser implements LogParser<LogEntry> {
+public class NcsaLogParser implements LogParser<ReadonlyLogEntry> {
 
 	public static List<String> parse(final String line) {
 		final List<String> tokens = new ArrayList<String>();
@@ -69,7 +70,7 @@ public class NcsaLogParser implements LogParser<LogEntry> {
 	/**
 	 * Post processor for an log entry
 	 */
-	private LogEntryPostProcessor<LogEntry> postProcessor;
+	private LogEntryPostProcessor postProcessor;
 
 	public NcsaLogParser(final LogFormat format) {
 		if (format == null) {
@@ -87,23 +88,22 @@ public class NcsaLogParser implements LogParser<LogEntry> {
 	 * </p>
 	 */
 	@Override
-	public LogEntry parseLine(final String line) {
+	public ReadonlyLogEntry parseLine(final String line) {
 		if (line == null) {
 			throw new IllegalArgumentException("Argument 'line' can not be null.");
 		}
 
 		final List<String> tokens = parse(line);
-		LogEntry entry = null;
-		entry = TokensToLogEntryMapper.map(format, tokens);
+		final LogEntryBuilder builder = TokensToLogEntryMapper.map(format, tokens);
 		if (postProcessor != null) {
-			postProcessor.process(entry);
+			postProcessor.process(builder);
 		}
 
-		return entry;
+		return builder.build();
 	}
 
 	@Override
-	public void setPostProcessor(final LogEntryPostProcessor<LogEntry> processor) {
+	public void setPostProcessor(final LogEntryPostProcessor processor) {
 		postProcessor = processor;
 	}
 

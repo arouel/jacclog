@@ -24,9 +24,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import net.sf.jacclog.api.domain.LogEntryBuilder;
+import net.sf.jacclog.api.domain.http.HttpRequestHeader;
+import net.sf.jacclog.api.domain.http.HttpRequestHeaderField;
+import net.sf.jacclog.api.domain.http.HttpRequestMethod;
+import net.sf.jacclog.api.domain.http.HttpStatus;
 import net.sf.jacclog.logformat.LogFormat;
 import net.sf.jacclog.logformat.field.Field;
 import net.sf.jacclog.logformat.field.HttpLastStatusField;
@@ -39,10 +41,9 @@ import net.sf.jacclog.logformat.field.RequestFirstLineField;
 import net.sf.jacclog.logformat.field.RequestTimeField;
 import net.sf.jacclog.logformat.field.ResponseInBytesClfField;
 import net.sf.jacclog.logformat.field.ResponseInBytesField;
-import net.sf.jacclog.service.repository.domain.HttpRequestMethod;
-import net.sf.jacclog.service.repository.domain.HttpStatus;
-import net.sf.jacclog.service.repository.domain.LogEntry;
-import net.sf.jacclog.service.repository.domain.NonPersistentLogEntry;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class TokensToLogEntryMapper {
 
@@ -58,7 +59,7 @@ public final class TokensToLogEntryMapper {
 	 * @param tokens
 	 * @return
 	 */
-	public static LogEntry map(final LogFormat format, final List<String> tokens) {
+	public static LogEntryBuilder map(final LogFormat format, final List<String> tokens) {
 		if (format == null) {
 			throw new IllegalArgumentException("Argument 'format' can not be null.");
 		}
@@ -78,73 +79,74 @@ public final class TokensToLogEntryMapper {
 		}
 
 		final Map<Field, String> map = TokenToFieldMapper.map(format.getFields(), tokens);
-		final LogEntry entry = new NonPersistentLogEntry();
-		mapHttpLastStatus(entry, map);
-		mapHttpReferer(entry, map);
-		mapHttpStatus(entry, map);
-		mapRemoteHost(entry, map);
-		mapRemoteUser(entry, map);
-		mapRequestFirstLine(entry, map);
-		mapRequestTime(entry, map);
-		mapUserAgent(entry, map);
-		mapResponseInBytesClf(entry, map);
-		mapResponseInBytes(entry, map);
+		final LogEntryBuilder builder = new LogEntryBuilder();
+		mapHttpLastStatus(builder, map);
+		mapHttpReferer(builder, map);
+		mapHttpStatus(builder, map);
+		mapRemoteHost(builder, map);
+		mapRemoteUser(builder, map);
+		mapRequestFirstLine(builder, map);
+		mapRequestTime(builder, map);
+		mapUserAgent(builder, map);
+		mapResponseInBytesClf(builder, map);
+		mapResponseInBytes(builder, map);
 
-		return entry;
+		return builder;
 	}
 
-	private static void mapHttpLastStatus(final LogEntry entry, final Map<Field, String> map) {
+	private static void mapHttpLastStatus(final LogEntryBuilder builder, final Map<Field, String> map) {
 		if (map.containsKey(HttpLastStatusField.getInstance())) {
 			try {
 				final int status = Integer.parseInt(map.get(HttpLastStatusField.getInstance()));
-				// TODO create a new field in LogEntry for the last status
-				entry.setHttpStatus(HttpStatus.evaluate(status));
+				builder.lastStatusCode(HttpStatus.evaluate(status));
 			} catch (final NumberFormatException e) {
 				// ignore this value
 			}
 		}
 	}
 
-	private static void mapHttpReferer(final LogEntry entry, final Map<Field, String> map) {
+	private static void mapHttpReferer(final LogEntryBuilder builder, final Map<Field, String> map) {
 		if (map.containsKey(HttpRefererField.getInstance())) {
-			entry.setReferer(map.get(HttpRefererField.getInstance()));
+			final String referer = map.get(HttpRefererField.getInstance());
+			final HttpRequestHeaderField header = new HttpRequestHeaderField(HttpRequestHeader.REFERER, referer);
+			builder.appendRequestHeaders(header);
 		}
 	}
 
-	private static void mapHttpStatus(final LogEntry entry, final Map<Field, String> map) {
+	private static void mapHttpStatus(final LogEntryBuilder builder, final Map<Field, String> map) {
 		if (map.containsKey(HttpStatusField.getInstance())) {
 			try {
 				final int status = Integer.parseInt(map.get(HttpStatusField.getInstance()));
-				entry.setHttpStatus(HttpStatus.evaluate(status));
+				builder.statusCode(HttpStatus.evaluate(status));
 			} catch (final NumberFormatException e) {
 				// ignore this value
 			}
 		}
 	}
 
-	private static void mapRemoteHost(final LogEntry entry, final Map<Field, String> map) {
+	private static void mapRemoteHost(final LogEntryBuilder builder, final Map<Field, String> map) {
 		if (map.containsKey(RemoteHostField.getInstance())) {
-			entry.setRemoteHost(map.get(RemoteHostField.getInstance()));
+			builder.remoteHost(map.get(RemoteHostField.getInstance()));
 		}
 	}
 
-	private static void mapRemoteUser(final LogEntry entry, final Map<Field, String> map) {
+	private static void mapRemoteUser(final LogEntryBuilder builder, final Map<Field, String> map) {
 		if (map.containsKey(RemoteUserField.getInstance())) {
-			entry.setUserId(map.get(RemoteUserField.getInstance()));
+			builder.remoteUser(map.get(RemoteUserField.getInstance()));
 		}
 	}
 
-	private static void mapRequestFirstLine(final LogEntry entry, final Map<Field, String> map) {
+	private static void mapRequestFirstLine(final LogEntryBuilder builder, final Map<Field, String> map) {
 		if (map.containsKey(RequestFirstLineField.getInstance())) {
 			final String value = map.get(RequestFirstLineField.getInstance());
 			final String[] split = value.split("\\s");
 			if (split.length > 1) {
-				entry.setRequestMethod(HttpRequestMethod.evaluate(split[0]));
+				builder.requestMethod(HttpRequestMethod.evaluate(split[0]));
 				try {
 					// TODO map more parts or create MetaData-Object
 					final URI url = new URI(split[1]);
-					entry.setRequestUrlPath(url.getPath());
-					entry.setRequestParameter(url.getQuery());
+					builder.urlPath(url.getPath() != null ? url.getPath() : "");
+					builder.queryString(url.getQuery() != null ? url.getQuery() : "");
 				} catch (final URISyntaxException e) {
 					LOG.info(e.getLocalizedMessage() + ": " + split[1]);
 				}
@@ -152,14 +154,14 @@ public final class TokensToLogEntryMapper {
 		}
 	}
 
-	private static void mapRequestTime(final LogEntry entry, final Map<Field, String> map) {
+	private static void mapRequestTime(final LogEntryBuilder builder, final Map<Field, String> map) {
 		if (map.containsKey(RequestTimeField.getInstance())) {
-			Date finishedRequestAt;
+			Date requestTime;
 			try {
 				final SimpleDateFormat defaultTimeFormatter = new SimpleDateFormat("dd/MMM/yyyy:HH:mm:ss Z",
 						Locale.ENGLISH);
-				finishedRequestAt = defaultTimeFormatter.parse(map.get(RequestTimeField.getInstance()));
-				entry.setFinishedRequestAt(finishedRequestAt);
+				requestTime = defaultTimeFormatter.parse(map.get(RequestTimeField.getInstance()));
+				builder.requestTime(requestTime);
 			} catch (final ParseException e) {
 				LOG.info(e.getLocalizedMessage() + ": " + map.get(RequestTimeField.getInstance()));
 				// ignore this value
@@ -167,26 +169,25 @@ public final class TokensToLogEntryMapper {
 		}
 	}
 
-	private static void mapResponseInBytes(final LogEntry entry, final Map<Field, String> map) {
+	private static void mapResponseInBytes(final LogEntryBuilder builder, final Map<Field, String> map) {
 		if (map.containsKey(ResponseInBytesField.getInstance())) {
 			try {
-				final Long bytes = Long.parseLong(map.get(ResponseInBytesField.getInstance()));
-				entry.setResponseDataSize(bytes);
+				builder.responseInBytes(Long.parseLong(map.get(ResponseInBytesField.getInstance())));
 			} catch (final NumberFormatException e) {
 				// ignore this value
 			}
 		}
 	}
 
-	private static void mapResponseInBytesClf(final LogEntry entry, final Map<Field, String> map) {
+	private static void mapResponseInBytesClf(final LogEntryBuilder builder, final Map<Field, String> map) {
 		if (map.containsKey(ResponseInBytesClfField.getInstance())) {
 			final String bytesString = map.get(ResponseInBytesClfField.getInstance());
 			if (bytesString != null) {
 				if ("-".equals(bytesString)) {
-					entry.setResponseDataSize(Long.valueOf(0));
+					builder.responseInBytes(Long.valueOf(0));
 				} else {
 					try {
-						entry.setResponseDataSize(Long.parseLong(bytesString));
+						builder.responseInBytes(Long.parseLong(bytesString));
 					} catch (final NumberFormatException e) {
 						// ignore this value
 					}
@@ -195,13 +196,16 @@ public final class TokensToLogEntryMapper {
 		}
 	}
 
-	private static void mapUserAgent(final LogEntry entry, final Map<Field, String> map) {
+	private static void mapUserAgent(final LogEntryBuilder builder, final Map<Field, String> map) {
 		if (map.containsKey(HttpUserAgentField.getInstance())) {
-			entry.setUserAgent(map.get(HttpUserAgentField.getInstance()));
+			final String userAgent = map.get(HttpUserAgentField.getInstance());
+			final HttpRequestHeaderField header = new HttpRequestHeaderField(HttpRequestHeader.USER_AGENT, userAgent);
+			builder.appendRequestHeaders(header);
 		}
 	}
 
 	private TokensToLogEntryMapper() {
+		// stateless classes should not be instantiated
 	}
 
 }
