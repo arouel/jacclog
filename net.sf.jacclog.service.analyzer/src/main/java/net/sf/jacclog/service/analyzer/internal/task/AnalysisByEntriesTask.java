@@ -18,8 +18,10 @@ package net.sf.jacclog.service.analyzer.internal.task;
 import java.util.List;
 
 import jsr166y.RecursiveAction;
+import net.sf.jacclog.api.domain.ReadonlyLogEntry;
+import net.sf.jacclog.api.domain.http.HttpRequestHeader;
+import net.sf.jacclog.api.domain.http.ReadableHttpRequestHeaderField;
 import net.sf.jacclog.service.analyzer.LogEntryAnalysisResult;
-import net.sf.jacclog.service.repository.domain.LogEntry;
 import net.sf.jacclog.uasparser.UserAgentStringParser;
 
 import org.slf4j.Logger;
@@ -33,17 +35,34 @@ public class AnalysisByEntriesTask extends RecursiveAction {
 
 	protected static final int THRESHOLD = 200;
 
+	/**
+	 * Searches in the request headers of the given log entry for an user agent string.
+	 * 
+	 * @param entry
+	 *            the log entry
+	 * @return the user agent string or <code>null</code>
+	 */
+	public static String searchUserAgent(final ReadonlyLogEntry entry) {
+		String userAgent = null;
+		for (final ReadableHttpRequestHeaderField header : entry.getRequestHeaders()) {
+			if (header.getType().equals(HttpRequestHeader.USER_AGENT)) {
+				userAgent = header.getValue();
+			}
+		}
+		return userAgent;
+	}
+
 	private final int maxResults;
 
 	private final UserAgentStringParser parser;
 
-	private final List<LogEntry> entries;
+	private final List<ReadonlyLogEntry> entries;
 
 	private final LogEntryAnalysisResult.Builder builder;
 
 	private final int startPosition;
 
-	public AnalysisByEntriesTask(final List<LogEntry> entries, final UserAgentStringParser parser,
+	public AnalysisByEntriesTask(final List<ReadonlyLogEntry> entries, final UserAgentStringParser parser,
 			final LogEntryAnalysisResult.Builder builder, final int startPosition, final int maxResults) {
 
 		if (entries == null) {
@@ -77,10 +96,14 @@ public class AnalysisByEntriesTask extends RecursiveAction {
 	protected void compute() {
 		if (maxResults < THRESHOLD) {
 			try {
-				final List<LogEntry> entries = this.entries.subList(startPosition, startPosition + maxResults);
+				final List<ReadonlyLogEntry> entries = this.entries.subList(startPosition, startPosition + maxResults);
 				if (!entries.isEmpty()) {
-					for (final LogEntry entry : entries) {
-						builder.appendUserAgentInfo(parser.parse(entry.getUserAgent()));
+					String userAgent = null;
+					for (final ReadonlyLogEntry entry : entries) {
+						userAgent = searchUserAgent(entry);
+						if (userAgent != null) {
+							builder.appendUserAgentInfo(parser.parse(userAgent));
+						}
 					}
 				}
 			} catch (final IndexOutOfBoundsException e) {

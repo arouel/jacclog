@@ -19,11 +19,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jsr166y.ForkJoinPool;
+import net.sf.jacclog.api.LogEntryService;
+import net.sf.jacclog.api.domain.ReadonlyLogEntry;
 import net.sf.jacclog.service.analyzer.LogEntryAnalysisResult;
 import net.sf.jacclog.service.analyzer.internal.task.AnalysisByEntriesTask;
 import net.sf.jacclog.service.analyzer.internal.task.AnalysisByIntervalTask;
-import net.sf.jacclog.service.repository.LogEntryRepositoryService;
-import net.sf.jacclog.service.repository.domain.LogEntry;
 import net.sf.jacclog.uasparser.UserAgentStringParser;
 
 import org.joda.time.Interval;
@@ -57,9 +57,9 @@ public class LogEntryAnalyzer implements net.sf.jacclog.service.analyzer.LogEntr
 
 	private final UserAgentStringParser parser;
 
-	private final LogEntryRepositoryService<LogEntry> repositoryService;
+	private final LogEntryService<ReadonlyLogEntry> service;
 
-	public LogEntryAnalyzer(final LogEntryRepositoryService<LogEntry> service, final UserAgentStringParser parser) {
+	public LogEntryAnalyzer(final LogEntryService<ReadonlyLogEntry> service, final UserAgentStringParser parser) {
 		if (service == null) {
 			throw new IllegalArgumentException("Argument 'service' can not be null.");
 		}
@@ -68,7 +68,7 @@ public class LogEntryAnalyzer implements net.sf.jacclog.service.analyzer.LogEntr
 			throw new IllegalArgumentException("Argument 'parser' can not be null.");
 		}
 
-		repositoryService = service;
+		this.service = service;
 		this.parser = parser;
 	}
 
@@ -77,10 +77,9 @@ public class LogEntryAnalyzer implements net.sf.jacclog.service.analyzer.LogEntr
 		validateInterval(interval);
 
 		// Number of log entries to be analyzed
-		final int count = castLongToInt(repositoryService.count(interval));
+		final int count = castLongToInt(service.count(interval));
 
-		final AnalysisByIntervalTask analyzer = new AnalysisByIntervalTask(repositoryService, parser, builder,
-				interval, 0, count);
+		final AnalysisByIntervalTask analyzer = new AnalysisByIntervalTask(service, parser, builder, interval, 0, count);
 		final ForkJoinPool pool = new ForkJoinPool(THREADS);
 		pool.invoke(analyzer);
 
@@ -89,7 +88,7 @@ public class LogEntryAnalyzer implements net.sf.jacclog.service.analyzer.LogEntr
 	}
 
 	@Override
-	public LogEntryAnalyzer analyze(final List<LogEntry> entries) {
+	public LogEntryAnalyzer analyze(final List<ReadonlyLogEntry> entries) {
 		if (entries == null) {
 			throw new IllegalArgumentException("Argument 'entries' can not be null.");
 		}
@@ -103,12 +102,12 @@ public class LogEntryAnalyzer implements net.sf.jacclog.service.analyzer.LogEntr
 	}
 
 	@Override
-	public LogEntryAnalyzer analyze(final LogEntry entry) {
+	public LogEntryAnalyzer analyze(final ReadonlyLogEntry entry) {
 		if (entry == null) {
 			throw new IllegalArgumentException("Argument 'entry' can not be null.");
 		}
 
-		final List<LogEntry> entries = new ArrayList<LogEntry>();
+		final List<ReadonlyLogEntry> entries = new ArrayList<ReadonlyLogEntry>();
 		entries.add(entry);
 		analyze(entries);
 
@@ -123,8 +122,8 @@ public class LogEntryAnalyzer implements net.sf.jacclog.service.analyzer.LogEntr
 		return parser;
 	}
 
-	public LogEntryRepositoryService<LogEntry> getRepositoryService() {
-		return repositoryService;
+	public LogEntryService<ReadonlyLogEntry> getService() {
+		return service;
 	}
 
 	@Override

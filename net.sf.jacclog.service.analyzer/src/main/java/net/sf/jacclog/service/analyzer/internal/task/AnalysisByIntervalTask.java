@@ -18,9 +18,9 @@ package net.sf.jacclog.service.analyzer.internal.task;
 import java.util.List;
 
 import jsr166y.RecursiveAction;
+import net.sf.jacclog.api.LogEntryService;
+import net.sf.jacclog.api.domain.ReadonlyLogEntry;
 import net.sf.jacclog.service.analyzer.LogEntryAnalysisResult;
-import net.sf.jacclog.service.repository.LogEntryRepositoryService;
-import net.sf.jacclog.service.repository.domain.LogEntry;
 import net.sf.jacclog.uasparser.UserAgentStringParser;
 
 import org.joda.time.Interval;
@@ -37,13 +37,13 @@ public class AnalysisByIntervalTask extends RecursiveAction {
 
 	private final UserAgentStringParser parser;
 
-	private final LogEntryRepositoryService<LogEntry> repositoryService;
+	private final LogEntryService<ReadonlyLogEntry> service;
 
-	private final LogEntryAnalysisResult.Builder resultBuilder;
+	private final LogEntryAnalysisResult.Builder builder;
 
 	private final int startPosition;
 
-	public AnalysisByIntervalTask(final LogEntryRepositoryService<LogEntry> service, final UserAgentStringParser parser,
+	public AnalysisByIntervalTask(final LogEntryService<ReadonlyLogEntry> service, final UserAgentStringParser parser,
 			final LogEntryAnalysisResult.Builder builder, final Interval interval, final int startPosition,
 			final int maxResults) {
 
@@ -75,9 +75,9 @@ public class AnalysisByIntervalTask extends RecursiveAction {
 			throw new IllegalArgumentException("Argument 'maxResults' can not be smaller than 1.");
 		}
 
-		repositoryService = service;
+		this.service = service;
 		this.parser = parser;
-		resultBuilder = builder;
+		this.builder = builder;
 		this.interval = interval;
 		this.startPosition = startPosition;
 		this.maxResults = maxResults;
@@ -86,17 +86,21 @@ public class AnalysisByIntervalTask extends RecursiveAction {
 	@Override
 	protected void compute() {
 		if (maxResults < THRESHOLD) {
-			final List<LogEntry> entries = repositoryService.read(interval, startPosition, maxResults);
+			final List<ReadonlyLogEntry> entries = service.find(interval, startPosition, maxResults);
 			if (entries != null && !entries.isEmpty()) {
-				for (final LogEntry entry : entries) {
-					resultBuilder.appendUserAgentInfo(parser.parse(entry.getUserAgent()));
+				String userAgent = null;
+				for (final ReadonlyLogEntry entry : entries) {
+					userAgent = AnalysisByEntriesTask.searchUserAgent(entry);
+					if (userAgent != null) {
+						builder.appendUserAgentInfo(parser.parse(userAgent));
+					}
 				}
 			}
 		} else {
 			final int midpoint = maxResults / 2;
-			final AnalysisByIntervalTask a1 = new AnalysisByIntervalTask(repositoryService, parser, resultBuilder, interval,
+			final AnalysisByIntervalTask a1 = new AnalysisByIntervalTask(service, parser, builder, interval,
 					startPosition, midpoint);
-			final AnalysisByIntervalTask a2 = new AnalysisByIntervalTask(repositoryService, parser, resultBuilder, interval,
+			final AnalysisByIntervalTask a2 = new AnalysisByIntervalTask(service, parser, builder, interval,
 					startPosition + midpoint, maxResults - midpoint);
 			invokeAll(a1, a2);
 		}

@@ -20,10 +20,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import net.sf.jacclog.api.LogEntryService;
+import net.sf.jacclog.api.domain.ReadableLogEntry;
+import net.sf.jacclog.api.domain.http.ReadableHttpRequestHeaderField;
+import net.sf.jacclog.api.domain.http.ReadableHttpResponseHeaderField;
 import net.sf.jacclog.service.analyzer.LogEntryAnalysisResult;
 import net.sf.jacclog.service.analyzer.LogEntryAnalyzer;
-import net.sf.jacclog.service.repository.LogEntryRepositoryService;
-import net.sf.jacclog.service.repository.domain.LogEntry;
 import net.sf.jacclog.uasparser.UserAgentInfo;
 
 import org.apache.felix.gogo.commands.Command;
@@ -84,7 +86,7 @@ public class AnalyzeLogEntriesShellCommand extends OsgiCommandSupport {
 		return result;
 	}
 
-	private LogEntryRepositoryService<LogEntry> repositoryService;
+	private LogEntryService<ReadableLogEntry<ReadableHttpRequestHeaderField, ReadableHttpResponseHeaderField>> service;
 
 	private LogEntryAnalyzer analyzerService;
 
@@ -95,7 +97,7 @@ public class AnalyzeLogEntriesShellCommand extends OsgiCommandSupport {
 	private final String to = null;
 
 	private void analyzeEntries() {
-		if (repositoryService != null) {
+		if (service != null) {
 			final DateTimeFormatter format = DateTimeFormat.forPattern("yyyyMMdd");
 			final DateTime from = format.parseDateTime(this.from);
 			final DateTime to = (this.to != null) ? format.parseDateTime(this.to) : from.plusDays(1);
@@ -121,7 +123,7 @@ public class AnalyzeLogEntriesShellCommand extends OsgiCommandSupport {
 
 			System.out.println(buffer.toString());
 
-			final long maxResults = repositoryService.count(interval);
+			final long maxResults = service.count(interval);
 			if (maxResults > 0) {
 				int maxCount = 0;
 				if (proceed(maxResults)) {
@@ -155,7 +157,7 @@ public class AnalyzeLogEntriesShellCommand extends OsgiCommandSupport {
 
 	@Override
 	protected Object doExecute() throws Exception {
-		if (repositoryService != null) {
+		if (service != null) {
 			analyzeEntries();
 		} else {
 			log.warn("Can not analyze the log entries from '" + from + "' to '" + to + "'.");
@@ -168,16 +170,17 @@ public class AnalyzeLogEntriesShellCommand extends OsgiCommandSupport {
 		return analyzerService;
 	}
 
-	public LogEntryRepositoryService<LogEntry> getRepositoryService() {
-		return repositoryService;
+	public LogEntryService<ReadableLogEntry<ReadableHttpRequestHeaderField, ReadableHttpResponseHeaderField>> getRepositoryService() {
+		return service;
 	}
 
 	public void setAnalyzerService(final LogEntryAnalyzer analyzerService) {
 		this.analyzerService = analyzerService;
 	}
 
-	public void setRepositoryService(final LogEntryRepositoryService<LogEntry> repositoryService) {
-		this.repositoryService = repositoryService;
+	public void setRepositoryService(
+			final LogEntryService<ReadableLogEntry<ReadableHttpRequestHeaderField, ReadableHttpResponseHeaderField>> service) {
+		this.service = service;
 	}
 
 }

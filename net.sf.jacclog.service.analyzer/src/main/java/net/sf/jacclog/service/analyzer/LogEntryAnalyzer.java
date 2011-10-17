@@ -17,7 +17,7 @@ package net.sf.jacclog.service.analyzer;
 
 import java.util.List;
 
-import net.sf.jacclog.service.repository.domain.LogEntry;
+import net.sf.jacclog.api.domain.ReadonlyLogEntry;
 
 import org.joda.time.Interval;
 
@@ -44,7 +44,7 @@ public interface LogEntryAnalyzer {
 	 *            List of log entry
 	 * @return LogEntryAnalyzer (itself)
 	 */
-	LogEntryAnalyzer analyze(final List<LogEntry> entries);
+	LogEntryAnalyzer analyze(final List<ReadonlyLogEntry> entries);
 
 	/**
 	 * Analyzes a log entry.
@@ -53,7 +53,7 @@ public interface LogEntryAnalyzer {
 	 *            Log entry
 	 * @return LogEntryAnalyzer (itself)
 	 */
-	LogEntryAnalyzer analyze(final LogEntry entry);
+	LogEntryAnalyzer analyze(final ReadonlyLogEntry entry);
 
 	/**
 	 * Builds an analysis result over the given log entries.
