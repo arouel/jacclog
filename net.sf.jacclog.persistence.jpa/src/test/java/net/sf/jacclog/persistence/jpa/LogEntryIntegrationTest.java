@@ -15,6 +15,7 @@
  ******************************************************************************/
 package net.sf.jacclog.persistence.jpa;
 
+import static org.eclipse.persistence.config.PersistenceUnitProperties.BATCH_WRITING;
 import static org.eclipse.persistence.config.PersistenceUnitProperties.JDBC_DRIVER;
 import static org.eclipse.persistence.config.PersistenceUnitProperties.JDBC_PASSWORD;
 import static org.eclipse.persistence.config.PersistenceUnitProperties.JDBC_URL;
@@ -56,12 +57,16 @@ public class LogEntryIntegrationTest {
 	}
 
 	private void compareRandomlyEqualityOfEntries(final List<LogEntry> entries) {
-		final int amount = 100;
+		final int amount = 10;
 		for (int i = 0; i < amount; i++) {
 			final LogEntry expected = getRandomLogEntry(entries);
 			Assert.assertNotNull(expected);
 			final LogEntry actual = repository.find(expected.getId());
 			Assert.assertNotNull(actual);
+
+			Assert.assertEquals(2, actual.getRequestHeaders().size());
+			Assert.assertEquals(2, actual.getResponseHeaders().size());
+
 			Assert.assertEquals(expected, actual);
 			Assert.assertNotSame(expected, actual);
 		}

@@ -79,7 +79,7 @@ public class CountryRepository {
 
 		final EntityManager entityManager = entityManagerFactory.createEntityManager();
 		final Long count = entityManager
-				.createQuery("SELECT count(o) FROM Country o WHERE o.finishedRequestAt BETWEEN :start AND :end",
+				.createQuery("SELECT count(o) FROM Country o WHERE o.requestTime BETWEEN :start AND :end",
 						Long.class).setParameter("start", start, TemporalType.DATE)
 				.setParameter("end", end, TemporalType.DATE).getSingleResult();
 		entityManager.close();

@@ -17,17 +17,23 @@ package net.sf.jacclog.persistence.jpa;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
+import net.sf.jacclog.api.domain.http.HttpConnectionStatus;
+import net.sf.jacclog.api.domain.http.HttpRequestHeader;
+import net.sf.jacclog.api.domain.http.HttpRequestMethod;
+import net.sf.jacclog.api.domain.http.HttpResponseHeader;
+import net.sf.jacclog.api.domain.http.HttpStatus;
+import net.sf.jacclog.persistence.jpa.entity.HttpRequestHeaderField;
+import net.sf.jacclog.persistence.jpa.entity.HttpResponseHeaderField;
 import net.sf.jacclog.persistence.jpa.entity.LogEntry;
 import net.sf.jacclog.persistence.jpa.internal.LogEntryRepository;
-import net.sf.jacclog.service.repository.domain.HttpRequestMethod;
-import net.sf.jacclog.service.repository.domain.HttpStatus;
-import net.sf.jacclog.service.repository.domain.MimeType;
+import net.sf.jacclog.service.repository.domain.PersistableHttpRequestHeaderField;
+import net.sf.jacclog.service.repository.domain.PersistableHttpResponseHeaderField;
 
 public class LogEntryDataOnDemand {
 
@@ -49,23 +55,37 @@ public class LogEntryDataOnDemand {
 	}
 
 	public LogEntry getNewTransientLogEntry(final int index) {
-		final LogEntry obj = new LogEntry();
-		setContentType(obj, index);
-		setFinishedRequestAt(obj, index);
-		setHttpStatus(obj, index);
-		setLocalHost(obj, index);
-		setLocalIpAddress(obj, index);
-		setReferer(obj, index);
-		setRemoteHost(obj, index);
-		setRemoteIpAddress(obj, index);
-		setRequestMethod(obj, index);
-		setRequestParameter(obj, index);
-		setRequestUrlPath(obj, index);
-		setResponseDataSize(obj, index);
-		setSessionId(obj, index);
-		setUserAgent(obj, index);
-		setUserId(obj, index);
-		return obj;
+		final LogEntry entry = new LogEntry();
+		entry.setBytesReceived(1l ^ index);
+		entry.setBytesSent(2l ^ index);
+		entry.setConnectionStatus(HttpConnectionStatus.KEPT_ALIVE);
+		entry.setFilename("test.log");
+		entry.setLastStatusCode(HttpStatus.OK);
+		entry.setLocalIpAddress("192.168.1.1");
+		entry.setProcessId(4001);
+		entry.setQueryString("?key=value" + index);
+		entry.setRemoteHost(index + ".remote.host.net");
+		entry.setRemoteIpAddress("19.12.34.15");
+		entry.setRemoteLogname("-");
+		entry.setRemoteUser("user" + index);
+		final Set<PersistableHttpRequestHeaderField> requestHeaders = new HashSet<PersistableHttpRequestHeaderField>();
+		requestHeaders.add(new HttpRequestHeaderField(HttpRequestHeader.HOST, index + ".jacclog.sf.net"));
+		requestHeaders.add(new HttpRequestHeaderField(HttpRequestHeader.FROM, "mail." + index + ".user@client.net"));
+		entry.setRequestHeaders(requestHeaders);
+		entry.setRequestInMillis(4l ^ index);
+		entry.setRequestMethod(HttpRequestMethod.GET);
+		entry.setRequestProtocol("HTTP/1.1");
+		entry.setRequestTime(new Date(index));
+		final Set<PersistableHttpResponseHeaderField> responseHeaders = new HashSet<PersistableHttpResponseHeaderField>();
+		responseHeaders.add(new HttpResponseHeaderField(HttpResponseHeader.AGE, String.valueOf(index)));
+		responseHeaders.add(new HttpResponseHeaderField(HttpResponseHeader.CONTENT_ENCODING, "deflate"));
+		entry.setResponseHeaders(responseHeaders);
+		entry.setResponseInBytes(5l ^ index);
+		entry.setServerName(index + ".jacclog.analyzer.net");
+		entry.setServerPort(8000);
+		entry.setStatusCode(HttpStatus.OK);
+		entry.setUrlPath("/");
+		return entry;
 	}
 
 	public LogEntry getRandomLogEntry() {
@@ -116,84 +136,6 @@ public class LogEntryDataOnDemand {
 
 	public boolean modifyLogEntry(final LogEntry obj) {
 		return false;
-	}
-
-	public void setContentType(final LogEntry obj, final int index) {
-		final MimeType contentType = MimeType.TEXT_HTML;
-		obj.setContentType(contentType);
-	}
-
-	public void setFinishedRequestAt(final LogEntry obj, final int index) {
-		final Date finishedRequestAt = new GregorianCalendar(Calendar.getInstance().get(Calendar.YEAR), Calendar
-				.getInstance().get(Calendar.MONTH), Calendar.getInstance().get(Calendar.DAY_OF_MONTH), Calendar
-				.getInstance().get(Calendar.HOUR_OF_DAY), Calendar.getInstance().get(Calendar.MINUTE), Calendar
-				.getInstance().get(Calendar.SECOND) + new Double(Math.random() * 1000).intValue()).getTime();
-		obj.setFinishedRequestAt(finishedRequestAt);
-	}
-
-	public void setHttpStatus(final LogEntry obj, final int index) {
-		final HttpStatus httpStatus = HttpStatus.ACCEPTED;
-		obj.setHttpStatus(httpStatus);
-	}
-
-	public void setLocalHost(final LogEntry obj, final int index) {
-		final String localHost = "localHost." + index;
-		obj.setLocalHost(localHost);
-	}
-
-	public void setLocalIpAddress(final LogEntry obj, final int index) {
-		final String localIpAddress = "192.168.42." + index;
-		obj.setLocalIpAddress(localIpAddress);
-	}
-
-	public void setReferer(final LogEntry obj, final int index) {
-		final String referer = "referer_" + index;
-		obj.setReferer(referer);
-	}
-
-	public void setRemoteHost(final LogEntry obj, final int index) {
-		final String remoteHost = "remoteHost_" + index;
-		obj.setRemoteHost(remoteHost);
-	}
-
-	public void setRemoteIpAddress(final LogEntry obj, final int index) {
-		final String remoteIpAddress = "remoteIpAddress_" + index;
-		obj.setRemoteIpAddress(remoteIpAddress);
-	}
-
-	public void setRequestMethod(final LogEntry obj, final int index) {
-		final HttpRequestMethod requestMethod = HttpRequestMethod.GET;
-		obj.setRequestMethod(requestMethod);
-	}
-
-	public void setRequestParameter(final LogEntry obj, final int index) {
-		final String requestParameter = "requestParameter_" + index;
-		obj.setRequestParameter(requestParameter);
-	}
-
-	public void setRequestUrlPath(final LogEntry obj, final int index) {
-		final String requestUrlPath = "requestUrlPath_" + index;
-		obj.setRequestUrlPath(requestUrlPath);
-	}
-
-	public void setResponseDataSize(final LogEntry obj, final int index) {
-		final Long responseDataSize = new Integer(index).longValue();
-		obj.setResponseDataSize(responseDataSize);
-	}
-
-	public void setSessionId(final LogEntry obj, final int index) {
-		final String sessionId = "sessionId_" + index;
-		obj.setSessionId(sessionId);
-	}
-
-	public void setUserAgent(final LogEntry obj, final int index) {
-		final String userAgent = "userAgent_" + index;
-		obj.setUserAgent(userAgent);
-	}
-
-	public void setUserId(final LogEntry obj, final int index) {
-		final String userId = "userId_" + index;
-		obj.setUserId(userId);
 	}
 
 }

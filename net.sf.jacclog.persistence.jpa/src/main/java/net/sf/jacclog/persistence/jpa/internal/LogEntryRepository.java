@@ -16,16 +16,23 @@
 package net.sf.jacclog.persistence.jpa.internal;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.TemporalType;
 
+import net.sf.jacclog.persistence.jpa.entity.HttpRequestHeaderField;
+import net.sf.jacclog.persistence.jpa.entity.HttpResponseHeaderField;
 import net.sf.jacclog.persistence.jpa.entity.LogEntry;
+import net.sf.jacclog.service.repository.domain.PersistableHttpRequestHeaderField;
+import net.sf.jacclog.service.repository.domain.PersistableHttpResponseHeaderField;
 
 import org.joda.time.Interval;
 import org.slf4j.Logger;
@@ -39,15 +46,24 @@ public class LogEntryRepository {
 
 	private final EntityManagerFactory entityManagerFactory;
 
+	private final HttpRequestHeaderFieldRepository requestFieldRepository;
+
+	private final HttpResponseHeaderFieldRepository responseFieldRepository;
+
 	public LogEntryRepository() {
 		entityManagerFactory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
+		requestFieldRepository = new HttpRequestHeaderFieldRepository(entityManagerFactory);
+		responseFieldRepository = new HttpResponseHeaderFieldRepository(entityManagerFactory);
 	}
 
 	public LogEntryRepository(final Map<String, String> properties) {
-		if (properties == null)
+		if (properties == null) {
 			throw new IllegalArgumentException("Argument 'properties' can not be null.");
+		}
 
 		entityManagerFactory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME, properties);
+		requestFieldRepository = new HttpRequestHeaderFieldRepository(entityManagerFactory);
+		responseFieldRepository = new HttpResponseHeaderFieldRepository(entityManagerFactory);
 	}
 
 	/**
@@ -57,30 +73,33 @@ public class LogEntryRepository {
 	 * @return
 	 */
 	public long count(final Date start, final Date end) {
-		if (start == null)
+		if (start == null) {
 			throw new IllegalArgumentException("Argument 'start' can not be null.");
+		}
 
-		if (end == null)
+		if (end == null) {
 			throw new IllegalArgumentException("Argument 'end' can not be null.");
+		}
 
 		final EntityManager entityManager = entityManagerFactory.createEntityManager();
 		final Long count = entityManager
-				.createQuery("SELECT count(o) FROM LogEntry o WHERE o.finishedRequestAt between :start and :end",
-						Long.class).setParameter("start", start, TemporalType.DATE)
-				.setParameter("end", end, TemporalType.DATE).getSingleResult();
+				.createQuery("SELECT count(o) FROM LogEntry o WHERE o.requestTime between :start and :end", Long.class)
+				.setParameter("start", start, TemporalType.DATE).setParameter("end", end, TemporalType.DATE)
+				.getSingleResult();
 		entityManager.close();
 		return count;
 	}
 
 	/**
-	 * Count all log entries within an interval
+	 * Counts all log entries within an interval
 	 * 
 	 * @param interval
 	 * @return
 	 */
 	public long count(final Interval interval) {
-		if (interval == null)
+		if (interval == null) {
 			throw new IllegalArgumentException("Argument 'interval' can not be null.");
+		}
 		return count(interval.getStart().toDate(), interval.getEnd().toDate());
 	}
 
@@ -99,17 +118,19 @@ public class LogEntryRepository {
 	 * @return
 	 */
 	public List<LogEntry> find(final Date start, final Date end) {
-		if (start == null)
+		if (start == null) {
 			throw new IllegalArgumentException("Argument 'start' can not be null.");
+		}
 
-		if (end == null)
+		if (end == null) {
 			throw new IllegalArgumentException("Argument 'end' can not be null.");
+		}
 
 		final EntityManager entityManager = entityManagerFactory.createEntityManager();
 		final List<LogEntry> entries = entityManager
-				.createQuery("SELECT o FROM LogEntry o WHERE o.finishedRequestAt between :start and :end",
-						LogEntry.class).setParameter("start", start, TemporalType.DATE)
-				.setParameter("end", end, TemporalType.DATE).getResultList();
+				.createQuery("SELECT o FROM LogEntry o WHERE o.requestTime between :start and :end", LogEntry.class)
+				.setParameter("start", start, TemporalType.DATE).setParameter("end", end, TemporalType.DATE)
+				.getResultList();
 		entityManager.close();
 		return entries;
 	}
@@ -137,19 +158,21 @@ public class LogEntryRepository {
 	 * @return A list of log entries
 	 */
 	public List<LogEntry> find(final Date start, final Date end, final int startPosition, final int maxResults) {
-		if (start == null)
+		if (start == null) {
 			throw new IllegalArgumentException("Argument 'start' can not be null.");
+		}
 
-		if (end == null)
+		if (end == null) {
 			throw new IllegalArgumentException("Argument 'end' can not be null.");
+		}
 
-		if (start.after(end))
+		if (start.after(end)) {
 			throw new IllegalArgumentException("The end date should be greater than the start date.");
+		}
 
 		final EntityManager entityManager = entityManagerFactory.createEntityManager();
 		final List<LogEntry> entries = entityManager
-				.createQuery(
-						"SELECT o FROM LogEntry o WHERE o.finishedRequestAt BETWEEN :start and :end ORDER BY o.id",
+				.createQuery("SELECT o FROM LogEntry o WHERE o.requestTime BETWEEN :start and :end ORDER BY o.id",
 						LogEntry.class).setParameter("start", start, TemporalType.DATE)
 				.setParameter("end", end, TemporalType.DATE).setFirstResult(startPosition).setMaxResults(maxResults)
 				.getResultList();
@@ -182,8 +205,9 @@ public class LogEntryRepository {
 	 * @return A list of log entries
 	 */
 	public List<LogEntry> find(final Interval interval) {
-		if (interval == null)
+		if (interval == null) {
 			throw new IllegalArgumentException("Argument 'interval' can not be null.");
+		}
 
 		return find(interval.getStart().toDate(), interval.getEnd().toDate());
 	}
@@ -203,15 +227,17 @@ public class LogEntryRepository {
 	 * @return A list of log entries
 	 */
 	public List<LogEntry> find(final Interval interval, final int startPosition, final int maxResults) {
-		if (interval == null)
+		if (interval == null) {
 			throw new IllegalArgumentException("Argument 'interval' can not be null.");
+		}
 
 		return find(interval.getStart().toDate(), interval.getEnd().toDate(), startPosition, maxResults);
 	}
 
 	public LogEntry find(final Long id) {
-		if (id == null)
+		if (id == null) {
 			throw new IllegalArgumentException("Argument 'id' can not be null.");
+		}
 
 		final EntityManager entityManager = entityManagerFactory.createEntityManager();
 		final LogEntry entry = entityManager.find(LogEntry.class, id);
@@ -228,8 +254,9 @@ public class LogEntryRepository {
 	}
 
 	public LogEntry merge(final LogEntry entry) {
-		if (entry == null)
+		if (entry == null) {
 			throw new IllegalArgumentException("Argument 'entry' must be set.");
+		}
 
 		LogEntry merged = null;
 		final EntityManager entityManager = entityManagerFactory.createEntityManager();
@@ -238,13 +265,14 @@ public class LogEntryRepository {
 			merged = entityManager.merge(entry);
 			entityManager.getTransaction().commit();
 		} catch (final RuntimeException e1) {
-			if (entityManager.getTransaction().isActive())
+			if (entityManager.getTransaction().isActive()) {
 				try {
 					entityManager.getTransaction().rollback();
 				} catch (final RuntimeException e2) {
 					// Log rollback failure or something
 					throw e2;
 				}
+			}
 			throw e1;
 		} finally {
 			if (entityManager != null) {
@@ -256,24 +284,28 @@ public class LogEntryRepository {
 		return merged;
 	}
 
-	public void persist(final List<LogEntry> entries) {
-		if (entries == null)
+	public void persist(final Collection<LogEntry> entries) {
+		if (entries == null) {
 			throw new IllegalArgumentException("Argument 'entries' can not be null.");
+		}
 
 		final EntityManager entityManager = entityManagerFactory.createEntityManager();
 		entityManager.getTransaction().begin();
 		try {
-			for (final LogEntry entry : entries)
+			for (final LogEntry entry : entries) {
+				persistHeaders(entry);
 				entityManager.persist(entry);
+			}
 			entityManager.getTransaction().commit();
 		} catch (final RuntimeException e1) {
-			if (entityManager.getTransaction().isActive())
+			if (entityManager.getTransaction().isActive()) {
 				try {
 					entityManager.getTransaction().rollback();
 				} catch (final RuntimeException e2) {
 					// Log rollback failure or something
 					throw e2;
 				}
+			}
 			throw e1;
 		} finally {
 			if (entityManager != null) {
@@ -284,22 +316,25 @@ public class LogEntryRepository {
 	}
 
 	public void persist(final LogEntry entry) {
-		if (entry == null)
+		if (entry == null) {
 			throw new IllegalArgumentException("Argument 'entry' must be set.");
+		}
 
 		final EntityManager entityManager = entityManagerFactory.createEntityManager();
 		entityManager.getTransaction().begin();
 		try {
+			persistHeaders(entry);
 			entityManager.persist(entry);
 			entityManager.getTransaction().commit();
 		} catch (final RuntimeException e1) {
-			if (entityManager.getTransaction().isActive())
+			if (entityManager.getTransaction().isActive()) {
 				try {
 					entityManager.getTransaction().rollback();
 				} catch (final RuntimeException e2) {
 					// Log rollback failure or something
 					throw e2;
 				}
+			}
 			throw e1;
 		} finally {
 			if (entityManager != null) {
@@ -309,27 +344,71 @@ public class LogEntryRepository {
 		}
 	}
 
+	private void persistHeaders(final LogEntry entry) {
+		persistRequestHeaders(entry);
+		persistResponseHeaders(entry);
+	}
+
+	private void persistRequestHeaders(final LogEntry entry) {
+		final Set<PersistableHttpRequestHeaderField> attachedFields = new HashSet<PersistableHttpRequestHeaderField>();
+		for (final PersistableHttpRequestHeaderField field : entry.getRequestHeaders()) {
+			final HttpRequestHeaderField f = HttpRequestHeaderFieldMapper.map(field);
+			final HttpRequestHeaderField attached = requestFieldRepository.find(f);
+			if (attached == null) {
+				try {
+					requestFieldRepository.persist(f);
+				} catch (RuntimeException e) {
+					final HttpRequestHeaderField a = requestFieldRepository.find(f);
+					LOG.info(e.getLocalizedMessage() + ": " + a, e);
+				}
+				attachedFields.add(f);
+			} else {
+				attachedFields.add(attached);
+			}
+		}
+		entry.setRequestHeaders(attachedFields);
+	}
+
+	private void persistResponseHeaders(final LogEntry entry) {
+		final Set<PersistableHttpResponseHeaderField> attachedFields = new HashSet<PersistableHttpResponseHeaderField>();
+		for (final PersistableHttpResponseHeaderField field : entry.getResponseHeaders()) {
+			final HttpResponseHeaderField f = HttpResponseHeaderFieldMapper.map(field);
+			final HttpResponseHeaderField attached = responseFieldRepository.find(f);
+			if (attached == null) {
+				responseFieldRepository.persist(f);
+				attachedFields.add(f);
+			} else {
+				attachedFields.add(attached);
+			}
+		}
+		entry.setResponseHeaders(attachedFields);
+	}
+
 	public void remove(final List<LogEntry> entries) {
-		if (entries == null || entries.isEmpty())
+		if (entries == null || entries.isEmpty()) {
 			throw new IllegalArgumentException("Argument 'entries' can not be null or empty.");
+		}
 
 		final EntityManager entityManager = entityManagerFactory.createEntityManager();
 		final List<LogEntry> attached = new ArrayList<LogEntry>(entries.size());
-		for (final LogEntry entry : entries)
+		for (final LogEntry entry : entries) {
 			attached.add(entityManager.find(LogEntry.class, entry.getId()));
+		}
 		entityManager.getTransaction().begin();
 		try {
-			for (final LogEntry entry : attached)
+			for (final LogEntry entry : attached) {
 				entityManager.remove(entry);
+			}
 			entityManager.getTransaction().commit();
 		} catch (final RuntimeException e1) {
-			if (entityManager.getTransaction().isActive())
+			if (entityManager.getTransaction().isActive()) {
 				try {
 					entityManager.getTransaction().rollback();
 				} catch (final RuntimeException e2) {
 					// Log rollback failure or something
 					throw e2;
 				}
+			}
 			throw e1;
 		} finally {
 			if (entityManager != null) {
@@ -340,11 +419,13 @@ public class LogEntryRepository {
 	}
 
 	public void remove(final LogEntry entry) {
-		if (entry == null)
+		if (entry == null) {
 			throw new IllegalArgumentException("Argument 'entry' can not be null.");
+		}
 
-		if (entry.getId() == null)
+		if (entry.getId() == null) {
 			throw new IllegalArgumentException("The ID for an log entry can not be null.");
+		}
 
 		final EntityManager entityManager = entityManagerFactory.createEntityManager();
 		final LogEntry attached = entityManager.find(LogEntry.class, entry.getId());
@@ -353,13 +434,14 @@ public class LogEntryRepository {
 			entityManager.remove(attached);
 			entityManager.getTransaction().commit();
 		} catch (final RuntimeException e1) {
-			if (entityManager.getTransaction().isActive())
+			if (entityManager.getTransaction().isActive()) {
 				try {
 					entityManager.getTransaction().rollback();
 				} catch (final RuntimeException e2) {
 					// Log rollback failure or something
 					throw e2;
 				}
+			}
 			throw e1;
 		} finally {
 			if (entityManager != null) {
@@ -376,8 +458,9 @@ public class LogEntryRepository {
 	public void stop() {
 		LOG.debug("Closing EntityManagerFactory of LogEntryRepository...");
 
-		if (entityManagerFactory != null)
+		if (entityManagerFactory != null) {
 			entityManagerFactory.close();
+		}
 	}
 
 }

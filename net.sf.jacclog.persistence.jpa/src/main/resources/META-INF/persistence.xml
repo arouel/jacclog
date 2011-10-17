@@ -18,6 +18,8 @@
 	version="2.0" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
 	<persistence-unit name="jacclogPU" transaction-type="RESOURCE_LOCAL">
 		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+		<class>net.sf.jacclog.persistence.jpa.entity.HttpRequestHeaderField</class>
+		<class>net.sf.jacclog.persistence.jpa.entity.HttpResponseHeaderField</class>
 		<class>net.sf.jacclog.persistence.jpa.entity.LogEntry</class>
 		<class>net.sf.jacclog.persistence.jpa.entity.Country</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
@@ -35,7 +37,7 @@
 
 			<property name="eclipselink.target-database" value="org.eclipse.persistence.platform.database.H2Platform" />
 			<property name="eclipselink.ddl-generation.output-mode" value="database" />
-			<property name="eclipselink.weaving" value="static" />
+			<property name="eclipselink.weaving" value="true" />
 
 			<!-- Configure connection pool. -->
 			<property name="eclipselink.jdbc.connections.initial" value="1" />
