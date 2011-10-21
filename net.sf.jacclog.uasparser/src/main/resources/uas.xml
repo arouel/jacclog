@@ -3,7 +3,7 @@
 <uasdata>
 	<description>
 		<label>Data (format xml) for UASparser - http://user-agent-string.info/download/UASparser</label>
-		<version>20110927-01</version>
+		<version>20111018-01</version>
 		<checksum type="MD5">http://user-agent-string.info/rpc/get_data.php?format=xml&amp;md5=y</checksum>
 		<checksum type="SHA1">http://user-agent-string.info/rpc/get_data.php?format=xml&amp;sha1=y</checksum>
 	</description>
@@ -1415,6 +1415,16 @@
 				<family>Covario-IDS</family>
 				<name>Covario-IDS/1.0</name>
 				<company><![CDATA[Covario Inc.]]></company>
+				<url_company><![CDATA[http://www.covario.com/]]></url_company>
+				<icon>bot.png</icon>
+				<bot_info_url>/list-of-ua/bot-detail?bot=Covario-IDS</bot_info_url>
+			</robot>
+			<robot>
+				<id>6630</id>
+				<useragent><![CDATA[CovarioIDS/1.1 (http://www.covario.com/ids; support at covario dot com)]]></useragent>
+				<family>Covario-IDS</family>
+				<name>CovarioIDS/1.1</name>
+				<company><![CDATA[Covario, Inc.]]></company>
 				<url_company><![CDATA[http://www.covario.com/]]></url_company>
 				<icon>bot.png</icon>
 				<bot_info_url>/list-of-ua/bot-detail?bot=Covario-IDS</bot_info_url>
@@ -3396,7 +3406,7 @@
 				<name>LapozzBot/1.4 hu</name>
 				<company><![CDATA[lapozz.hu]]></company>
 				<url_company><![CDATA[http://www.lapozz.hu/]]></url_company>
-				<icon>bot.png</icon>
+				<icon>bot_lapozzbot.png</icon>
 				<bot_info_url>/list-of-ua/bot-detail?bot=LapozzBot</bot_info_url>
 			</robot>
 			<robot>
@@ -3404,6 +3414,16 @@
 				<useragent><![CDATA[LapozzBot/1.4 (+http://robot.lapozz.com)]]></useragent>
 				<family>LapozzBot</family>
 				<name>LapozzBot/1.4 com</name>
+				<company><![CDATA[lapozz.hu]]></company>
+				<url_company><![CDATA[http://www.lapozz.hu/]]></url_company>
+				<icon>bot_lapozzbot.png</icon>
+				<bot_info_url>/list-of-ua/bot-detail?bot=LapozzBot</bot_info_url>
+			</robot>
+			<robot>
+				<id>6625</id>
+				<useragent><![CDATA[LapozzBot/1.5 (+http://robot.lapozz.hu) ]]></useragent>
+				<family>LapozzBot</family>
+				<name>LapozzBot/1.5</name>
 				<company><![CDATA[lapozz.hu]]></company>
 				<url_company><![CDATA[http://www.lapozz.hu/]]></url_company>
 				<icon>bot_lapozzbot.png</icon>
@@ -3422,12 +3442,32 @@
 			<robot>
 				<id>778</id>
 				<useragent><![CDATA[LarbinWebCrawler (spider@download11.com)]]></useragent>
-				<family>LarbinWebCrawler</family>
-				<name>LarbinWebCrawler</name>
-				<company><![CDATA[Download11.com]]></company>
-				<url_company><![CDATA[http://download11.com/]]></url_company>
+				<family>LemurWebCrawler</family>
+				<name>LabrinWebCrawler</name>
+				<company><![CDATA[Language Technologies Institute]]></company>
+				<url_company><![CDATA[http://www.lti.cs.cmu.edu/]]></url_company>
 				<icon>bot.png</icon>
-				<bot_info_url>/list-of-ua/bot-detail?bot=LarbinWebCrawler</bot_info_url>
+				<bot_info_url>/list-of-ua/bot-detail?bot=LemurWebCrawler</bot_info_url>
+			</robot>
+			<robot>
+				<id>6612</id>
+				<useragent><![CDATA[The Lemur Web Crawler/Nutch-1.3 (Lemur Web Crawler; http://boston.lti.cs.cmu.edu/crawler_12/; admin@lemurproject.org)]]></useragent>
+				<family>LemurWebCrawler</family>
+				<name>LemurWebCrawler</name>
+				<company><![CDATA[Language Technologies Institute]]></company>
+				<url_company><![CDATA[http://www.lti.cs.cmu.edu/]]></url_company>
+				<icon>bot.png</icon>
+				<bot_info_url>/list-of-ua/bot-detail?bot=LemurWebCrawler</bot_info_url>
+			</robot>
+			<robot>
+				<id>6647</id>
+				<useragent><![CDATA[Mozilla/5.0 (compatible; heritrix/3.1.0-RC1 +http://boston.lti.cs.cmu.edu/crawler_12/)]]></useragent>
+				<family>LemurWebCrawler</family>
+				<name>LemurWebCrawler</name>
+				<company><![CDATA[Language Technologies Institute]]></company>
+				<url_company><![CDATA[http://www.lti.cs.cmu.edu/]]></url_company>
+				<icon>bot.png</icon>
+				<bot_info_url>/list-of-ua/bot-detail?bot=LemurWebCrawler</bot_info_url>
 			</robot>
 			<robot>
 				<id>1780</id>
@@ -5468,6 +5508,16 @@
 				<url_company><![CDATA[http://www.seoengine.com/]]></url_company>
 				<icon>bot_SEOENGBot.png</icon>
 				<bot_info_url>/list-of-ua/bot-detail?bot=SEOENGBot</bot_info_url>
+			</robot>
+			<robot>
+				<id>6598</id>
+				<useragent><![CDATA[Mozilla/5.0 (compatible; SEOkicks-Robot +http://www.seokicks.de/robot.html)]]></useragent>
+				<family>SEOkicks-Robot</family>
+				<name>SEOkicks-Robot</name>
+				<company><![CDATA[Torsten Rückert Internetdienstleistungen]]></company>
+				<url_company><![CDATA[]]></url_company>
+				<icon>bot.png</icon>
+				<bot_info_url>/list-of-ua/bot-detail?bot=SEOkicks-Robot</bot_info_url>
 			</robot>
 			<robot>
 				<id>6229</id>
@@ -7544,6 +7594,16 @@
 				<useragent><![CDATA[Y!J-BRO/YFSJ crawler (compatible; Mozilla 4.0; MSIE 5.5; http://help.yahoo.co.jp/help/jp/search/indexing/indexing-15.html; YahooFeedSeekerJp/2.0)]]></useragent>
 				<family>Yahoo! JAPAN</family>
 				<name>Y!J-BRO/YFSJ</name>
+				<company><![CDATA[Yahoo! Inc]]></company>
+				<url_company><![CDATA[http://www.yahoo.com/]]></url_company>
+				<icon>bot_yahoo!slurp.png</icon>
+				<bot_info_url>/list-of-ua/bot-detail?bot=Yahoo! JAPAN</bot_info_url>
+			</robot>
+			<robot>
+				<id>6603</id>
+				<useragent><![CDATA[Y!J-BRW/1.0 crawler (http://help.yahoo.co.jp/help/jp/search/indexing/indexing-15.html)]]></useragent>
+				<family>Yahoo! JAPAN</family>
+				<name>Y!J-BRW/1.0</name>
 				<company><![CDATA[Yahoo! Inc]]></company>
 				<url_company><![CDATA[http://www.yahoo.com/]]></url_company>
 				<icon>bot_yahoo!slurp.png</icon>
