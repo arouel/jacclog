@@ -16,7 +16,43 @@
 package net.sf.jacclog.api.domain.http;
 
 /**
- * Defines the type of a Hypertext Transfer Protocol (HTTP) response header field.
+ * Defines the type of a Hypertext Transfer Protocol (HTTP) response header field.<br>
+ * <br>
+ * Supported header types are:
+ * <ul>
+ * <li>Accept-Ranges</li>
+ * <li>Age</li>
+ * <li>Allow</li>
+ * <li>Cache-Control</li>
+ * <li>Connection</li>
+ * <li>Content-Encoding</li>
+ * <li>Content-Language</li>
+ * <li>Content-Length</li>
+ * <li>Content-Location</li>
+ * <li>Content-Disposition</li>
+ * <li>Content-Range</li>
+ * <li>Content-Type</li>
+ * <li>Date</li>
+ * <li>ETag</li>
+ * <li>Expires</li>
+ * <li>Last-Modified</li>
+ * <li>Link</li>
+ * <li>Location</li>
+ * <li>P3P</li>
+ * <li>Pragma</li>
+ * <li>Proxy-Authenticate</li>
+ * <li>Refresh</li>
+ * <li>Retry-After</li>
+ * <li>Server</li>
+ * <li>Set-Cookie</li>
+ * <li>Strict-Transport-Security</li>
+ * <li>Trailer</li>
+ * <li>Transfer-Encoding</li>
+ * <li>Vary</li>
+ * <li>Via</li>
+ * <li>Warning</li>
+ * <li>WWW-Authenticate</li>
+ * </ul>
  * 
  * @author André Rouél
  */
