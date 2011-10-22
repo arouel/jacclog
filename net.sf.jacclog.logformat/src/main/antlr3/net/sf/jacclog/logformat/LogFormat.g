@@ -60,10 +60,9 @@ options {
 
   catch(RecognitionException re) {
     lastError = this.getErrorMessage(re, this.getTokenNames());
-    System.out.println("Catch=" + this.getLastError());
     throw re;
   }
-  
+
 }
 
 
