@@ -15,6 +15,8 @@
  ******************************************************************************/
 package net.sf.jacclog.logformat.field;
 
+import net.sf.jacclog.api.domain.http.HttpRequestHeader;
+
 /**
  * The contents of User-agent: header line(s) in the request sent to the server.<br>
  * <br>
@@ -27,8 +29,8 @@ public final class HttpUserAgentField extends AbstractParameterizedLogFormatFiel
 	 * <code>FieldHolder.INSTANCE</code>, not before.
 	 */
 	private static class FieldHolder {
-		public static final HttpUserAgentField INSTANCE = new HttpUserAgentField(
-				FieldType.REQUEST_HEADER_LINE, HttpRequestHeader.USER_AGENT);
+		public static final HttpUserAgentField INSTANCE = new HttpUserAgentField(FieldType.REQUEST_HEADER_LINE,
+				HttpRequestHeader.USER_AGENT);
 	}
 
 	public static HttpUserAgentField getInstance() {

@@ -15,6 +15,8 @@
  ******************************************************************************/
 package net.sf.jacclog.logformat.field;
 
+import net.sf.jacclog.api.domain.http.HttpRequestHeader;
+
 /**
  * The contents of Referer: header line(s) in the request sent to the server.<br>
  * <br>
