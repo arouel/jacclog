@@ -19,7 +19,9 @@ import java.util.List;
 
 import jsr166y.RecursiveAction;
 import net.sf.jacclog.api.LogEntryService;
-import net.sf.jacclog.api.domain.ReadonlyLogEntry;
+import net.sf.jacclog.api.domain.ReadableLogEntry;
+import net.sf.jacclog.api.domain.http.ReadableHttpRequestHeaderField;
+import net.sf.jacclog.api.domain.http.ReadableHttpResponseHeaderField;
 import net.sf.jacclog.service.analyzer.LogEntryAnalysisResult;
 import net.sf.jacclog.uasparser.UserAgentStringParser;
 
@@ -37,15 +39,16 @@ public class AnalysisByIntervalTask extends RecursiveAction {
 
 	private final UserAgentStringParser parser;
 
-	private final LogEntryService<ReadonlyLogEntry> service;
+	private final LogEntryService<ReadableLogEntry<ReadableHttpRequestHeaderField, ReadableHttpResponseHeaderField>> service;
 
 	private final LogEntryAnalysisResult.Builder builder;
 
 	private final int startPosition;
 
-	public AnalysisByIntervalTask(final LogEntryService<ReadonlyLogEntry> service, final UserAgentStringParser parser,
-			final LogEntryAnalysisResult.Builder builder, final Interval interval, final int startPosition,
-			final int maxResults) {
+	public AnalysisByIntervalTask(
+			final LogEntryService<ReadableLogEntry<ReadableHttpRequestHeaderField, ReadableHttpResponseHeaderField>> service,
+			final UserAgentStringParser parser, final LogEntryAnalysisResult.Builder builder, final Interval interval,
+			final int startPosition, final int maxResults) {
 
 		if (service == null) {
 			throw new IllegalArgumentException("Argument 'service' can not be null.");
@@ -86,10 +89,11 @@ public class AnalysisByIntervalTask extends RecursiveAction {
 	@Override
 	protected void compute() {
 		if (maxResults < THRESHOLD) {
-			final List<ReadonlyLogEntry> entries = service.find(interval, startPosition, maxResults);
+			final List<ReadableLogEntry<ReadableHttpRequestHeaderField, ReadableHttpResponseHeaderField>> entries = service
+					.find(interval, startPosition, maxResults);
 			if (entries != null && !entries.isEmpty()) {
 				String userAgent = null;
-				for (final ReadonlyLogEntry entry : entries) {
+				for (final ReadableLogEntry<ReadableHttpRequestHeaderField, ReadableHttpResponseHeaderField> entry : entries) {
 					userAgent = AnalysisByEntriesTask.searchUserAgent(entry);
 					if (userAgent != null) {
 						builder.appendUserAgentInfo(parser.parse(userAgent));

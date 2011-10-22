@@ -20,7 +20,9 @@ import java.util.List;
 
 import jsr166y.ForkJoinPool;
 import net.sf.jacclog.api.LogEntryService;
-import net.sf.jacclog.api.domain.ReadonlyLogEntry;
+import net.sf.jacclog.api.domain.ReadableLogEntry;
+import net.sf.jacclog.api.domain.http.ReadableHttpRequestHeaderField;
+import net.sf.jacclog.api.domain.http.ReadableHttpResponseHeaderField;
 import net.sf.jacclog.service.analyzer.LogEntryAnalysisResult;
 import net.sf.jacclog.service.analyzer.internal.task.AnalysisByEntriesTask;
 import net.sf.jacclog.service.analyzer.internal.task.AnalysisByIntervalTask;
@@ -57,9 +59,11 @@ public class LogEntryAnalyzer implements net.sf.jacclog.service.analyzer.LogEntr
 
 	private final UserAgentStringParser parser;
 
-	private final LogEntryService<ReadonlyLogEntry> service;
+	private final LogEntryService<ReadableLogEntry<ReadableHttpRequestHeaderField, ReadableHttpResponseHeaderField>> service;
 
-	public LogEntryAnalyzer(final LogEntryService<ReadonlyLogEntry> service, final UserAgentStringParser parser) {
+	public LogEntryAnalyzer(
+			final LogEntryService<ReadableLogEntry<ReadableHttpRequestHeaderField, ReadableHttpResponseHeaderField>> service,
+			final UserAgentStringParser parser) {
 		if (service == null) {
 			throw new IllegalArgumentException("Argument 'service' can not be null.");
 		}
@@ -88,7 +92,8 @@ public class LogEntryAnalyzer implements net.sf.jacclog.service.analyzer.LogEntr
 	}
 
 	@Override
-	public LogEntryAnalyzer analyze(final List<ReadonlyLogEntry> entries) {
+	public LogEntryAnalyzer analyze(
+			final List<ReadableLogEntry<ReadableHttpRequestHeaderField, ReadableHttpResponseHeaderField>> entries) {
 		if (entries == null) {
 			throw new IllegalArgumentException("Argument 'entries' can not be null.");
 		}
@@ -102,12 +107,13 @@ public class LogEntryAnalyzer implements net.sf.jacclog.service.analyzer.LogEntr
 	}
 
 	@Override
-	public LogEntryAnalyzer analyze(final ReadonlyLogEntry entry) {
+	public LogEntryAnalyzer analyze(
+			final ReadableLogEntry<ReadableHttpRequestHeaderField, ReadableHttpResponseHeaderField> entry) {
 		if (entry == null) {
 			throw new IllegalArgumentException("Argument 'entry' can not be null.");
 		}
 
-		final List<ReadonlyLogEntry> entries = new ArrayList<ReadonlyLogEntry>();
+		final List<ReadableLogEntry<ReadableHttpRequestHeaderField, ReadableHttpResponseHeaderField>> entries = new ArrayList<ReadableLogEntry<ReadableHttpRequestHeaderField, ReadableHttpResponseHeaderField>>();
 		entries.add(entry);
 		analyze(entries);
 
@@ -122,7 +128,7 @@ public class LogEntryAnalyzer implements net.sf.jacclog.service.analyzer.LogEntr
 		return parser;
 	}
 
-	public LogEntryService<ReadonlyLogEntry> getService() {
+	public LogEntryService<ReadableLogEntry<ReadableHttpRequestHeaderField, ReadableHttpResponseHeaderField>> getService() {
 		return service;
 	}
 
