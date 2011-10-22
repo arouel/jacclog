@@ -26,9 +26,7 @@ import net.sf.jacclog.logformat.field.CustomRequestTimeField;
 import net.sf.jacclog.logformat.field.Field;
 import net.sf.jacclog.logformat.field.FilenameField;
 import net.sf.jacclog.logformat.field.HttpLastStatusField;
-import net.sf.jacclog.logformat.field.HttpRefererField;
 import net.sf.jacclog.logformat.field.HttpStatusField;
-import net.sf.jacclog.logformat.field.HttpUserAgentField;
 import net.sf.jacclog.logformat.field.IgnorableField;
 import net.sf.jacclog.logformat.field.LocalIpAddressField;
 import net.sf.jacclog.logformat.field.ProcessIdField;
@@ -38,11 +36,72 @@ import net.sf.jacclog.logformat.field.RemoteIpAddressField;
 import net.sf.jacclog.logformat.field.RemoteLognameField;
 import net.sf.jacclog.logformat.field.RemoteUserField;
 import net.sf.jacclog.logformat.field.RequestFirstLineField;
+import net.sf.jacclog.logformat.field.RequestHeaderAcceptCharsetField;
+import net.sf.jacclog.logformat.field.RequestHeaderAcceptEncodingField;
+import net.sf.jacclog.logformat.field.RequestHeaderAcceptField;
+import net.sf.jacclog.logformat.field.RequestHeaderAcceptLanguageField;
+import net.sf.jacclog.logformat.field.RequestHeaderAuthorizationField;
+import net.sf.jacclog.logformat.field.RequestHeaderCacheControlField;
+import net.sf.jacclog.logformat.field.RequestHeaderConnectionField;
+import net.sf.jacclog.logformat.field.RequestHeaderContentLengthField;
+import net.sf.jacclog.logformat.field.RequestHeaderContentTypeField;
+import net.sf.jacclog.logformat.field.RequestHeaderCookieField;
+import net.sf.jacclog.logformat.field.RequestHeaderDateField;
+import net.sf.jacclog.logformat.field.RequestHeaderExpectField;
+import net.sf.jacclog.logformat.field.RequestHeaderFromField;
+import net.sf.jacclog.logformat.field.RequestHeaderHostField;
+import net.sf.jacclog.logformat.field.RequestHeaderIfMatchField;
+import net.sf.jacclog.logformat.field.RequestHeaderIfModifiedSinceField;
+import net.sf.jacclog.logformat.field.RequestHeaderIfNoneMatchField;
+import net.sf.jacclog.logformat.field.RequestHeaderIfRangeField;
+import net.sf.jacclog.logformat.field.RequestHeaderIfUnmodifiedSinceField;
+import net.sf.jacclog.logformat.field.RequestHeaderMaxForwardsField;
+import net.sf.jacclog.logformat.field.RequestHeaderPragmaField;
+import net.sf.jacclog.logformat.field.RequestHeaderProxyAuthorizationField;
+import net.sf.jacclog.logformat.field.RequestHeaderRangeField;
+import net.sf.jacclog.logformat.field.RequestHeaderRefererField;
+import net.sf.jacclog.logformat.field.RequestHeaderTeField;
+import net.sf.jacclog.logformat.field.RequestHeaderUpgradeField;
+import net.sf.jacclog.logformat.field.RequestHeaderUserAgentField;
+import net.sf.jacclog.logformat.field.RequestHeaderViaField;
+import net.sf.jacclog.logformat.field.RequestHeaderWarningField;
 import net.sf.jacclog.logformat.field.RequestInMillisField;
 import net.sf.jacclog.logformat.field.RequestInSecondsField;
 import net.sf.jacclog.logformat.field.RequestMethodField;
 import net.sf.jacclog.logformat.field.RequestProtocolField;
 import net.sf.jacclog.logformat.field.RequestTimeField;
+import net.sf.jacclog.logformat.field.ResponseHeaderAcceptRangesField;
+import net.sf.jacclog.logformat.field.ResponseHeaderAgeField;
+import net.sf.jacclog.logformat.field.ResponseHeaderAllowField;
+import net.sf.jacclog.logformat.field.ResponseHeaderCacheControlField;
+import net.sf.jacclog.logformat.field.ResponseHeaderConnectionField;
+import net.sf.jacclog.logformat.field.ResponseHeaderContentDispositionField;
+import net.sf.jacclog.logformat.field.ResponseHeaderContentEncodingField;
+import net.sf.jacclog.logformat.field.ResponseHeaderContentLanguageField;
+import net.sf.jacclog.logformat.field.ResponseHeaderContentLengthField;
+import net.sf.jacclog.logformat.field.ResponseHeaderContentLocationField;
+import net.sf.jacclog.logformat.field.ResponseHeaderContentRangeField;
+import net.sf.jacclog.logformat.field.ResponseHeaderContentTypeField;
+import net.sf.jacclog.logformat.field.ResponseHeaderDateField;
+import net.sf.jacclog.logformat.field.ResponseHeaderEtagField;
+import net.sf.jacclog.logformat.field.ResponseHeaderExpiresField;
+import net.sf.jacclog.logformat.field.ResponseHeaderLastModifiedField;
+import net.sf.jacclog.logformat.field.ResponseHeaderLinkField;
+import net.sf.jacclog.logformat.field.ResponseHeaderLocationField;
+import net.sf.jacclog.logformat.field.ResponseHeaderP3pField;
+import net.sf.jacclog.logformat.field.ResponseHeaderPragmaField;
+import net.sf.jacclog.logformat.field.ResponseHeaderProxyAuthenticateField;
+import net.sf.jacclog.logformat.field.ResponseHeaderRefreshField;
+import net.sf.jacclog.logformat.field.ResponseHeaderRetryAfterField;
+import net.sf.jacclog.logformat.field.ResponseHeaderServerField;
+import net.sf.jacclog.logformat.field.ResponseHeaderSetCookieField;
+import net.sf.jacclog.logformat.field.ResponseHeaderStrictTransportSecurityField;
+import net.sf.jacclog.logformat.field.ResponseHeaderTrailerField;
+import net.sf.jacclog.logformat.field.ResponseHeaderTransferEncodingField;
+import net.sf.jacclog.logformat.field.ResponseHeaderVaryField;
+import net.sf.jacclog.logformat.field.ResponseHeaderViaField;
+import net.sf.jacclog.logformat.field.ResponseHeaderWarningField;
+import net.sf.jacclog.logformat.field.ResponseHeaderWwwAuthenticateField;
 import net.sf.jacclog.logformat.field.ResponseInBytesClfField;
 import net.sf.jacclog.logformat.field.ResponseInBytesField;
 import net.sf.jacclog.logformat.field.ServerNameField;
@@ -104,16 +163,8 @@ public class LogFormat {
 			return appendField(HttpLastStatusField.getInstance());
 		}
 
-		public Builder appendHttpRefererField() {
-			return appendField(HttpRefererField.getInstance());
-		}
-
 		public Builder appendHttpStatusField() {
 			return appendField(HttpStatusField.getInstance());
-		}
-
-		public Builder appendHttpUserAgentField() {
-			return appendField(HttpUserAgentField.getInstance());
 		}
 
 		public Builder appendIgnorableField() {
@@ -152,6 +203,122 @@ public class LogFormat {
 			return appendField(RequestFirstLineField.getInstance());
 		}
 
+		public Builder appendRequestHeaderAcceptCharsetField() {
+			return appendField(RequestHeaderAcceptCharsetField.getInstance());
+		}
+
+		public Builder appendRequestHeaderAcceptEncodingField() {
+			return appendField(RequestHeaderAcceptEncodingField.getInstance());
+		}
+
+		public Builder appendRequestHeaderAcceptField() {
+			return appendField(RequestHeaderAcceptField.getInstance());
+		}
+
+		public Builder appendRequestHeaderAcceptLanguageField() {
+			return appendField(RequestHeaderAcceptLanguageField.getInstance());
+		}
+
+		public Builder appendRequestHeaderAuthorizationField() {
+			return appendField(RequestHeaderAuthorizationField.getInstance());
+		}
+
+		public Builder appendRequestHeaderCacheControlField() {
+			return appendField(RequestHeaderCacheControlField.getInstance());
+		}
+
+		public Builder appendRequestHeaderConnectionField() {
+			return appendField(RequestHeaderConnectionField.getInstance());
+		}
+
+		public Builder appendRequestHeaderContentLengthField() {
+			return appendField(RequestHeaderContentLengthField.getInstance());
+		}
+
+		public Builder appendRequestHeaderContentTypeField() {
+			return appendField(RequestHeaderContentTypeField.getInstance());
+		}
+
+		public Builder appendRequestHeaderCookieField() {
+			return appendField(RequestHeaderCookieField.getInstance());
+		}
+
+		public Builder appendRequestHeaderDateField() {
+			return appendField(RequestHeaderDateField.getInstance());
+		}
+
+		public Builder appendRequestHeaderExpectField() {
+			return appendField(RequestHeaderExpectField.getInstance());
+		}
+
+		public Builder appendRequestHeaderFromField() {
+			return appendField(RequestHeaderFromField.getInstance());
+		}
+
+		public Builder appendRequestHeaderHostField() {
+			return appendField(RequestHeaderHostField.getInstance());
+		}
+
+		public Builder appendRequestHeaderIfMatchField() {
+			return appendField(RequestHeaderIfMatchField.getInstance());
+		}
+
+		public Builder appendRequestHeaderIfModifiedSinceField() {
+			return appendField(RequestHeaderIfModifiedSinceField.getInstance());
+		}
+
+		public Builder appendRequestHeaderIfNoneMatchField() {
+			return appendField(RequestHeaderIfNoneMatchField.getInstance());
+		}
+
+		public Builder appendRequestHeaderIfRangeField() {
+			return appendField(RequestHeaderIfRangeField.getInstance());
+		}
+
+		public Builder appendRequestHeaderIfUnmodifiedSinceField() {
+			return appendField(RequestHeaderIfUnmodifiedSinceField.getInstance());
+		}
+
+		public Builder appendRequestHeaderMaxForwardsField() {
+			return appendField(RequestHeaderMaxForwardsField.getInstance());
+		}
+
+		public Builder appendRequestHeaderPragmaField() {
+			return appendField(RequestHeaderPragmaField.getInstance());
+		}
+
+		public Builder appendRequestHeaderProxyAuthorizationField() {
+			return appendField(RequestHeaderProxyAuthorizationField.getInstance());
+		}
+
+		public Builder appendRequestHeaderRangeField() {
+			return appendField(RequestHeaderRangeField.getInstance());
+		}
+
+		public Builder appendRequestHeaderRefererField() {
+			return appendField(RequestHeaderRefererField.getInstance());
+		}
+
+		public Builder appendRequestHeaderTeField() {
+			return appendField(RequestHeaderTeField.getInstance());
+		}
+
+		public Builder appendRequestHeaderUpgradeField() {
+			return appendField(RequestHeaderUpgradeField.getInstance());
+		}
+
+		public Builder appendRequestHeaderUserAgentField() {
+			return appendField(RequestHeaderUserAgentField.getInstance());
+		}
+
+		public Builder appendRequestHeaderViaField() {
+			return appendField(RequestHeaderViaField.getInstance());
+		}
+
+		public Builder appendRequestHeaderWarningField() {
+			return appendField(RequestHeaderWarningField.getInstance());
+		}
+
 		public Builder appendRequestInMillisField() {
 			return appendField(RequestInMillisField.getInstance());
 		}
@@ -170,6 +337,134 @@ public class LogFormat {
 
 		public Builder appendRequestTimeField() {
 			return appendField(RequestTimeField.getInstance());
+		}
+
+		public Builder appendResponseHeaderAcceptRangesField() {
+			return appendField(ResponseHeaderAcceptRangesField.getInstance());
+		}
+
+		public Builder appendResponseHeaderAgeField() {
+			return appendField(ResponseHeaderAgeField.getInstance());
+		}
+
+		public Builder appendResponseHeaderAllowField() {
+			return appendField(ResponseHeaderAllowField.getInstance());
+		}
+
+		public Builder appendResponseHeaderCacheControlField() {
+			return appendField(ResponseHeaderCacheControlField.getInstance());
+		}
+
+		public Builder appendResponseHeaderConnectionField() {
+			return appendField(ResponseHeaderConnectionField.getInstance());
+		}
+
+		public Builder appendResponseHeaderContentDispositionField() {
+			return appendField(ResponseHeaderContentDispositionField.getInstance());
+		}
+
+		public Builder appendResponseHeaderContentEncodingField() {
+			return appendField(ResponseHeaderContentEncodingField.getInstance());
+		}
+
+		public Builder appendResponseHeaderContentLanguageField() {
+			return appendField(ResponseHeaderContentLanguageField.getInstance());
+		}
+
+		public Builder appendResponseHeaderContentLengthField() {
+			return appendField(ResponseHeaderContentLengthField.getInstance());
+		}
+
+		public Builder appendResponseHeaderContentLocationField() {
+			return appendField(ResponseHeaderContentLocationField.getInstance());
+		}
+
+		public Builder appendResponseHeaderContentRangeField() {
+			return appendField(ResponseHeaderContentRangeField.getInstance());
+		}
+
+		public Builder appendResponseHeaderContentTypeField() {
+			return appendField(ResponseHeaderContentTypeField.getInstance());
+		}
+
+		public Builder appendResponseHeaderDateField() {
+			return appendField(ResponseHeaderDateField.getInstance());
+		}
+
+		public Builder appendResponseHeaderEtagField() {
+			return appendField(ResponseHeaderEtagField.getInstance());
+		}
+
+		public Builder appendResponseHeaderExpiresField() {
+			return appendField(ResponseHeaderExpiresField.getInstance());
+		}
+
+		public Builder appendResponseHeaderLastModifiedField() {
+			return appendField(ResponseHeaderLastModifiedField.getInstance());
+		}
+
+		public Builder appendResponseHeaderLinkField() {
+			return appendField(ResponseHeaderLinkField.getInstance());
+		}
+
+		public Builder appendResponseHeaderLocationField() {
+			return appendField(ResponseHeaderLocationField.getInstance());
+		}
+
+		public Builder appendResponseHeaderP3pField() {
+			return appendField(ResponseHeaderP3pField.getInstance());
+		}
+
+		public Builder appendResponseHeaderPragmaField() {
+			return appendField(ResponseHeaderPragmaField.getInstance());
+		}
+
+		public Builder appendResponseHeaderProxyAuthenticateField() {
+			return appendField(ResponseHeaderProxyAuthenticateField.getInstance());
+		}
+
+		public Builder appendResponseHeaderRefreshField() {
+			return appendField(ResponseHeaderRefreshField.getInstance());
+		}
+
+		public Builder appendResponseHeaderRetryAfterField() {
+			return appendField(ResponseHeaderRetryAfterField.getInstance());
+		}
+
+		public Builder appendResponseHeaderServerField() {
+			return appendField(ResponseHeaderServerField.getInstance());
+		}
+
+		public Builder appendResponseHeaderSetCookieField() {
+			return appendField(ResponseHeaderSetCookieField.getInstance());
+		}
+
+		public Builder appendResponseHeaderStrictTransportSecurityField() {
+			return appendField(ResponseHeaderStrictTransportSecurityField.getInstance());
+		}
+
+		public Builder appendResponseHeaderTrailerField() {
+			return appendField(ResponseHeaderTrailerField.getInstance());
+		}
+
+		public Builder appendResponseHeaderTransferEncodingField() {
+			return appendField(ResponseHeaderTransferEncodingField.getInstance());
+		}
+
+		public Builder appendResponseHeaderVaryField() {
+			return appendField(ResponseHeaderVaryField.getInstance());
+		}
+
+		public Builder appendResponseHeaderViaField() {
+			return appendField(ResponseHeaderViaField.getInstance());
+		}
+
+		public Builder appendResponseHeaderWarningField() {
+			return appendField(ResponseHeaderWarningField.getInstance());
+		}
+
+		public Builder appendResponseHeaderWwwAuthenticateField() {
+			return appendField(ResponseHeaderWwwAuthenticateField.getInstance());
 		}
 
 		public Builder appendResponseInBytesClfField() {
@@ -207,7 +502,8 @@ public class LogFormat {
 		 */
 		COMBINED(new LogFormat.Builder().appendRemoteHostField().appendRemoteLognameField().appendRemoteUserField()
 				.appendRequestTimeField().appendRequestFirstLineField().appendHttpLastStatusField()
-				.appendResponseInBytesClfField().appendHttpRefererField().appendHttpUserAgentField().build()),
+				.appendResponseInBytesClfField().appendRequestHeaderRefererField().appendRequestHeaderUserAgentField()
+				.build()),
 
 		/**
 		 * Common Log Format (CLF)<br>
@@ -288,18 +584,23 @@ public class LogFormat {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		final LogFormat other = (LogFormat) obj;
 		if (fields == null) {
-			if (other.fields != null)
+			if (other.fields != null) {
 				return false;
-		} else if (!fields.equals(other.fields))
+			}
+		} else if (!fields.equals(other.fields)) {
 			return false;
+		}
 		return true;
 	}
 

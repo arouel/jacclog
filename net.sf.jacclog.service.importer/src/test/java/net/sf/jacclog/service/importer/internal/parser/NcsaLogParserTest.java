@@ -135,7 +135,7 @@ public class NcsaLogParserTest {
 		printResult(line, tokens);
 
 		final ReadonlyLogEntry entry = new NcsaLogParser(
-				LogFormat.parse("%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" %D \"%{User-agent}i\"")).parseLine(line);
+				LogFormat.parse("%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" %D \"%{User-Agent}i\"")).parseLine(line);
 		// TODO %l is not tested yet
 		// TODO %D is not tested yet
 		Assert.assertEquals("192.168.123.12", entry.getRemoteHost());

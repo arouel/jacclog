@@ -32,12 +32,12 @@ import net.sf.jacclog.api.domain.http.HttpStatus;
 import net.sf.jacclog.logformat.LogFormat;
 import net.sf.jacclog.logformat.field.Field;
 import net.sf.jacclog.logformat.field.HttpLastStatusField;
-import net.sf.jacclog.logformat.field.HttpRefererField;
 import net.sf.jacclog.logformat.field.HttpStatusField;
-import net.sf.jacclog.logformat.field.HttpUserAgentField;
 import net.sf.jacclog.logformat.field.RemoteHostField;
 import net.sf.jacclog.logformat.field.RemoteUserField;
 import net.sf.jacclog.logformat.field.RequestFirstLineField;
+import net.sf.jacclog.logformat.field.RequestHeaderRefererField;
+import net.sf.jacclog.logformat.field.RequestHeaderUserAgentField;
 import net.sf.jacclog.logformat.field.RequestTimeField;
 import net.sf.jacclog.logformat.field.ResponseInBytesClfField;
 import net.sf.jacclog.logformat.field.ResponseInBytesField;
@@ -106,8 +106,8 @@ public final class TokensToLogEntryMapper {
 	}
 
 	private static void mapHttpReferer(final LogEntryBuilder builder, final Map<Field, String> map) {
-		if (map.containsKey(HttpRefererField.getInstance())) {
-			final String referer = map.get(HttpRefererField.getInstance());
+		if (map.containsKey(RequestHeaderRefererField.getInstance())) {
+			final String referer = map.get(RequestHeaderRefererField.getInstance());
 			final HttpRequestHeaderField header = new HttpRequestHeaderField(HttpRequestHeader.REFERER, referer);
 			builder.appendRequestHeaders(header);
 		}
@@ -197,8 +197,8 @@ public final class TokensToLogEntryMapper {
 	}
 
 	private static void mapUserAgent(final LogEntryBuilder builder, final Map<Field, String> map) {
-		if (map.containsKey(HttpUserAgentField.getInstance())) {
-			final String userAgent = map.get(HttpUserAgentField.getInstance());
+		if (map.containsKey(RequestHeaderUserAgentField.getInstance())) {
+			final String userAgent = map.get(RequestHeaderUserAgentField.getInstance());
 			final HttpRequestHeaderField header = new HttpRequestHeaderField(HttpRequestHeader.USER_AGENT, userAgent);
 			builder.appendRequestHeaders(header);
 		}

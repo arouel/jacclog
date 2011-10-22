@@ -15,25 +15,25 @@
  ******************************************************************************/
 package net.sf.jacclog.logformat.field;
 
-import net.sf.jacclog.api.domain.http.HttpRequestHeader;
+import net.sf.jacclog.api.domain.http.HttpResponseHeader;
 
 /**
- * The contents of Referer: header line(s) in the request sent to the server.<br>
+ * An instance of this class represents a <code>Age</code> field in a HTTP header of a response sent to a client.<br>
  * <br>
- * <strong>Field:</strong> %{Referer}i
+ * <strong>Field:</strong> %{Age}o
  */
-public final class HttpRefererField extends AbstractParameterizedLogFormatField<HttpRequestHeader> {
+public final class ResponseHeaderAgeField extends AbstractParameterizedLogFormatField<HttpResponseHeader> {
 
 	/**
 	 * <code>FieldHolder</code> is loaded on the first execution of <code>getInstance()</code> or the first access to
 	 * <code>FieldHolder.INSTANCE</code>, not before.
 	 */
 	private static class FieldHolder {
-		public static final HttpRefererField INSTANCE = new HttpRefererField(FieldType.REQUEST_HEADER_LINE,
-				HttpRequestHeader.REFERER);
+		public static final ResponseHeaderAgeField INSTANCE = new ResponseHeaderAgeField(
+				FieldType.RESPONSE_HEADER_LINE, HttpResponseHeader.AGE);
 	}
 
-	public static HttpRefererField getInstance() {
+	public static ResponseHeaderAgeField getInstance() {
 		return FieldHolder.INSTANCE;
 	}
 
@@ -43,7 +43,7 @@ public final class HttpRefererField extends AbstractParameterizedLogFormatField<
 	 * @param type
 	 * @param parameter
 	 */
-	private HttpRefererField(final FieldType type, final HttpRequestHeader parameter) {
+	private ResponseHeaderAgeField(final FieldType type, final HttpResponseHeader parameter) {
 		super(type, parameter);
 	}
 

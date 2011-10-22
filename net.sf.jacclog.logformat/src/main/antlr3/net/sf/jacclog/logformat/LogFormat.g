@@ -42,17 +42,17 @@ options {
     return lastError;
   }
 
-	List<RecognitionException> exceptions = new ArrayList<RecognitionException>();
+  List<RecognitionException> exceptions = new ArrayList<RecognitionException>();
 
-	public List<RecognitionException> getExceptions() {
-	  return exceptions;
-	}
+  public List<RecognitionException> getExceptions() {
+    return exceptions;
+  }
 
-	@Override
-	public void reportError(RecognitionException e) {
-	  super.reportError(e);
-	  exceptions.add(e);
-	}
+  @Override
+  public void reportError(RecognitionException e) {
+    super.reportError(e);
+    exceptions.add(e);
+  }
 
 }
 
@@ -326,14 +326,12 @@ basic_field
 
 
 
-
-
 complex_field
   : ( request_header_line
-	  | response_header_line
+    | response_header_line
     | pid_or_tid
-	  | request_time_custom
-	  )
+    | request_time_custom
+    )
   ;
 
   /**
@@ -341,20 +339,126 @@ complex_field
    * modules (e.g. mod_headers) affect this.
    */
   request_header_line
-    : PLACEHOLDER LPAREN
-      ( request_referer
-      | request_useragent
-      )
-      RPAREN 'i'
+    : PLACEHOLDER LPAREN request_header_fields RPAREN 'i'
+    ;
+  request_header_fields
+    : request_accept
+    | request_accept_charset
+    | request_accept_encoding
+    | request_accept_language
+    | request_authorization
+    | request_cache_control
+    | request_connection
+    | request_cookie
+    | request_content_length
+    | request_content_type
+    | request_date
+    | request_expect
+    | request_from
+    | request_host
+    | request_if_match
+    | request_if_modified_since
+    | request_if_none_match
+    | request_if_range
+    | request_if_unmodified_since
+    | request_max_forwards
+    | request_pragma
+    | request_proxy_authorization
+    | request_range
+    | request_referer
+    | request_te
+    | request_upgrade
+    | request_user_agent
+    | request_via
+    | request_warning
+    ;
+  request_accept : 'Accept'
+    { this.getBuilder().appendRequestHeaderAcceptField(); }
+    ;
+  request_accept_charset : 'Accept-Charset'
+    { this.getBuilder().appendRequestHeaderAcceptCharsetField(); }
+    ;
+  request_accept_encoding : 'Accept-Encoding'
+    { this.getBuilder().appendRequestHeaderAcceptEncodingField(); }
+    ;
+  request_accept_language : 'Accept-Language'
+    { this.getBuilder().appendRequestHeaderAcceptLanguageField(); }
+    ;
+  request_authorization : 'Authorization'
+    { this.getBuilder().appendRequestHeaderAuthorizationField(); }
+    ;
+  request_cache_control : 'Cache-Control'
+    { this.getBuilder().appendRequestHeaderCacheControlField(); }
+    ;
+  request_connection : 'Connection'
+    { this.getBuilder().appendRequestHeaderConnectionField(); }
+    ;
+  request_cookie : 'Cookie'
+    { this.getBuilder().appendRequestHeaderCookieField(); }
+    ;
+  request_content_length : 'Content-Length'
+    { this.getBuilder().appendRequestHeaderContentLengthField(); }
+    ;
+  request_content_type : 'Content-Type'
+    { this.getBuilder().appendRequestHeaderContentTypeField(); }
+    ;
+  request_date : 'Date'
+    { this.getBuilder().appendRequestHeaderDateField(); }
+    ;
+  request_expect : 'Expect'
+    { this.getBuilder().appendRequestHeaderExpectField(); }
+    ;
+  request_from : 'From'
+    { this.getBuilder().appendRequestHeaderFromField(); }
+    ;
+  request_host : 'Host'
+    { this.getBuilder().appendRequestHeaderHostField(); }
+    ;
+  request_if_match : 'If-Match'
+    { this.getBuilder().appendRequestHeaderIfMatchField(); }
+    ;
+  request_if_modified_since : 'If-Modified-Since'
+    { this.getBuilder().appendRequestHeaderIfModifiedSinceField(); }
+    ;
+  request_if_none_match : 'If-None-Match'
+    { this.getBuilder().appendRequestHeaderIfNoneMatchField(); }
+    ;
+  request_if_range : 'If-Range'
+    { this.getBuilder().appendRequestHeaderIfRangeField(); }
+    ;
+  request_if_unmodified_since : 'If-Unmodified-Since'
+    { this.getBuilder().appendRequestHeaderIfUnmodifiedSinceField(); }
+    ;
+  request_max_forwards : 'Max-Forwards'
+    { this.getBuilder().appendRequestHeaderMaxForwardsField(); }
+    ;
+  request_pragma : 'Pragma'
+    { this.getBuilder().appendRequestHeaderPragmaField(); }
+    ;
+  request_proxy_authorization : 'Proxy-Authorization'
+    { this.getBuilder().appendRequestHeaderProxyAuthorizationField(); }
+    ;
+  request_range : 'Range'
+    { this.getBuilder().appendRequestHeaderRangeField(); }
     ;
   request_referer : 'Referer'
-    {
-      this.getBuilder().appendHttpRefererField();
-    };
-  request_useragent : 'User-agent'
-    {
-      this.getBuilder().appendHttpUserAgentField();
-    };
+    { this.getBuilder().appendRequestHeaderRefererField(); }
+    ;
+  request_te : 'TE'
+    { this.getBuilder().appendRequestHeaderTeField(); }
+    ;
+  request_upgrade : 'Upgrade'
+    { this.getBuilder().appendRequestHeaderUpgradeField(); }
+    ;
+  request_user_agent : 'User-Agent'
+    { this.getBuilder().appendRequestHeaderUserAgentField(); }
+    ;
+  request_via : 'Via'
+    { this.getBuilder().appendRequestHeaderViaField(); }
+    ;
+  request_warning : 'Warning'
+    { this.getBuilder().appendRequestHeaderWarningField(); }
+    ;
 
 
 
@@ -362,12 +466,140 @@ complex_field
    * %...{Foobar}o The contents of Foobar: header line(s) in the reply.
    */
   response_header_line
-    : PLACEHOLDER LPAREN
-      ( 'Refresh'
-      | 'Var'
-      )
-      RPAREN 'o'
+    : PLACEHOLDER LPAREN response_header_fields RPAREN 'o'
     ;
+  response_header_fields
+    : response_accept_ranges
+    | response_age
+    | response_allow
+    | response_cache_control
+    | response_connection
+    | response_content_encoding
+    | response_content_language
+    | response_content_length
+    | response_content_location
+    | response_content_disposition
+    | response_content_range
+    | response_content_type
+    | response_date
+    | response_etag
+    | response_expires
+    | response_last_modified
+    | response_link
+    | response_location
+    | response_p3p
+    | response_pragma
+    | response_proxy_authenticate
+    | response_refresh
+    | response_retry_after
+    | response_server
+    | response_set_cookie
+    | response_strict_transport_security
+    | response_trailer
+    | response_transfer_encoding
+    | response_vary
+    | response_via
+    | response_warning
+    | response_www_authenticate
+    ;
+  response_accept_ranges : 'Accept-Ranges'
+    { this.getBuilder().appendResponseHeaderAcceptRangesField(); }
+    ;
+  response_age : 'Age'
+    { this.getBuilder().appendResponseHeaderAgeField(); }
+    ;
+  response_allow : 'Allow'
+    { this.getBuilder().appendResponseHeaderAllowField(); }
+    ;
+  response_cache_control : 'Cache-Control'
+    { this.getBuilder().appendResponseHeaderCacheControlField(); }
+    ;
+  response_connection : 'Connection'
+    { this.getBuilder().appendResponseHeaderConnectionField(); }
+    ;
+  response_content_encoding : 'Content-Encoding'
+    { this.getBuilder().appendResponseHeaderContentEncodingField(); }
+    ;
+  response_content_language : 'Content-Language'
+    { this.getBuilder().appendResponseHeaderContentLanguageField(); }
+    ;
+  response_content_length : 'Content-Length'
+    { this.getBuilder().appendResponseHeaderContentLengthField(); }
+    ;
+  response_content_location : 'Content-Location'
+    { this.getBuilder().appendResponseHeaderContentLocationField(); }
+    ;
+  response_content_disposition : 'Content-Disposition'
+    { this.getBuilder().appendResponseHeaderContentDispositionField(); }
+    ;
+  response_content_range : 'Content-Range'
+    { this.getBuilder().appendResponseHeaderContentRangeField(); }
+    ;
+  response_content_type : 'Content-Type'
+    { this.getBuilder().appendResponseHeaderContentTypeField(); }
+    ;
+  response_date : 'Date'
+    { this.getBuilder().appendResponseHeaderDateField(); }
+    ;
+  response_etag : 'ETag'
+    { this.getBuilder().appendResponseHeaderEtagField(); }
+    ;
+  response_expires : 'Expires'
+    { this.getBuilder().appendResponseHeaderExpiresField(); }
+    ;
+  response_last_modified : 'Last-Modified'
+    { this.getBuilder().appendResponseHeaderLastModifiedField(); }
+    ;
+  response_link : 'Link'
+    { this.getBuilder().appendResponseHeaderLinkField(); }
+    ;
+  response_location : 'Location'
+    { this.getBuilder().appendResponseHeaderLocationField(); }
+    ;
+  response_p3p : 'P3P'
+    { this.getBuilder().appendResponseHeaderP3pField(); }
+    ;
+  response_pragma : 'Pragma'
+    { this.getBuilder().appendResponseHeaderPragmaField(); }
+    ;
+  response_proxy_authenticate : 'Proxy-Authenticate'
+    { this.getBuilder().appendResponseHeaderProxyAuthenticateField(); }
+    ;
+  response_refresh : 'Refresh'
+    { this.getBuilder().appendResponseHeaderRefreshField(); }
+    ;
+  response_retry_after : 'Retry-After'
+    { this.getBuilder().appendResponseHeaderRetryAfterField(); }
+    ;
+  response_server : 'Server'
+    { this.getBuilder().appendResponseHeaderServerField(); }
+    ;
+  response_set_cookie : 'Set-Cookie'
+    { this.getBuilder().appendResponseHeaderSetCookieField(); }
+    ;
+  response_strict_transport_security : 'Strict-Transport-Security'
+    { this.getBuilder().appendResponseHeaderStrictTransportSecurityField(); }
+    ;
+  response_trailer : 'Trailer'
+    { this.getBuilder().appendResponseHeaderTrailerField(); }
+    ;
+  response_transfer_encoding : 'Transfer-Encoding'
+    { this.getBuilder().appendResponseHeaderTransferEncodingField(); }
+    ;
+  response_vary : 'Vary'
+    { this.getBuilder().appendResponseHeaderVaryField(); }
+    ;
+  response_via : 'Via'
+    { this.getBuilder().appendResponseHeaderViaField(); }
+    ;
+  response_warning : 'Warning'
+    { this.getBuilder().appendResponseHeaderWarningField(); }
+    ;
+  response_www_authenticate : 'WWW-Authenticate'
+    { this.getBuilder().appendResponseHeaderWwwAuthenticateField(); }
+    ;
+
+
 
   /**
    * %...{format}P The process ID or thread id of the child that serviced the request. Valid formats are pid and tid.

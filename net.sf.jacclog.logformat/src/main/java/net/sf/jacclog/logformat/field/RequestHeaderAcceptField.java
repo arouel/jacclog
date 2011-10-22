@@ -18,22 +18,22 @@ package net.sf.jacclog.logformat.field;
 import net.sf.jacclog.api.domain.http.HttpRequestHeader;
 
 /**
- * The contents of User-agent: header line(s) in the request sent to the server.<br>
+ * An instance of this class represents a <code>Accept</code> field in a HTTP header of a request sent to a server.<br>
  * <br>
- * <strong>Field:</strong> %{User-agent}i
+ * <strong>Field:</strong> %{Accept}i
  */
-public final class HttpUserAgentField extends AbstractParameterizedLogFormatField<HttpRequestHeader> {
+public final class RequestHeaderAcceptField extends AbstractParameterizedLogFormatField<HttpRequestHeader> {
 
 	/**
 	 * <code>FieldHolder</code> is loaded on the first execution of <code>getInstance()</code> or the first access to
 	 * <code>FieldHolder.INSTANCE</code>, not before.
 	 */
 	private static class FieldHolder {
-		public static final HttpUserAgentField INSTANCE = new HttpUserAgentField(FieldType.REQUEST_HEADER_LINE,
-				HttpRequestHeader.USER_AGENT);
+		public static final RequestHeaderAcceptField INSTANCE = new RequestHeaderAcceptField(
+				FieldType.REQUEST_HEADER_LINE, HttpRequestHeader.ACCEPT);
 	}
 
-	public static HttpUserAgentField getInstance() {
+	public static RequestHeaderAcceptField getInstance() {
 		return FieldHolder.INSTANCE;
 	}
 
@@ -43,7 +43,7 @@ public final class HttpUserAgentField extends AbstractParameterizedLogFormatFiel
 	 * @param type
 	 * @param parameter
 	 */
-	private HttpUserAgentField(final FieldType type, final HttpRequestHeader parameter) {
+	private RequestHeaderAcceptField(final FieldType type, final HttpRequestHeader parameter) {
 		super(type, parameter);
 	}
 
