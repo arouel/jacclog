@@ -110,9 +110,6 @@ import net.sf.jacclog.logformat.field.UrlPathField;
 
 import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.CommonTokenStream;
-import org.antlr.runtime.RecognitionException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class LogFormat {
 
@@ -535,8 +532,6 @@ public class LogFormat {
 
 	}
 
-	private static final Logger LOG = LoggerFactory.getLogger(LogFormat.class);
-
 	/**
 	 * Parses a format string and returns an object of type <code>LogFormat</code>.<br>
 	 * <br>
@@ -544,6 +539,10 @@ public class LogFormat {
 	 * 
 	 * @param format
 	 * @return
+	 * @throws IllegalArgumentException
+	 *             if the given argument is <code>null</code>
+	 * @throws LogFormatParsingException
+	 *             if the given log format can not be parsed
 	 */
 	public static LogFormat parse(final String format) {
 		if (format == null) {
@@ -564,8 +563,8 @@ public class LogFormat {
 			final LogFormatParser parser = new LogFormatParser(tokens);
 			try {
 				result = parser.format();
-			} catch (final RecognitionException e) {
-				LOG.debug("The format '" + format + "' can not be read: " + e.getLocalizedMessage());
+			} catch (final Exception e) {
+				throw new LogFormatParsingException("The format '" + format + "' is not valid.", e);
 			}
 		}
 
