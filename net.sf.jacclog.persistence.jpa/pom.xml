@@ -51,8 +51,8 @@
 
 		<!-- Specifications -->
 		<dependency>
-			<groupId>org.apache.geronimo.specs</groupId>
-			<artifactId>geronimo-jpa_2.0_spec</artifactId>
+			<groupId>org.eclipse.persistence</groupId>
+			<artifactId>javax.persistence</artifactId>
 		</dependency>
 
 		<!-- EclipseLink -->
@@ -101,27 +101,23 @@
 	<build>
 		<plugins>
 			<plugin>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>jpa-enhancement</id>
-                        <phase>compile</phase>
-                        <configuration>
-                        	<target>
-                                <java
-                                    classname="org.eclipse.persistence.tools.weaving.jpa.StaticWeave"
-                                    classpathref="maven.test.classpath"
-                                    fork="true">
-                                    <arg
-                                        line="-loglevel FINEST -persistenceinfo src/main/resources target/classes target/classes" />
-                                </java>
-                        	</target>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                </executions>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>jpa-enhancement</id>
+						<phase>compile</phase>
+						<configuration>
+							<target>
+								<java classname="org.eclipse.persistence.tools.weaving.jpa.StaticWeave" classpathref="maven.test.classpath" fork="true">
+									<arg line="-loglevel FINEST -persistenceinfo src/main/resources target/classes target/classes" />
+								</java>
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<!-- the following instructions build a simple set of public/private classes into an OSGi bundle -->
