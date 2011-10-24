@@ -26,51 +26,44 @@ import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
 
 import net.sf.jacclog.api.domain.http.ReadableHttpResponseHeader;
-import net.sf.jacclog.api.domain.http.ReadableHttpResponseHeaderField;
-import net.sf.jacclog.persistence.jpa.entity.HttpResponseHeaderField;
 import net.sf.jacclog.persistence.jpa.entity.HttpResponseHeaderType;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class HttpResponseHeaderFieldRepository {
+public class HttpResponseHeaderTypeRepository {
 
-	private static final Logger LOG = LoggerFactory.getLogger(HttpResponseHeaderFieldRepository.class);
+	private static final Logger LOG = LoggerFactory.getLogger(HttpResponseHeaderTypeRepository.class);
 
 	private static final String PERSISTENCE_UNIT_NAME = "jacclogPU";
 
 	private final EntityManagerFactory entityManagerFactory;
 
-	private final HttpResponseHeaderTypeRepository responseHeaderTypeRepository;
-
-	public HttpResponseHeaderFieldRepository() {
+	public HttpResponseHeaderTypeRepository() {
 		entityManagerFactory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
-		responseHeaderTypeRepository = new HttpResponseHeaderTypeRepository(entityManagerFactory);
 	}
 
-	public HttpResponseHeaderFieldRepository(final EntityManagerFactory entityManagerFactory) {
+	public HttpResponseHeaderTypeRepository(final EntityManagerFactory entityManagerFactory) {
 		if (entityManagerFactory == null) {
 			throw new IllegalArgumentException("Argument 'entityManagerFactory' can not be null.");
 		}
 
 		this.entityManagerFactory = entityManagerFactory;
-		responseHeaderTypeRepository = new HttpResponseHeaderTypeRepository(entityManagerFactory);
 	}
 
-	public HttpResponseHeaderFieldRepository(final Map<String, String> properties) {
+	public HttpResponseHeaderTypeRepository(final Map<String, String> properties) {
 		if (properties == null) {
 			throw new IllegalArgumentException("Argument 'properties' can not be null.");
 		}
 
 		entityManagerFactory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME, properties);
-		responseHeaderTypeRepository = new HttpResponseHeaderTypeRepository(entityManagerFactory);
 	}
 
 	/**
 	 * Counts all HTTP response headers of a specific type.
 	 * 
 	 * @param type
-	 *            the type of a HTTP response header field
+	 *            the type of a HTTP response header type
 	 * @return number of HTTP response headers
 	 */
 	public long count(final ReadableHttpResponseHeader type) {
@@ -80,15 +73,15 @@ public class HttpResponseHeaderFieldRepository {
 
 		final EntityManager entityManager = entityManagerFactory.createEntityManager();
 		final Long count = entityManager
-				.createQuery("SELECT count(o) FROM HttpResponseHeaderField o LEFT JOIN o.type t WHERE t.name = :type",
-						Long.class).setParameter("type", type.getName()).getSingleResult();
+				.createQuery("SELECT count(o) FROM HttpResponseHeaderType o WHERE o.name = :name", Long.class)
+				.setParameter("name", type.getName()).getSingleResult();
 		entityManager.close();
 		return count;
 	}
 
 	public long countAll() {
 		final EntityManager entityManager = entityManagerFactory.createEntityManager();
-		final Long count = entityManager.createQuery("SELECT count(o) FROM HttpResponseHeaderField o", Long.class)
+		final Long count = entityManager.createQuery("SELECT count(o) FROM HttpResponseHeaderType o", Long.class)
 				.getSingleResult();
 		entityManager.close();
 		return count;
@@ -101,53 +94,50 @@ public class HttpResponseHeaderFieldRepository {
 	 *            Position of the first result, numbered from 0
 	 * @param maxResults
 	 *            Maximum number of results to retrieve
-	 * @return a list of HTTP response header fields
+	 * @return a list of HTTP response header types
 	 */
-	public List<HttpResponseHeaderField> find(final int startPosition, final int maxResults) {
+	public List<HttpResponseHeaderType> find(final int startPosition, final int maxResults) {
 		final EntityManager entityManager = entityManagerFactory.createEntityManager();
-		final List<HttpResponseHeaderField> entries = entityManager
-				.createQuery("SELECT o FROM HttpResponseHeaderField o", HttpResponseHeaderField.class)
+		final List<HttpResponseHeaderType> entries = entityManager
+				.createQuery("SELECT o FROM HttpResponseHeaderType o", HttpResponseHeaderType.class)
 				.setFirstResult(startPosition).setMaxResults(maxResults).getResultList();
 		entityManager.close();
 		return entries;
 	}
 
 	/**
-	 * Finds a HTTP response header field by primary key.
+	 * Finds a HTTP response header type by primary key.
 	 * 
 	 * @param id
-	 *            the primary key (ID) of a HTTP response header field
-	 * @return the found response header field or <code>null</code> if the field does not exist
+	 *            the primary key (ID) of a HTTP response header type
+	 * @return the found response header type or <code>null</code> if the type does not exist
 	 */
-	public HttpResponseHeaderField find(final Long id) {
+	public HttpResponseHeaderType find(final Long id) {
 		if (id == null) {
 			throw new IllegalArgumentException("Argument 'id' can not be null.");
 		}
 
 		final EntityManager entityManager = entityManagerFactory.createEntityManager();
-		final HttpResponseHeaderField field = entityManager.find(HttpResponseHeaderField.class, id);
+		final HttpResponseHeaderType type = entityManager.find(HttpResponseHeaderType.class, id);
 		entityManager.close();
-		return field;
+		return type;
 	}
 
 	/**
-	 * Find all HTTP response header fields within a start and end date.
+	 * Finds a HTTP response header type by the name of the given <code>ReadableHttpResponseHeader</code>.
 	 * 
 	 * @param type
-	 *            the type of a HTTP response header field
-	 * @return a list of HTTP response header fields
+	 *            the readable HTTP response header type
+	 * @throws IllegalArgumentException
+	 *             if the given argument is <code>null</code>
+	 * @return the HTTP response header type or <code>null</code>, if nothing is found
 	 */
-	public List<HttpResponseHeaderField> find(final ReadableHttpResponseHeader type) {
+	public HttpResponseHeaderType find(final ReadableHttpResponseHeader type) {
 		if (type == null) {
 			throw new IllegalArgumentException("Argument 'type' can not be null.");
 		}
 
-		final EntityManager entityManager = entityManagerFactory.createEntityManager();
-		final List<HttpResponseHeaderField> entries = entityManager
-				.createQuery("SELECT o FROM HttpResponseHeaderField o LEFT JOIN o.type t WHERE t.name = :type",
-						HttpResponseHeaderField.class).setParameter("type", type.getName()).getResultList();
-		entityManager.close();
-		return entries;
+		return find(type.getName());
 	}
 
 	/**
@@ -155,62 +145,55 @@ public class HttpResponseHeaderFieldRepository {
 	 * and maximum number of results it restricts the size of the result set.
 	 * 
 	 * @param type
-	 *            the type of a HTTP response header field
+	 *            the type of a HTTP response header type
 	 * @param startPosition
 	 *            Position of the first result, numbered from 0
 	 * @param maxResults
 	 *            Maximum number of results to retrieve
 	 * @throws IllegalArgumentException
 	 *             if the given type is <code>null</code>
-	 * @return a list of HTTP response header fields
+	 * @return a list of HTTP response header types
 	 */
-	public List<HttpResponseHeaderField> find(final ReadableHttpResponseHeader type, final int startPosition,
+	public List<HttpResponseHeaderType> find(final ReadableHttpResponseHeader type, final int startPosition,
 			final int maxResults) {
 		if (type == null) {
 			throw new IllegalArgumentException("Argument 'type' can not be null.");
 		}
 
 		final EntityManager entityManager = entityManagerFactory.createEntityManager();
-		final List<HttpResponseHeaderField> fields = entityManager
-				.createQuery(
-						"SELECT o FROM HttpResponseHeaderField o LEFT JOIN o.type t WHERE t.name = :type ORDER BY o.id",
-						HttpResponseHeaderField.class).setParameter("type", type.getName())
+		final List<HttpResponseHeaderType> types = entityManager
+				.createQuery("SELECT o FROM HttpResponseHeaderType o WHERE o.name = :name ORDER BY o.id",
+						HttpResponseHeaderType.class).setParameter("name", type.getName())
 				.setFirstResult(startPosition).setMaxResults(maxResults).getResultList();
 		entityManager.close();
-		return fields;
+		return types;
 	}
 
 	/**
-	 * Finds a HTTP response header field by type and value.
+	 * Finds a HTTP response header type by name.
 	 * 
 	 * @param type
-	 *            the type of a HTTP response header field
+	 *            the type of a HTTP response header type
 	 * @param value
-	 *            the value of a HTTP response header field
+	 *            the value of a HTTP response header type
 	 * @throws IllegalArgumentException
 	 *             if the given arguments are <code>null</code>
-	 * @return the HTTP response header field or <code>null</code>, if nothing is found
+	 * @return the HTTP response header type or <code>null</code>, if nothing is found
 	 */
-	public HttpResponseHeaderField find(final ReadableHttpResponseHeader type, final String value) {
-		if (type == null) {
-			throw new IllegalArgumentException("Argument 'type' can not be null.");
-		}
-
-		if (value == null) {
-			throw new IllegalArgumentException("Argument 'value' can not be null.");
+	public HttpResponseHeaderType find(final String name) {
+		if (name == null) {
+			throw new IllegalArgumentException("Argument 'name' can not be null.");
 		}
 
 		final EntityManager entityManager = entityManagerFactory.createEntityManager();
-		HttpResponseHeaderField entry = null;
+		HttpResponseHeaderType entry = null;
 		try {
 			entry = entityManager
-					.createQuery(
-							"SELECT o FROM HttpResponseHeaderField o LEFT JOIN o.type t WHERE t.name = :type AND o.value = :value",
-							HttpResponseHeaderField.class).setParameter("type", type.getName())
-					.setParameter("value", value).getSingleResult();
+					.createQuery("SELECT o FROM HttpResponseHeaderType o WHERE o.name = :name",
+							HttpResponseHeaderType.class).setParameter("name", name).getSingleResult();
 		} catch (final NoResultException e) {
-			LOG.debug("The HTTP response header field with the type '" + type.getName() + "' and value '" + value
-					+ "' does not exist. (" + e.getLocalizedMessage() + ")");
+			LOG.debug("The HTTP response header type with the name '" + name + "' does not exist. ("
+					+ e.getLocalizedMessage() + ")");
 		} finally {
 			entityManager.close();
 		}
@@ -218,52 +201,35 @@ public class HttpResponseHeaderFieldRepository {
 	}
 
 	/**
-	 * Finds a HTTP response header field by the type and value of the given (readable) field.
+	 * Reads all HTTP response header types within the repository.
 	 * 
-	 * @param field
-	 *            the readable HTTP response header field
-	 * @throws IllegalArgumentException
-	 *             if the given argument is <code>null</code>
-	 * @return the HTTP response header field or <code>null</code>, if nothing is found
+	 * @return a list of all HTTP response header types
 	 */
-	public HttpResponseHeaderField find(final ReadableHttpResponseHeaderField field) {
-		if (field == null) {
-			throw new IllegalArgumentException("Argument 'field' can not be null.");
-		}
-
-		return find(field.getType(), field.getValue());
-	}
-
-	/**
-	 * Reads all HTTP response header fields within the repository.
-	 * 
-	 * @return a list of all HTTP response header fields
-	 */
-	public List<HttpResponseHeaderField> findAll() {
+	public List<HttpResponseHeaderType> findAll() {
 		final EntityManager entityManager = entityManagerFactory.createEntityManager();
-		final List<HttpResponseHeaderField> fields = entityManager.createQuery(
-				"SELECT o FROM HttpResponseHeaderField o", HttpResponseHeaderField.class).getResultList();
+		final List<HttpResponseHeaderType> types = entityManager.createQuery("SELECT o FROM HttpResponseHeaderType o",
+				HttpResponseHeaderType.class).getResultList();
 		entityManager.close();
-		return fields;
+		return types;
 	}
 
 	/**
-	 * Updates the given field within the persisted one in the repository.
+	 * Updates the given type within the persisted one in the repository.
 	 * 
-	 * @param field
-	 *            the HTTP response header field to be updated
-	 * @return the updated HTTP response header field or <code>null</code> if the merge process failed
+	 * @param type
+	 *            the HTTP response header type to be updated
+	 * @return the updated HTTP response header type or <code>null</code> if the merge process failed
 	 */
-	public HttpResponseHeaderField merge(final HttpResponseHeaderField field) {
-		if (field == null) {
-			throw new IllegalArgumentException("Argument 'field' must be set.");
+	public HttpResponseHeaderType merge(final HttpResponseHeaderType type) {
+		if (type == null) {
+			throw new IllegalArgumentException("Argument 'type' must be set.");
 		}
 
-		HttpResponseHeaderField merged = null;
+		HttpResponseHeaderType merged = null;
 		final EntityManager entityManager = entityManagerFactory.createEntityManager();
 		entityManager.getTransaction().begin();
 		try {
-			merged = entityManager.merge(field);
+			merged = entityManager.merge(type);
 			entityManager.getTransaction().commit();
 		} catch (final RuntimeException e1) {
 			if (entityManager.getTransaction().isActive()) {
@@ -285,17 +251,16 @@ public class HttpResponseHeaderFieldRepository {
 		return merged;
 	}
 
-	public void persist(final Collection<HttpResponseHeaderField> fields) {
-		if (fields == null) {
-			throw new IllegalArgumentException("Argument 'fields' can not be null.");
+	public void persist(final Collection<HttpResponseHeaderType> types) {
+		if (types == null) {
+			throw new IllegalArgumentException("Argument 'types' can not be null.");
 		}
 
 		final EntityManager entityManager = entityManagerFactory.createEntityManager();
 		entityManager.getTransaction().begin();
 		try {
-			for (final HttpResponseHeaderField field : fields) {
-				persistType(field);
-				entityManager.persist(field);
+			for (final HttpResponseHeaderType type : types) {
+				entityManager.persist(type);
 			}
 			entityManager.getTransaction().commit();
 		} catch (final RuntimeException e1) {
@@ -316,24 +281,19 @@ public class HttpResponseHeaderFieldRepository {
 		}
 	}
 
-	public void persist(final HttpResponseHeaderField field) {
-		if (field == null) {
-			throw new IllegalArgumentException("Argument 'field' must be set.");
+	public void persist(final HttpResponseHeaderType type) {
+		if (type == null) {
+			throw new IllegalArgumentException("Argument 'type' must be set.");
 		}
 
-		if (field.getType() == null) {
-			throw new IllegalArgumentException("The type of an header field can not be null.");
-		}
-
-		if (field.getValue() == null) {
-			throw new IllegalArgumentException("The value of an header field can not be null.");
+		if (type.getType() == null) {
+			throw new IllegalArgumentException("The name of an header type can not be null.");
 		}
 
 		final EntityManager entityManager = entityManagerFactory.createEntityManager();
 		entityManager.getTransaction().begin();
 		try {
-			persistType(field);
-			entityManager.persist(field);
+			entityManager.persist(type);
 			entityManager.getTransaction().commit();
 		} catch (final RuntimeException e1) {
 			if (entityManager.getTransaction().isActive()) {
@@ -353,21 +313,7 @@ public class HttpResponseHeaderFieldRepository {
 		}
 	}
 
-	private void persistType(final HttpResponseHeaderField field) {
-		final HttpResponseHeaderType attached = responseHeaderTypeRepository.find(field.getType());
-		if (attached == null) {
-			final HttpResponseHeaderType entity = field.getHttpResponseHeaderType();
-			try {
-				responseHeaderTypeRepository.persist(entity);
-			} catch (final RuntimeException e) {
-				LOG.info(e.getLocalizedMessage() + ": " + entity, e);
-			}
-		} else {
-			field.setHttpResponseHeaderType(attached);
-		}
-	}
-
-	public void remove(final HttpResponseHeaderField entry) {
+	public void remove(final HttpResponseHeaderType entry) {
 		if (entry == null) {
 			throw new IllegalArgumentException("Argument 'entry' can not be null.");
 		}
@@ -377,7 +323,7 @@ public class HttpResponseHeaderFieldRepository {
 		}
 
 		final EntityManager entityManager = entityManagerFactory.createEntityManager();
-		final HttpResponseHeaderField attached = entityManager.find(HttpResponseHeaderField.class, entry.getId());
+		final HttpResponseHeaderType attached = entityManager.find(HttpResponseHeaderType.class, entry.getId());
 		entityManager.getTransaction().begin();
 		try {
 			entityManager.remove(attached);
@@ -400,19 +346,19 @@ public class HttpResponseHeaderFieldRepository {
 		}
 	}
 
-	public void remove(final List<HttpResponseHeaderField> types) {
+	public void remove(final List<HttpResponseHeaderType> types) {
 		if (types == null || types.isEmpty()) {
 			throw new IllegalArgumentException("Argument 'entries' can not be null or empty.");
 		}
 
 		final EntityManager entityManager = entityManagerFactory.createEntityManager();
-		final List<HttpResponseHeaderField> attached = new ArrayList<HttpResponseHeaderField>(types.size());
-		for (final HttpResponseHeaderField type : types) {
-			attached.add(entityManager.find(HttpResponseHeaderField.class, type.getId()));
+		final List<HttpResponseHeaderType> attached = new ArrayList<HttpResponseHeaderType>(types.size());
+		for (final HttpResponseHeaderType type : types) {
+			attached.add(entityManager.find(HttpResponseHeaderType.class, type.getId()));
 		}
 		entityManager.getTransaction().begin();
 		try {
-			for (final HttpResponseHeaderField type : attached) {
+			for (final HttpResponseHeaderType type : attached) {
 				entityManager.remove(type);
 			}
 			entityManager.getTransaction().commit();
@@ -435,11 +381,11 @@ public class HttpResponseHeaderFieldRepository {
 	}
 
 	public void start() {
-		LOG.debug("Starting HttpResponseHeaderFieldRepository...");
+		LOG.debug("Starting HttpResponseHeaderTypeRepository...");
 	}
 
 	public void stop() {
-		LOG.debug("Closing EntityManagerFactory of HttpResponseHeaderFieldRepository...");
+		LOG.debug("Closing EntityManagerFactory of HttpResponseHeaderTypeRepository...");
 
 		if (entityManagerFactory != null) {
 			entityManagerFactory.close();

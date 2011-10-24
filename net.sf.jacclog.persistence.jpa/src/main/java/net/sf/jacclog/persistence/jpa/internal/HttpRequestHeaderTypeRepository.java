@@ -15,7 +15,6 @@
  ******************************************************************************/
 package net.sf.jacclog.persistence.jpa.internal;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -26,51 +25,44 @@ import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
 
 import net.sf.jacclog.api.domain.http.ReadableHttpRequestHeader;
-import net.sf.jacclog.api.domain.http.ReadableHttpRequestHeaderField;
-import net.sf.jacclog.persistence.jpa.entity.HttpRequestHeaderField;
 import net.sf.jacclog.persistence.jpa.entity.HttpRequestHeaderType;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class HttpRequestHeaderFieldRepository {
+public class HttpRequestHeaderTypeRepository {
 
-	private static final Logger LOG = LoggerFactory.getLogger(HttpRequestHeaderFieldRepository.class);
+	private static final Logger LOG = LoggerFactory.getLogger(HttpRequestHeaderTypeRepository.class);
 
 	private static final String PERSISTENCE_UNIT_NAME = "jacclogPU";
 
 	private final EntityManagerFactory entityManagerFactory;
 
-	private final HttpRequestHeaderTypeRepository requestHeaderTypeRepository;
-
-	public HttpRequestHeaderFieldRepository() {
+	public HttpRequestHeaderTypeRepository() {
 		entityManagerFactory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
-		requestHeaderTypeRepository = new HttpRequestHeaderTypeRepository(entityManagerFactory);
 	}
 
-	public HttpRequestHeaderFieldRepository(final EntityManagerFactory entityManagerFactory) {
+	public HttpRequestHeaderTypeRepository(final EntityManagerFactory entityManagerFactory) {
 		if (entityManagerFactory == null) {
 			throw new IllegalArgumentException("Argument 'entityManagerFactory' can not be null.");
 		}
 
 		this.entityManagerFactory = entityManagerFactory;
-		requestHeaderTypeRepository = new HttpRequestHeaderTypeRepository(entityManagerFactory);
 	}
 
-	public HttpRequestHeaderFieldRepository(final Map<String, String> properties) {
+	public HttpRequestHeaderTypeRepository(final Map<String, String> properties) {
 		if (properties == null) {
 			throw new IllegalArgumentException("Argument 'properties' can not be null.");
 		}
 
 		entityManagerFactory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME, properties);
-		requestHeaderTypeRepository = new HttpRequestHeaderTypeRepository(entityManagerFactory);
 	}
 
 	/**
 	 * Counts all HTTP request headers of a specific type.
 	 * 
 	 * @param type
-	 *            the type of a HTTP request header field
+	 *            the type of a HTTP request header type
 	 * @return number of HTTP request headers
 	 */
 	public long count(final ReadableHttpRequestHeader type) {
@@ -80,15 +72,15 @@ public class HttpRequestHeaderFieldRepository {
 
 		final EntityManager entityManager = entityManagerFactory.createEntityManager();
 		final Long count = entityManager
-				.createQuery("SELECT count(o) FROM HttpRequestHeaderField o LEFT JOIN o.type t WHERE t.name = :type",
-						Long.class).setParameter("type", type.getName()).getSingleResult();
+				.createQuery("SELECT count(o) FROM HttpRequestHeaderType o WHERE o.name = :name", Long.class)
+				.setParameter("name", type.getName()).getSingleResult();
 		entityManager.close();
 		return count;
 	}
 
 	public long countAll() {
 		final EntityManager entityManager = entityManagerFactory.createEntityManager();
-		final Long count = entityManager.createQuery("SELECT count(o) FROM HttpRequestHeaderField o", Long.class)
+		final Long count = entityManager.createQuery("SELECT count(o) FROM HttpRequestHeaderType o", Long.class)
 				.getSingleResult();
 		entityManager.close();
 		return count;
@@ -101,53 +93,50 @@ public class HttpRequestHeaderFieldRepository {
 	 *            Position of the first result, numbered from 0
 	 * @param maxResults
 	 *            Maximum number of results to retrieve
-	 * @return a list of HTTP request header fields
+	 * @return a list of HTTP request header types
 	 */
-	public List<HttpRequestHeaderField> find(final int startPosition, final int maxResults) {
+	public List<HttpRequestHeaderType> find(final int startPosition, final int maxResults) {
 		final EntityManager entityManager = entityManagerFactory.createEntityManager();
-		final List<HttpRequestHeaderField> entries = entityManager
-				.createQuery("SELECT o FROM HttpRequestHeaderField o", HttpRequestHeaderField.class)
+		final List<HttpRequestHeaderType> entries = entityManager
+				.createQuery("SELECT o FROM HttpRequestHeaderType o", HttpRequestHeaderType.class)
 				.setFirstResult(startPosition).setMaxResults(maxResults).getResultList();
 		entityManager.close();
 		return entries;
 	}
 
 	/**
-	 * Finds a HTTP request header field by primary key.
+	 * Finds a HTTP request header type by primary key.
 	 * 
 	 * @param id
-	 *            the primary key (ID) of a HTTP request header field
-	 * @return the found request header field or <code>null</code> if the field does not exist
+	 *            the primary key (ID) of a HTTP request header type
+	 * @return the found request header type or <code>null</code> if the type does not exist
 	 */
-	public HttpRequestHeaderField find(final Long id) {
+	public HttpRequestHeaderType find(final Long id) {
 		if (id == null) {
 			throw new IllegalArgumentException("Argument 'id' can not be null.");
 		}
 
 		final EntityManager entityManager = entityManagerFactory.createEntityManager();
-		final HttpRequestHeaderField field = entityManager.find(HttpRequestHeaderField.class, id);
+		final HttpRequestHeaderType type = entityManager.find(HttpRequestHeaderType.class, id);
 		entityManager.close();
-		return field;
+		return type;
 	}
 
 	/**
-	 * Find all HTTP request header fields within a start and end date.
+	 * Finds a HTTP request header type by the name of the given <code>ReadableHttpRequestHeader</code>.
 	 * 
 	 * @param type
-	 *            the type of a HTTP request header field
-	 * @return a list of HTTP request header fields
+	 *            the readable HTTP request header type
+	 * @throws IllegalArgumentException
+	 *             if the given argument is <code>null</code>
+	 * @return the HTTP request header type or <code>null</code>, if nothing is found
 	 */
-	public List<HttpRequestHeaderField> find(final ReadableHttpRequestHeader type) {
+	public HttpRequestHeaderType find(final ReadableHttpRequestHeader type) {
 		if (type == null) {
 			throw new IllegalArgumentException("Argument 'type' can not be null.");
 		}
 
-		final EntityManager entityManager = entityManagerFactory.createEntityManager();
-		final List<HttpRequestHeaderField> entries = entityManager
-				.createQuery("SELECT o FROM HttpRequestHeaderField o LEFT JOIN o.type t WHERE t.name = :type",
-						HttpRequestHeaderField.class).setParameter("type", type.getName()).getResultList();
-		entityManager.close();
-		return entries;
+		return find(type.getName());
 	}
 
 	/**
@@ -155,62 +144,55 @@ public class HttpRequestHeaderFieldRepository {
 	 * and maximum number of results it restricts the size of the result set.
 	 * 
 	 * @param type
-	 *            the type of a HTTP request header field
+	 *            the type of a HTTP request header type
 	 * @param startPosition
 	 *            Position of the first result, numbered from 0
 	 * @param maxResults
 	 *            Maximum number of results to retrieve
 	 * @throws IllegalArgumentException
 	 *             if the given type is <code>null</code>
-	 * @return a list of HTTP request header fields
+	 * @return a list of HTTP request header types
 	 */
-	public List<HttpRequestHeaderField> find(final ReadableHttpRequestHeader type, final int startPosition,
+	public List<HttpRequestHeaderType> find(final ReadableHttpRequestHeader type, final int startPosition,
 			final int maxResults) {
 		if (type == null) {
 			throw new IllegalArgumentException("Argument 'type' can not be null.");
 		}
 
 		final EntityManager entityManager = entityManagerFactory.createEntityManager();
-		final List<HttpRequestHeaderField> fields = entityManager
-				.createQuery(
-						"SELECT o FROM HttpRequestHeaderField o LEFT JOIN o.type t WHERE t.name = :type ORDER BY o.id",
-						HttpRequestHeaderField.class).setParameter("type", type.getName())
-				.setFirstResult(startPosition).setMaxResults(maxResults).getResultList();
+		final List<HttpRequestHeaderType> types = entityManager
+				.createQuery("SELECT o FROM HttpRequestHeaderType o WHERE o.name = :name ORDER BY o.id",
+						HttpRequestHeaderType.class).setParameter("name", type.getName()).setFirstResult(startPosition)
+				.setMaxResults(maxResults).getResultList();
 		entityManager.close();
-		return fields;
+		return types;
 	}
 
 	/**
-	 * Finds a HTTP request header field by type and value.
+	 * Finds a HTTP request header type by name.
 	 * 
 	 * @param type
-	 *            the type of a HTTP request header field
+	 *            the type of a HTTP request header type
 	 * @param value
-	 *            the value of a HTTP request header field
+	 *            the value of a HTTP request header type
 	 * @throws IllegalArgumentException
 	 *             if the given arguments are <code>null</code>
-	 * @return the HTTP request header field or <code>null</code>, if nothing is found
+	 * @return the HTTP request header type or <code>null</code>, if nothing is found
 	 */
-	public HttpRequestHeaderField find(final ReadableHttpRequestHeader type, final String value) {
-		if (type == null) {
-			throw new IllegalArgumentException("Argument 'type' can not be null.");
-		}
-
-		if (value == null) {
-			throw new IllegalArgumentException("Argument 'value' can not be null.");
+	public HttpRequestHeaderType find(final String name) {
+		if (name == null) {
+			throw new IllegalArgumentException("Argument 'name' can not be null.");
 		}
 
 		final EntityManager entityManager = entityManagerFactory.createEntityManager();
-		HttpRequestHeaderField entry = null;
+		HttpRequestHeaderType entry = null;
 		try {
 			entry = entityManager
-					.createQuery(
-							"SELECT o FROM HttpRequestHeaderField o LEFT JOIN o.type t WHERE t.name = :type AND o.value = :value",
-							HttpRequestHeaderField.class).setParameter("type", type.getName())
-					.setParameter("value", value).getSingleResult();
+					.createQuery("SELECT o FROM HttpRequestHeaderType o WHERE o.name = :name",
+							HttpRequestHeaderType.class).setParameter("name", name).getSingleResult();
 		} catch (final NoResultException e) {
-			LOG.debug("The HTTP request header field with the type '" + type.getName() + "' and value '" + value
-					+ "' does not exist. (" + e.getLocalizedMessage() + ")");
+			LOG.debug("The HTTP request header type with the name '" + name + "' does not exist. ("
+					+ e.getLocalizedMessage() + ")");
 		} finally {
 			entityManager.close();
 		}
@@ -218,52 +200,35 @@ public class HttpRequestHeaderFieldRepository {
 	}
 
 	/**
-	 * Finds a HTTP request header field by the type and value of the given (readable) field.
+	 * Reads all HTTP request header types within the repository.
 	 * 
-	 * @param field
-	 *            the readable HTTP request header field
-	 * @throws IllegalArgumentException
-	 *             if the given argument is <code>null</code>
-	 * @return the HTTP request header field or <code>null</code>, if nothing is found
+	 * @return a list of all HTTP request header types
 	 */
-	public HttpRequestHeaderField find(final ReadableHttpRequestHeaderField field) {
-		if (field == null) {
-			throw new IllegalArgumentException("Argument 'field' can not be null.");
-		}
-
-		return find(field.getType(), field.getValue());
-	}
-
-	/**
-	 * Reads all HTTP request header fields within the repository.
-	 * 
-	 * @return a list of all HTTP request header fields
-	 */
-	public List<HttpRequestHeaderField> findAll() {
+	public List<HttpRequestHeaderType> findAll() {
 		final EntityManager entityManager = entityManagerFactory.createEntityManager();
-		final List<HttpRequestHeaderField> fields = entityManager.createQuery("SELECT o FROM HttpRequestHeaderField o",
-				HttpRequestHeaderField.class).getResultList();
+		final List<HttpRequestHeaderType> types = entityManager.createQuery("SELECT o FROM HttpRequestHeaderType o",
+				HttpRequestHeaderType.class).getResultList();
 		entityManager.close();
-		return fields;
+		return types;
 	}
 
 	/**
-	 * Updates the given field within the persisted one in the repository.
+	 * Updates the given type within the persisted one in the repository.
 	 * 
-	 * @param field
-	 *            the HTTP request header field to be updated
-	 * @return the updated HTTP request header field or <code>null</code> if the merge process failed
+	 * @param type
+	 *            the HTTP request header type to be updated
+	 * @return the updated HTTP request header type or <code>null</code> if the merge process failed
 	 */
-	public HttpRequestHeaderField merge(final HttpRequestHeaderField field) {
-		if (field == null) {
-			throw new IllegalArgumentException("Argument 'field' must be set.");
+	public HttpRequestHeaderType merge(final HttpRequestHeaderType type) {
+		if (type == null) {
+			throw new IllegalArgumentException("Argument 'type' must be set.");
 		}
 
-		HttpRequestHeaderField merged = null;
+		HttpRequestHeaderType merged = null;
 		final EntityManager entityManager = entityManagerFactory.createEntityManager();
 		entityManager.getTransaction().begin();
 		try {
-			merged = entityManager.merge(field);
+			merged = entityManager.merge(type);
 			entityManager.getTransaction().commit();
 		} catch (final RuntimeException e1) {
 			if (entityManager.getTransaction().isActive()) {
@@ -285,17 +250,16 @@ public class HttpRequestHeaderFieldRepository {
 		return merged;
 	}
 
-	public void persist(final Collection<HttpRequestHeaderField> fields) {
-		if (fields == null) {
-			throw new IllegalArgumentException("Argument 'fields' can not be null.");
+	public void persist(final Collection<HttpRequestHeaderType> types) {
+		if (types == null) {
+			throw new IllegalArgumentException("Argument 'types' can not be null.");
 		}
 
 		final EntityManager entityManager = entityManagerFactory.createEntityManager();
 		entityManager.getTransaction().begin();
 		try {
-			for (final HttpRequestHeaderField field : fields) {
-				persistType(field);
-				entityManager.persist(field);
+			for (final HttpRequestHeaderType type : types) {
+				entityManager.persist(type);
 			}
 			entityManager.getTransaction().commit();
 		} catch (final RuntimeException e1) {
@@ -316,24 +280,19 @@ public class HttpRequestHeaderFieldRepository {
 		}
 	}
 
-	public void persist(final HttpRequestHeaderField field) {
-		if (field == null) {
-			throw new IllegalArgumentException("Argument 'field' must be set.");
+	public void persist(final HttpRequestHeaderType type) {
+		if (type == null) {
+			throw new IllegalArgumentException("Argument 'type' must be set.");
 		}
 
-		if (field.getType() == null) {
-			throw new IllegalArgumentException("The type of an header field can not be null.");
-		}
-
-		if (field.getValue() == null) {
-			throw new IllegalArgumentException("The value of an header field can not be null.");
+		if (type.getType() == null) {
+			throw new IllegalArgumentException("The name of an header type can not be null.");
 		}
 
 		final EntityManager entityManager = entityManagerFactory.createEntityManager();
 		entityManager.getTransaction().begin();
 		try {
-			persistType(field);
-			entityManager.persist(field);
+			entityManager.persist(type);
 			entityManager.getTransaction().commit();
 		} catch (final RuntimeException e1) {
 			if (entityManager.getTransaction().isActive()) {
@@ -353,34 +312,19 @@ public class HttpRequestHeaderFieldRepository {
 		}
 	}
 
-	private void persistType(final HttpRequestHeaderField field) {
-		final HttpRequestHeaderType attached = requestHeaderTypeRepository.find(field.getType());
-		if (attached == null) {
-			final HttpRequestHeaderType entity = field.getHttpRequestHeaderType();
-			try {
-				requestHeaderTypeRepository.persist(entity);
-			} catch (final RuntimeException e) {
-				LOG.info(e.getLocalizedMessage() + ": " + entity, e);
-			}
-		} else {
-			field.setHttpRequestHeaderType(attached);
-		}
-	}
-
-	public void remove(final HttpRequestHeaderField entry) {
-		if (entry == null) {
-			throw new IllegalArgumentException("Argument 'entry' can not be null.");
+	public void remove(final HttpRequestHeaderType type) {
+		if (type == null) {
+			throw new IllegalArgumentException("Argument 'type' can not be null.");
 		}
 
-		if (entry.getId() == null) {
-			throw new IllegalArgumentException("The ID for an log entry can not be null.");
+		if (type.getId() == null) {
+			throw new IllegalArgumentException("The ID for an type can not be null.");
 		}
 
 		final EntityManager entityManager = entityManagerFactory.createEntityManager();
-		final HttpRequestHeaderField attached = entityManager.find(HttpRequestHeaderField.class, entry.getId());
 		entityManager.getTransaction().begin();
 		try {
-			entityManager.remove(attached);
+			entityManager.remove(entityManager.find(HttpRequestHeaderType.class, type.getId()));
 			entityManager.getTransaction().commit();
 		} catch (final RuntimeException e1) {
 			if (entityManager.getTransaction().isActive()) {
@@ -400,20 +344,20 @@ public class HttpRequestHeaderFieldRepository {
 		}
 	}
 
-	public void remove(final List<HttpRequestHeaderField> types) {
+	public void remove(final List<HttpRequestHeaderType> types) {
 		if (types == null || types.isEmpty()) {
 			throw new IllegalArgumentException("Argument 'entries' can not be null or empty.");
 		}
 
 		final EntityManager entityManager = entityManagerFactory.createEntityManager();
-		final List<HttpRequestHeaderField> attached = new ArrayList<HttpRequestHeaderField>(types.size());
-		for (final HttpRequestHeaderField type : types) {
-			attached.add(entityManager.find(HttpRequestHeaderField.class, type.getId()));
-		}
 		entityManager.getTransaction().begin();
 		try {
-			for (final HttpRequestHeaderField type : attached) {
-				entityManager.remove(type);
+			for (final HttpRequestHeaderType type : types) {
+				if (type.getId() == null) {
+					throw new IllegalArgumentException("The ID for an type can not be null.");
+				}
+
+				entityManager.remove(entityManager.find(HttpRequestHeaderType.class, type.getId()));
 			}
 			entityManager.getTransaction().commit();
 		} catch (final RuntimeException e1) {
@@ -435,11 +379,11 @@ public class HttpRequestHeaderFieldRepository {
 	}
 
 	public void start() {
-		LOG.debug("Starting HttpRequestHeaderFieldRepository...");
+		LOG.debug("Starting HttpRequestHeaderTypeRepository...");
 	}
 
 	public void stop() {
-		LOG.debug("Closing EntityManagerFactory of HttpRequestHeaderFieldRepository...");
+		LOG.debug("Closing EntityManagerFactory of HttpRequestHeaderTypeRepository...");
 
 		if (entityManagerFactory != null) {
 			entityManagerFactory.close();

@@ -102,16 +102,11 @@ public class HttpRequestHeaderFieldIntegrationTest {
 	public void testFind() {
 		HttpRequestHeaderField field = dod.getRandomHttpRequestHeaderField();
 		Assert.assertNotNull("Data on demand for 'HttpRequestHeaderField' failed to initialize correctly", field);
-		final HttpRequestHeaderField duplicate = new HttpRequestHeaderField(field.getType(), field.getValue());
-		Assert.assertNotNull("Data on demand for 'HttpRequestHeaderField' failed to provide an identifier", duplicate);
-		field = repository.find(duplicate);
-		Assert.assertNotNull("Find method for 'HttpRequestHeaderField' illegally returned null for id '" + duplicate
-				+ "'", field);
-
-		Assert.assertEquals("Find method for 'HttpRequestHeaderField' returned the incorrect identifier",
-				duplicate.getType(), field.getType());
-		Assert.assertEquals("Find method for 'HttpRequestHeaderField' returned the incorrect identifier",
-				duplicate.getValue(), field.getValue());
+		final Long id = field.getId();
+		Assert.assertNotNull("Data on demand for 'HttpRequestHeaderField' failed to provide an identifier", id);
+		field = repository.find(id);
+		Assert.assertNotNull("Find method for 'LogEntry' illegally returned null for id '" + id + "'", field);
+		Assert.assertEquals("Find method for 'LogEntry' returned the incorrect identifier", id, field.getId());
 	}
 
 	@Test
@@ -127,6 +122,22 @@ public class HttpRequestHeaderFieldIntegrationTest {
 		final List<HttpRequestHeaderField> result = repository.findAll();
 		Assert.assertNotNull("Find all method for 'HttpRequestHeaderField' illegally returned null", result);
 		Assert.assertTrue("Find all method for 'HttpRequestHeaderField' failed to return any data", result.size() > 0);
+	}
+
+	@Test
+	public void testFindByTypeAndValue() {
+		HttpRequestHeaderField field = dod.getRandomHttpRequestHeaderField();
+		Assert.assertNotNull("Data on demand for 'HttpRequestHeaderField' failed to initialize correctly", field);
+		final HttpRequestHeaderField duplicate = new HttpRequestHeaderField(field.getType(), field.getValue());
+		Assert.assertNotNull("Data on demand for 'HttpRequestHeaderField' failed to provide an identifier", duplicate);
+		field = repository.find(duplicate);
+		Assert.assertNotNull("Find method for 'HttpRequestHeaderField' illegally returned null for id '" + duplicate
+				+ "'", field);
+
+		Assert.assertEquals("Find method for 'HttpRequestHeaderField' returned the incorrect identifier",
+				duplicate.getType(), field.getType());
+		Assert.assertEquals("Find method for 'HttpRequestHeaderField' returned the incorrect identifier",
+				duplicate.getValue(), field.getValue());
 	}
 
 	@Test
@@ -200,13 +211,19 @@ public class HttpRequestHeaderFieldIntegrationTest {
 
 	@Test
 	public void testPersistDuplicate() {
+		// remove all currently persisted fields
+		if (repository.findAll() != null && !repository.findAll().isEmpty()) {
+			repository.remove(repository.findAll());
+		}
+
 		final HttpRequestHeaderField field = dod.getNewTransientHttpRequestHeaderField(Integer.MAX_VALUE);
 		Assert.assertNotNull("Data on demand for 'HttpRequestHeaderField' failed to provide a new transient entity",
 				field);
 
-		Assert.assertNotNull(repository.find(field));
+		Assert.assertNull(repository.find(field));
 		try {
 			repository.persist(field);
+			repository.persist(dod.getNewTransientHttpRequestHeaderField(Integer.MAX_VALUE));
 		} catch (final Exception e) {
 			Assert.assertEquals("org.eclipse.persistence.exceptions.DatabaseException", e.getCause().getClass()
 					.getName());
@@ -226,7 +243,7 @@ public class HttpRequestHeaderFieldIntegrationTest {
 		repository.remove(repository.findAll());
 		Assert.assertEquals(0, repository.countAll());
 
-		final int amount = 10000;
+		final int amount = 1000;
 		final List<HttpRequestHeaderField> entries = new ArrayList<HttpRequestHeaderField>();
 		for (int i = 0; i < amount; i++) {
 			final HttpRequestHeaderField obj = dod.getNewTransientHttpRequestHeaderField(i);
@@ -279,8 +296,8 @@ public class HttpRequestHeaderFieldIntegrationTest {
 		// remove all currently persisted fields and create more
 		repository.remove(repository.findAll());
 		Assert.assertEquals(0, repository.countAll());
-		dod.initialize(10000);
-		Assert.assertEquals(10000, repository.countAll());
+		dod.initialize(1000);
+		Assert.assertEquals(1000, repository.countAll());
 
 		final List<HttpRequestHeaderField> entries = repository.find(0, (int) repository.countAll());
 		LOG.info("Current number of entries: " + repository.countAll());

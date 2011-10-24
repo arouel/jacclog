@@ -193,7 +193,7 @@ public class LogEntryIntegrationTest {
 		repository.remove(repository.findAll());
 		Assert.assertEquals(0, repository.countAll());
 
-		final int amount = 10000;
+		final int amount = 1000;
 		final List<LogEntry> entries = new ArrayList<LogEntry>();
 		for (int i = 0; i < amount; i++) {
 			final LogEntry obj = dod.getNewTransientLogEntry(i);
@@ -244,8 +244,8 @@ public class LogEntryIntegrationTest {
 		// remove all currently log entries and create more
 		repository.remove(repository.findAll());
 		Assert.assertEquals(0, repository.countAll());
-		dod.initialize(10000);
-		Assert.assertEquals(10000, repository.countAll());
+		dod.initialize(1000);
+		Assert.assertEquals(1000, repository.countAll());
 
 		final List<LogEntry> entries = repository.find(0, (int) repository.countAll());
 		LOG.info("Current number of entries: " + repository.countAll());

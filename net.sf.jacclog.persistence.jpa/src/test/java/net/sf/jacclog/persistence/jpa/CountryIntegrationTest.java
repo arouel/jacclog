@@ -232,7 +232,7 @@ public class CountryIntegrationTest {
 		repository.remove(repository.findAll());
 		Assert.assertEquals(0, repository.countAll());
 
-		final int amount = 10000;
+		final int amount = 1000;
 		final List<Country> entries = new ArrayList<Country>();
 		for (int i = 0; i < amount; i++) {
 			final Country obj = dod.getNewTransientCountry(i);

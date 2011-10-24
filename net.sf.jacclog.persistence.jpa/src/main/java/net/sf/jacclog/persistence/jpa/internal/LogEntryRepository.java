@@ -352,16 +352,16 @@ public class LogEntryRepository {
 	private void persistRequestHeaders(final LogEntry entry) {
 		final Set<PersistableHttpRequestHeaderField> attachedFields = new HashSet<PersistableHttpRequestHeaderField>();
 		for (final PersistableHttpRequestHeaderField field : entry.getRequestHeaders()) {
-			final HttpRequestHeaderField f = HttpRequestHeaderFieldMapper.map(field);
-			final HttpRequestHeaderField attached = requestFieldRepository.find(f);
+			final HttpRequestHeaderField attached = requestFieldRepository.find(field.getType(), field.getValue());
 			if (attached == null) {
+				final HttpRequestHeaderField entity = HttpRequestHeaderFieldMapper.map(field);
 				try {
-					requestFieldRepository.persist(f);
-				} catch (RuntimeException e) {
-					final HttpRequestHeaderField a = requestFieldRepository.find(f);
+					requestFieldRepository.persist(entity);
+				} catch (final RuntimeException e) {
+					final HttpRequestHeaderField a = requestFieldRepository.find(entity);
 					LOG.info(e.getLocalizedMessage() + ": " + a, e);
 				}
-				attachedFields.add(f);
+				attachedFields.add(entity);
 			} else {
 				attachedFields.add(attached);
 			}
@@ -372,11 +372,16 @@ public class LogEntryRepository {
 	private void persistResponseHeaders(final LogEntry entry) {
 		final Set<PersistableHttpResponseHeaderField> attachedFields = new HashSet<PersistableHttpResponseHeaderField>();
 		for (final PersistableHttpResponseHeaderField field : entry.getResponseHeaders()) {
-			final HttpResponseHeaderField f = HttpResponseHeaderFieldMapper.map(field);
-			final HttpResponseHeaderField attached = responseFieldRepository.find(f);
+			final HttpResponseHeaderField attached = responseFieldRepository.find(field.getType(), field.getValue());
 			if (attached == null) {
-				responseFieldRepository.persist(f);
-				attachedFields.add(f);
+				final HttpResponseHeaderField entity = HttpResponseHeaderFieldMapper.map(field);
+				try {
+					responseFieldRepository.persist(entity);
+				} catch (final RuntimeException e) {
+					final HttpResponseHeaderField a = responseFieldRepository.find(entity);
+					LOG.info(e.getLocalizedMessage() + ": " + a, e);
+				}
+				attachedFields.add(entity);
 			} else {
 				attachedFields.add(attached);
 			}

@@ -102,6 +102,17 @@ public class HttpResponseHeaderFieldIntegrationTest {
 	public void testFind() {
 		HttpResponseHeaderField field = dod.getRandomHttpResponseHeaderField();
 		Assert.assertNotNull("Data on demand for 'HttpResponseHeaderField' failed to initialize correctly", field);
+		final Long id = field.getId();
+		Assert.assertNotNull("Data on demand for 'HttpResponseHeaderField' failed to provide an identifier", id);
+		field = repository.find(id);
+		Assert.assertNotNull("Find method for 'LogEntry' illegally returned null for id '" + id + "'", field);
+		Assert.assertEquals("Find method for 'LogEntry' returned the incorrect identifier", id, field.getId());
+	}
+
+	@Test
+	public void testFindByTypeAndValue() {
+		HttpResponseHeaderField field = dod.getRandomHttpResponseHeaderField();
+		Assert.assertNotNull("Data on demand for 'HttpResponseHeaderField' failed to initialize correctly", field);
 		final HttpResponseHeaderField duplicate = new HttpResponseHeaderField(field.getType(), field.getValue());
 		Assert.assertNotNull("Data on demand for 'HttpResponseHeaderField' failed to provide an identifier", duplicate);
 		field = repository.find(duplicate);
@@ -227,7 +238,7 @@ public class HttpResponseHeaderFieldIntegrationTest {
 		repository.remove(repository.findAll());
 		Assert.assertEquals(0, repository.countAll());
 
-		final int amount = 10000;
+		final int amount = 1000;
 		final List<HttpResponseHeaderField> entries = new ArrayList<HttpResponseHeaderField>();
 		for (int i = 0; i < amount; i++) {
 			final HttpResponseHeaderField obj = dod.getNewTransientHttpResponseHeaderField(i);
@@ -280,8 +291,8 @@ public class HttpResponseHeaderFieldIntegrationTest {
 		// remove all currently persisted fields and create more
 		repository.remove(repository.findAll());
 		Assert.assertEquals(0, repository.countAll());
-		dod.initialize(10000);
-		Assert.assertEquals(10000, repository.countAll());
+		dod.initialize(1000);
+		Assert.assertEquals(1000, repository.countAll());
 
 		final List<HttpResponseHeaderField> entries = repository.find(0, (int) repository.countAll());
 		LOG.info("Current number of entries: " + repository.countAll());

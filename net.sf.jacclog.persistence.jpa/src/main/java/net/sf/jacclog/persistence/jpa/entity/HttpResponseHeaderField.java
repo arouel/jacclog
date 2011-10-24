@@ -1,32 +1,40 @@
 package net.sf.jacclog.persistence.jpa.entity;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.IdClass;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
 
 import net.sf.jacclog.api.domain.http.HttpResponseHeader;
 import net.sf.jacclog.api.domain.http.ReadableHttpResponseHeader;
 import net.sf.jacclog.service.repository.domain.PersistableHttpResponseHeaderField;
 
-@IdClass(HttpResponseHeaderFieldPK.class)
 @Entity
-@Table(name = "http_response_header_fields")
+@Table(name = "response_headers", uniqueConstraints = @UniqueConstraint(columnNames = { "type_id", "value" }))
 public class HttpResponseHeaderField implements PersistableHttpResponseHeaderField {
 
+	/**
+	 * The primary key of the entity
+	 */
 	@Id
-	private String type;
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long id;
 
-	@Id
+	@ManyToOne
+	@JoinColumn(name = "type_id")
+	private HttpResponseHeaderType type;
+
 	private String value;
 
 	/**
 	 * The version number of the entity
 	 */
 	@Version
-	@Column(name = "version")
 	private Integer version;
 
 	HttpResponseHeaderField() {
@@ -41,7 +49,7 @@ public class HttpResponseHeaderField implements PersistableHttpResponseHeaderFie
 			throw new IllegalArgumentException("Argument 'value' can not be null.");
 		}
 
-		this.type = type.getName();
+		this.type = new HttpResponseHeaderType(type);
 		this.value = value;
 	}
 
@@ -81,9 +89,17 @@ public class HttpResponseHeaderField implements PersistableHttpResponseHeaderFie
 		return true;
 	}
 
+	public HttpResponseHeaderType getHttpResponseHeaderType() {
+		return type;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
 	@Override
 	public ReadableHttpResponseHeader getType() {
-		return HttpResponseHeader.evaluate(type);
+		return HttpResponseHeader.evaluate(type.getName());
 	}
 
 	@Override
@@ -106,12 +122,19 @@ public class HttpResponseHeaderField implements PersistableHttpResponseHeaderFie
 		return result;
 	}
 
+	public void setHttpResponseHeaderType(final HttpResponseHeaderType type) {
+		if (type == null) {
+			throw new IllegalArgumentException("Argument 'type' can not be null.");
+		}
+		this.type = type;
+	}
+
 	@Override
 	public void setType(final ReadableHttpResponseHeader type) {
 		if (type == null) {
 			throw new IllegalArgumentException("Argument 'type' can not be null.");
 		}
-		this.type = type.getName();
+		this.type = new HttpResponseHeaderType(type);
 	}
 
 	@Override

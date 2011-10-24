@@ -19,7 +19,9 @@
 	<persistence-unit name="jacclogPU" transaction-type="RESOURCE_LOCAL">
 		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
 		<class>net.sf.jacclog.persistence.jpa.entity.HttpRequestHeaderField</class>
+		<class>net.sf.jacclog.persistence.jpa.entity.HttpRequestHeaderType</class>
 		<class>net.sf.jacclog.persistence.jpa.entity.HttpResponseHeaderField</class>
+		<class>net.sf.jacclog.persistence.jpa.entity.HttpResponseHeaderType</class>
 		<class>net.sf.jacclog.persistence.jpa.entity.LogEntry</class>
 		<class>net.sf.jacclog.persistence.jpa.entity.Country</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
@@ -27,7 +29,8 @@
 
 			<!-- Default database login using H2 for EclipseLink's internal connection pool, change this to access your own database. -->
 			<property name="javax.persistence.jdbc.driver" value="org.h2.Driver" />
-			<property name="javax.persistence.jdbc.url" value="jdbc:h2:mem:provider;DB_CLOSE_DELAY=-1" />
+<!-- 			<property name="javax.persistence.jdbc.url" value="jdbc:h2:mem:provider;DB_CLOSE_DELAY=-1" /> -->
+			<property name="javax.persistence.jdbc.url" value="jdbc:h2:file:~/jacclog.db;DB_CLOSE_DELAY=-1" />
 			<property name="javax.persistence.jdbc.password" value="" />
 			<property name="javax.persistence.jdbc.user" value="sa" />
 

@@ -27,10 +27,13 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
 
 import net.sf.jacclog.api.domain.http.HttpConnectionStatus;
@@ -122,6 +125,8 @@ public class LogEntry implements PersistableLogEntry {
 	 * The contents of the header line(s) in the request sent to the server.
 	 */
 	@OneToMany(fetch = FetchType.LAZY)
+	@JoinTable(joinColumns = { @JoinColumn(name = "logentry_id") }, inverseJoinColumns = { @JoinColumn(name = "request_header_id") }, uniqueConstraints = { @UniqueConstraint(columnNames = {
+			"logentry_id", "request_header_id" }) })
 	private Set<HttpRequestHeaderField> requestHeaders = new HashSet<HttpRequestHeaderField>();
 
 	/**
@@ -149,6 +154,8 @@ public class LogEntry implements PersistableLogEntry {
 	 * The contents of Foobar: header line(s) in the reply.
 	 */
 	@OneToMany(fetch = FetchType.LAZY)
+	@JoinTable(joinColumns = { @JoinColumn(name = "logentry_id") }, inverseJoinColumns = { @JoinColumn(name = "response_header_id") }, uniqueConstraints = { @UniqueConstraint(columnNames = {
+			"logentry_id", "response_header_id" }) })
 	private Set<HttpResponseHeaderField> responseHeaders = new HashSet<HttpResponseHeaderField>();
 
 	/**
