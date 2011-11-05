@@ -358,8 +358,10 @@ public class LogEntryRepository {
 				try {
 					requestFieldRepository.persist(entity);
 				} catch (final RuntimeException e) {
+					// an exception here leads to an IllegalStateException while persisting the related log entry
+					// (synchronization error)
 					final HttpRequestHeaderField a = requestFieldRepository.find(entity);
-					LOG.info(e.getLocalizedMessage() + ": " + a, e);
+					LOG.info(e.getLocalizedMessage() + ": " + a);
 				}
 				attachedFields.add(entity);
 			} else {
@@ -378,8 +380,10 @@ public class LogEntryRepository {
 				try {
 					responseFieldRepository.persist(entity);
 				} catch (final RuntimeException e) {
+					// an exception here leads to an IllegalStateException while persisting the related log entry
+					// (synchronization error)
 					final HttpResponseHeaderField a = responseFieldRepository.find(entity);
-					LOG.info(e.getLocalizedMessage() + ": " + a, e);
+					LOG.info(e.getLocalizedMessage() + ": " + a);
 				}
 				attachedFields.add(entity);
 			} else {
