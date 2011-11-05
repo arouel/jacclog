@@ -69,30 +69,27 @@ public class LogEntryQueuePersisterObserver implements BlockingQueueObserver<Rea
 						entries.add(entry);
 						count++;
 					}
-				} while (entry != null && count <= BATCH_SIZE);
-				
-//				if(!entries.isEmpty()) {
-//					LOG.info("Size: " + entries.size());
-//					for (ReadonlyLogEntry logEntry : entries) {
-//						service.create(logEntry);
-//					}
-//				}
-				
-				LOG.info("Size: " + entries.size());
-//				if (entries.size() == 1) {
-//					LOG.info(entries.get(0).toString() + "\n................\n");
-//				}
-				try {
-					service.create(entries);
-				} catch (Exception e) {
-					LOG.warn(e.getLocalizedMessage());
-					StringBuilder builder = new StringBuilder();
-					for (ReadonlyLogEntry readonlyLogEntry : entries) {
-						builder.append(readonlyLogEntry.toString());
-						builder.append("\n................\n");
+				} while (entry != null && count < BATCH_SIZE);
+
+				if (!entries.isEmpty()) {
+					LOG.info("Size: " + entries.size());
+					for (ReadonlyLogEntry logEntry : entries) {
+						service.create(logEntry);
 					}
-					LOG.info(builder.toString());
 				}
+
+				// LOG.info("Size: " + entries.size());
+				// try {
+				// service.create(entries);
+				// } catch (Exception e) {
+				// LOG.warn(e.getLocalizedMessage());
+				// StringBuilder builder = new StringBuilder();
+				// for (ReadonlyLogEntry readonlyLogEntry : entries) {
+				// builder.append(readonlyLogEntry.toString());
+				// builder.append("\n................\n");
+				// }
+				// LOG.info(builder.toString());
+				// }
 			}
 		}
 
@@ -128,9 +125,9 @@ public class LogEntryQueuePersisterObserver implements BlockingQueueObserver<Rea
 
 		final BasicThreadFactory factory = new BasicThreadFactory.Builder()
 				// attributes
-				.namingPattern("persister-%d").daemon(true).priority(Thread.NORM_PRIORITY)
+				.namingPattern("persister-%d").daemon(true).priority(Thread.MAX_PRIORITY)
 				.uncaughtExceptionHandler(new UncaughtExceptionHandler()).build();
-		executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() / 4, factory);
+		executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() / 2, factory);
 	}
 
 	@Override
