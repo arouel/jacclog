@@ -102,8 +102,10 @@ public class LogEntryQueuePersisterObserver implements BlockingQueueObserver<Rea
 					}
 				} while (entry != null && count < BATCH_SIZE);
 
-				if (!persistWithMultipleAttempts(entries)) {
-					LOG.warn(entries.size() + " entries were not stored in the repository.");
+				if (!entries.isEmpty()) {
+					if (!persistWithMultipleAttempts(entries)) {
+						LOG.warn(entries.size() + " entries were not stored in the repository.");
+					}
 				}
 			}
 		}
