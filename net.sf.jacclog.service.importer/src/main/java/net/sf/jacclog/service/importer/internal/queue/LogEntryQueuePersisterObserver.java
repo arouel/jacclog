@@ -15,8 +15,8 @@
  ******************************************************************************/
 package net.sf.jacclog.service.importer.internal.queue;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.ArrayDeque;
+import java.util.Collection;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -33,6 +33,8 @@ import org.slf4j.LoggerFactory;
 public class LogEntryQueuePersisterObserver implements BlockingQueueObserver<ReadonlyLogEntry> {
 
 	public static class LogEntryPersisterTask implements Runnable {
+
+		private static final int MAX_ATTEMPTS = 3;
 
 		private final BlockingQueue<ReadonlyLogEntry> queue;
 
@@ -52,15 +54,44 @@ public class LogEntryQueuePersisterObserver implements BlockingQueueObserver<Rea
 			this.service = service;
 		}
 
+		private boolean persist(final Collection<ReadonlyLogEntry> entries) {
+			boolean result = false;
+			try {
+				service.create(entries);
+				result = true;
+			} catch (final Exception e) {
+				// no problem with an exception here, we try it multiple times
+				LOG.info("Persisting failed: " + e.getLocalizedMessage());
+			}
+			return result;
+		}
+
+		private boolean persistWithMultipleAttempts(final Collection<ReadonlyLogEntry> entries) {
+			boolean isPersisted = false;
+			if (!entries.isEmpty()) {
+				for (int i = 0; i < MAX_ATTEMPTS; i++) {
+					isPersisted = persist(entries);
+					if (isPersisted) {
+						break;
+					}
+				}
+			}
+			return isPersisted;
+		}
+
 		@Override
 		public void run() {
 			if (!queue.isEmpty()) {
+
+				// pause for a while so that more entries can be persist
 				try {
 					Thread.sleep(100l);
 				} catch (final InterruptedException e1) {
 					LOG.warn(e1.getLocalizedMessage(), e1);
 				}
-				final List<ReadonlyLogEntry> entries = new ArrayList<ReadonlyLogEntry>();
+
+				// take all available entries from the queue
+				final Collection<ReadonlyLogEntry> entries = new ArrayDeque<ReadonlyLogEntry>();
 				ReadonlyLogEntry entry = null;
 				int count = 0;
 				do {
@@ -71,25 +102,9 @@ public class LogEntryQueuePersisterObserver implements BlockingQueueObserver<Rea
 					}
 				} while (entry != null && count < BATCH_SIZE);
 
-				if (!entries.isEmpty()) {
-					LOG.info("Size: " + entries.size());
-					for (ReadonlyLogEntry logEntry : entries) {
-						service.create(logEntry);
-					}
+				if (!persistWithMultipleAttempts(entries)) {
+					LOG.warn(entries.size() + " entries were not stored in the repository.");
 				}
-
-				// LOG.info("Size: " + entries.size());
-				// try {
-				// service.create(entries);
-				// } catch (Exception e) {
-				// LOG.warn(e.getLocalizedMessage());
-				// StringBuilder builder = new StringBuilder();
-				// for (ReadonlyLogEntry readonlyLogEntry : entries) {
-				// builder.append(readonlyLogEntry.toString());
-				// builder.append("\n................\n");
-				// }
-				// LOG.info(builder.toString());
-				// }
 			}
 		}
 
@@ -127,7 +142,7 @@ public class LogEntryQueuePersisterObserver implements BlockingQueueObserver<Rea
 				// attributes
 				.namingPattern("persister-%d").daemon(true).priority(Thread.MAX_PRIORITY)
 				.uncaughtExceptionHandler(new UncaughtExceptionHandler()).build();
-		executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() / 2, factory);
+		executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors(), factory);
 	}
 
 	@Override
