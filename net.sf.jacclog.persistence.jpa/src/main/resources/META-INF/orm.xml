@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings version="2.1" xmlns="http://www.eclipse.org/eclipselink/xsds/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<entity class="net.sf.jacclog.persistence.jpa.entity.LogEntry">
+		<table-generator name="LOG_ENTRY_SEQ" allocation-size="500" />
+	</entity>
+	<entity class="net.sf.jacclog.persistence.jpa.entity.HttpRequestHeaderField">
+		<table-generator name="REQUEST_HEADER_FIELD_SEQ" allocation-size="500" />
+	</entity>
+	<entity class="net.sf.jacclog.persistence.jpa.entity.HttpResponseHeaderField">
+		<table-generator name="RESPONSE_HEADER_FIELD_SEQ" allocation-size="500" />
+	</entity>
+	<entity class="net.sf.jacclog.persistence.jpa.entity.HttpRequestHeaderType">
+		<table-generator name="REQUEST_HEADER_TYPE_SEQ" allocation-size="500" />
+	</entity>
+	<entity class="net.sf.jacclog.persistence.jpa.entity.HttpResponseHeaderType">
+		<table-generator name="RESPONSE_HEADER_TYPE_SEQ" allocation-size="500" />
+	</entity>
+</entity-mappings>

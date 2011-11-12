@@ -2,11 +2,11 @@ package net.sf.jacclog.persistence.jpa.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
 
@@ -22,7 +22,8 @@ public class HttpResponseHeaderField implements PersistableHttpResponseHeaderFie
 	 * The primary key of the entity
 	 */
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(generator = "RESPONSE_HEADER_FIELD_SEQ")
+	@TableGenerator(name = "RESPONSE_HEADER_FIELD_SEQ", allocationSize = 1)
 	private Long id;
 
 	@ManyToOne

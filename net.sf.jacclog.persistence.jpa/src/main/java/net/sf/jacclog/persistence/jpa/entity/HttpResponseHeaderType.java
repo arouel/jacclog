@@ -3,9 +3,9 @@ package net.sf.jacclog.persistence.jpa.entity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 import javax.persistence.UniqueConstraint;
 
 import net.sf.jacclog.api.domain.http.HttpResponseHeader;
@@ -19,8 +19,8 @@ public class HttpResponseHeaderType {
 	 * The primary key of the entity
 	 */
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "id")
+	@GeneratedValue(generator = "RESPONSE_HEADER_TYPE_SEQ")
+	@TableGenerator(name = "RESPONSE_HEADER_TYPE_SEQ", allocationSize = 1)
 	private Long id;
 
 	@Column(name = "name", unique = true)
